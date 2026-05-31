@@ -1,0 +1,77 @@
+package com.nntndscvtcvt.romsdownloader.presentation.login
+
+import android.annotation.SuppressLint
+import android.util.Log
+import android.view.ViewGroup
+import android.webkit.CookieManager
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
+import com.nntndscvtcvt.romsdownloader.presentation.login.components.LoginScreenTopBar
+import org.koin.androidx.compose.koinViewModel
+
+@SuppressLint("SetJavaScriptEnabled")
+@Composable
+fun LoginScreen(
+    onBack: () -> Unit,
+    viewModel: LoginViewModel = koinViewModel()
+) {
+    val webViewRef = remember { mutableStateOf<WebView?>(null) }
+
+    Column {
+        LoginScreenTopBar(
+            onBack = onBack,
+            onRefreshClick = { webViewRef.value?.reload() },
+            onClear = {
+                CookieManager.getInstance().removeAllCookies(null)
+                CookieManager.getInstance().flush()
+                viewModel.clearCookie()
+                webViewRef.value?.reload()
+            }
+        )
+
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                WebView(context).apply {
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
+                    settings.useWideViewPort = true
+
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+
+                    webViewClient = object : WebViewClient() {
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView,
+                            request: WebResourceRequest
+                        ): Boolean = false
+
+                        override fun onPageFinished(view: WebView, url: String) {
+                            val cookies = CookieManager.getInstance().getCookie("https://archive.org")
+                            val loggedInSig = viewModel.extractCookie(cookies, "logged-in-sig")
+                            val loggedInUser = viewModel.extractCookie(cookies, "logged-in-user")
+                            Log.d("COOKIE", "$loggedInSig")
+                            Log.d("COOKIE", "$loggedInUser")
+
+                            if (loggedInSig != null && loggedInUser != null) {
+                                viewModel.saveCookie(loggedInSig, loggedInUser)
+                            }
+                        }
+                    }
+                    loadUrl("https://archive.org/account/login")
+                }.also { webViewRef.value = it }
+            }
+        )
+    }
+}
+
