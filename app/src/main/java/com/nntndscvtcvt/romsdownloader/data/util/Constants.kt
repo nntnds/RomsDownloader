@@ -1,4 +1,4 @@
-package com.nntndscvtcvt.romsdownloader.presentation.util
+package com.nntndscvtcvt.romsdownloader.data.util
 
 object Constants {
     const val COVER_URL = "https://images.launchbox-app.com//"
