@@ -1,9 +1,11 @@
 package com.nntndscvtcvt.romsdownloader.presentation.navigation
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -25,6 +27,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameInfoScreen
 import com.nntndscvtcvt.romsdownloader.presentation.home.HomeScreen
 import com.nntndscvtcvt.romsdownloader.presentation.login.LoginScreen
 import com.nntndscvtcvt.romsdownloader.presentation.search.SearchScreen
+import kotlin.reflect.KClass
 
 @Composable
 fun Navigator() {
@@ -93,10 +96,13 @@ fun Navigator() {
                 }
             },
             transitionSpec = {
-                EnterTransition.None togetherWith ExitTransition.None
+                fadeIn(tween(100)) togetherWith fadeOut(tween(100))
             },
             popTransitionSpec = {
-                EnterTransition.None togetherWith ExitTransition.None
+                fadeIn(tween(100)) togetherWith fadeOut(tween(100))
+            },
+            predictivePopTransitionSpec = {
+                slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
             }
         )
     }
