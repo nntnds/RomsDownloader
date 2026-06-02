@@ -23,9 +23,10 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.presentation.util.Constants.COVER_URL
 
 @Composable
-fun GameInfoHeader(state: GameEntity, coverUrl: String) {
+fun GameInfoHeader(state: GameEntity) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,7 +39,7 @@ fun GameInfoHeader(state: GameEntity, coverUrl: String) {
                 .aspectRatio(0.7f)
                 .clip(RoundedCornerShape(12.dp)),
             model = ImageRequest.Builder(LocalContext.current).crossfade(true)
-                .data(coverUrl + state.coverUrl).memoryCachePolicy(CachePolicy.ENABLED).build(),
+                .data(COVER_URL + state.coverUrl).memoryCachePolicy(CachePolicy.ENABLED).build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
         )

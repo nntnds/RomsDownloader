@@ -28,6 +28,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
+import com.nntndscvtcvt.romsdownloader.presentation.util.Constants.COVER_URL
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -42,7 +43,6 @@ fun DownloadsList(
 ) {
     val stopButton = painterResource(R.drawable.outline_stop_24)
     val refreshButton = painterResource(R.drawable.outline_refresh_24)
-    val coverUrl = "https://images.launchbox-app.com/"
 
     Card(
         modifier = Modifier
@@ -68,7 +68,7 @@ fun DownloadsList(
                     .aspectRatio(0.7f)
                     .clip(MaterialTheme.shapes.medium),
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(coverUrl + item.coverUrl)
+                    .data(COVER_URL + item.coverUrl)
                     .crossfade(true)
                     .build(),
                 contentDescription = null,

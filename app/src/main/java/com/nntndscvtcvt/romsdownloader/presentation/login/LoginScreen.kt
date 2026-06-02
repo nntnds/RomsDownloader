@@ -15,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.nntndscvtcvt.romsdownloader.presentation.login.components.LoginScreenTopBar
+import com.nntndscvtcvt.romsdownloader.presentation.util.Constants.ARCHIVE_URL
+import com.nntndscvtcvt.romsdownloader.presentation.util.Constants.LOGIN_URL
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -57,8 +59,7 @@ fun LoginScreen(
                         ): Boolean = false
 
                         override fun onPageFinished(view: WebView, url: String) {
-                            val cookies =
-                                CookieManager.getInstance().getCookie("https://archive.org") ?: return
+                            val cookies = CookieManager.getInstance().getCookie(ARCHIVE_URL) ?: return
                             val loggedInSig = viewModel.extractCookie(cookies, "logged-in-sig")
                             val loggedInUser = viewModel.extractCookie(cookies, "logged-in-user")
                             Log.d("COOKIE", "$loggedInSig")
@@ -69,7 +70,7 @@ fun LoginScreen(
                             }
                         }
                     }
-                    loadUrl("https://archive.org/account/login")
+                    loadUrl(LOGIN_URL)
                 }.also { webViewRef.value = it }
             }
         )

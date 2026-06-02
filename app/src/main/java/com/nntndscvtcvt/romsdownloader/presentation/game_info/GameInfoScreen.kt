@@ -83,7 +83,6 @@ fun GameInfoContent(
     snackbarHostState: SnackbarHostState,
     startDownload: (String, String) -> Unit
 ) {
-    val coverUrl = "https://images.launchbox-app.com//"
     Column {
         GameInfoTopBar(isFavorite, onBack, toggleFavorite)
 
@@ -94,7 +93,7 @@ fun GameInfoContent(
                 verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
             ) {
                 item {
-                    GameInfoHeader(state, coverUrl)
+                    GameInfoHeader(state)
                 }
 
                 item {
@@ -102,7 +101,7 @@ fun GameInfoContent(
                 }
 
                 item {
-                    GameInfoScreenshots(state, coverUrl)
+                    GameInfoScreenshots(state)
                 }
                 gameInfoDownloads(downloads, startDownload)
                 item { Spacer(Modifier.height(12.dp)) }

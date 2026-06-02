@@ -31,9 +31,10 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.presentation.util.Constants.COVER_URL
 
 @Composable
-fun GameInfoScreenshots(state: GameEntity, coverUrl: String) {
+fun GameInfoScreenshots(state: GameEntity) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,7 +86,7 @@ fun GameInfoScreenshots(state: GameEntity, coverUrl: String) {
                             imageUrl = url
                         },
                     model = ImageRequest.Builder(LocalContext.current).crossfade(true)
-                        .data(coverUrl + url).memoryCachePolicy(CachePolicy.ENABLED).build(),
+                        .data(COVER_URL + url).memoryCachePolicy(CachePolicy.ENABLED).build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                 )
@@ -110,7 +111,7 @@ fun GameInfoScreenshots(state: GameEntity, coverUrl: String) {
                                 .clip(MaterialTheme.shapes.small)
                                 .clickable { isFullScreen = !isFullScreen },
                             model = ImageRequest.Builder(LocalContext.current).crossfade(true)
-                                .data(coverUrl + imageUrl).memoryCachePolicy(CachePolicy.ENABLED)
+                                .data(COVER_URL + imageUrl).memoryCachePolicy(CachePolicy.ENABLED)
                                 .build(),
                             contentDescription = null,
                             contentScale = ContentScale.Fit,

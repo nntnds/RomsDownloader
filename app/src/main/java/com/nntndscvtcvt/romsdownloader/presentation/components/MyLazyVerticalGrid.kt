@@ -20,18 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.viewpager.R
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
-
-private const val coverUrl = "https://images.launchbox-app.com//"
+import com.nntndscvtcvt.romsdownloader.presentation.util.Constants.COVER_URL
 
 @Composable
 fun MyLazyVerticalGrid(
@@ -76,7 +72,7 @@ private fun GameCard(
                     .fillMaxWidth()
                     .aspectRatio(0.7f),
                 model = ImageRequest.Builder(context)
-                    .data(coverUrl + data.coverUrl)
+                    .data(COVER_URL + data.coverUrl)
                     .memoryCachePolicy(CachePolicy.ENABLED)
                     .diskCachePolicy(CachePolicy.ENABLED)
                     .size(300, 430)
