@@ -1,5 +1,8 @@
 package com.nntndscvtcvt.romsdownloader.presentation.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -39,62 +42,63 @@ fun Navigator() {
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            NavDisplay(
-                backStack = backStack,
-                onBack = {
-                    backStack.removeLastOrNull()
-                },
-                entryProvider = entryProvider {
-                    entry<AppRoutes.Home> {
-                        HomeScreen(
-                            onNavigate = {
-                                navigateToTab(backStack, AppRoutes.GameInfo(it))
-                            }
-                        )
-                    }
-                    entry<AppRoutes.Search> {
-                        SearchScreen(
-                            onNavigate = {
-                                navigateToTab(backStack, AppRoutes.GameInfo(it))
-                            }
-                        )
-                    }
-                    entry<AppRoutes.Downloads> {
-                        DownloadScreen(
-                            onNavigate = {
-                                navigateToTab(backStack, AppRoutes.Login)
-                            },
-                            onGameInfoScreen = { navigateToTab(backStack, AppRoutes.GameInfo(it)) }
-                        )
-                    }
-                    entry<AppRoutes.Favorites> {
-                        FavoriteScreen(
-                            onNavigate = { navigateToTab(backStack, AppRoutes.GameInfo(it)) }
-                        )
-                    }
-                    entry<AppRoutes.GameInfo> { key ->
-                        GameInfoScreen(
-                            id = key.id,
-                            onBack = {
-                                if (backStack.size > 1) backStack.removeLastOrNull()
-                            }
-                        )
-                    }
-                    entry<AppRoutes.Login> {
-                        LoginScreen(
-                            onBack = {
-                                if (backStack.size > 1) backStack.removeLastOrNull()
-                            }
-                        )
-                    }
+        NavDisplay(
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            backStack = backStack,
+            onBack = {
+                backStack.removeLastOrNull()
+            },
+            entryProvider = entryProvider {
+                entry<AppRoutes.Home> {
+                    HomeScreen(
+                        onNavigate = {
+                            navigateToTab(backStack, AppRoutes.GameInfo(it))
+                        }
+                    )
                 }
-            )
-        }
+                entry<AppRoutes.Search> {
+                    SearchScreen(
+                        onNavigate = {
+                            navigateToTab(backStack, AppRoutes.GameInfo(it))
+                        }
+                    )
+                }
+                entry<AppRoutes.Downloads> {
+                    DownloadScreen(
+                        onNavigate = {
+                            navigateToTab(backStack, AppRoutes.Login)
+                        },
+                        onGameInfoScreen = { navigateToTab(backStack, AppRoutes.GameInfo(it)) }
+                    )
+                }
+                entry<AppRoutes.Favorites> {
+                    FavoriteScreen(
+                        onNavigate = { navigateToTab(backStack, AppRoutes.GameInfo(it)) }
+                    )
+                }
+                entry<AppRoutes.GameInfo> { key ->
+                    GameInfoScreen(
+                        id = key.id,
+                        onBack = {
+                            if (backStack.size > 1) backStack.removeLastOrNull()
+                        }
+                    )
+                }
+                entry<AppRoutes.Login> {
+                    LoginScreen(
+                        onBack = {
+                            if (backStack.size > 1) backStack.removeLastOrNull()
+                        }
+                    )
+                }
+            },
+            transitionSpec = {
+                EnterTransition.None togetherWith ExitTransition.None
+            },
+            popTransitionSpec = {
+                EnterTransition.None togetherWith ExitTransition.None
+            }
+        )
     }
 }
 

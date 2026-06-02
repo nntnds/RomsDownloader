@@ -52,7 +52,6 @@ dependencies {
 
     // Material 3 Expressive
     implementation(libs.androidx.compose.material3)
-    implementation(libs.firebase.firestore)
     implementation(libs.androidx.compose.animation)
 
     testImplementation(libs.junit)
@@ -80,6 +79,7 @@ dependencies {
 
     // Firebase
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
 
     // Coil
     implementation(libs.coil)
