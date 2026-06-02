@@ -57,7 +57,8 @@ fun LoginScreen(
                         ): Boolean = false
 
                         override fun onPageFinished(view: WebView, url: String) {
-                            val cookies = CookieManager.getInstance().getCookie("https://archive.org")
+                            val cookies =
+                                CookieManager.getInstance().getCookie("https://archive.org") ?: return
                             val loggedInSig = viewModel.extractCookie(cookies, "logged-in-sig")
                             val loggedInUser = viewModel.extractCookie(cookies, "logged-in-user")
                             Log.d("COOKIE", "$loggedInSig")
