@@ -16,16 +16,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.viewpager.R
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+
+private const val coverUrl = "https://images.launchbox-app.com//"
 
 @Composable
 fun MyLazyVerticalGrid(
@@ -42,7 +48,8 @@ fun MyLazyVerticalGrid(
     ) {
         items(
             items = gamesData,
-            key = { it.id }
+            key = { it.id },
+            contentType = { "games_data" }
         ) { data ->
             GameCard(data, onNavigate)
         }
@@ -54,7 +61,7 @@ private fun GameCard(
     data: GameEntity,
     onNavigate: (String) -> Unit
 ) {
-    val coverUrl = "https://images.launchbox-app.com//"
+    val context = LocalContext.current
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -68,13 +75,16 @@ private fun GameCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(0.7f),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .crossfade(true)
+                model = ImageRequest.Builder(context)
                     .data(coverUrl + data.coverUrl)
                     .memoryCachePolicy(CachePolicy.ENABLED)
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .size(300, 430)
                     .build(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
+                placeholder = ColorPainter(Color.LightGray),
+                error = ColorPainter(Color.DarkGray),
             )
             Column(
                 modifier = Modifier
@@ -84,7 +94,7 @@ private fun GameCard(
             ) {
                 Text(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .padding(horizontal = 4.dp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
