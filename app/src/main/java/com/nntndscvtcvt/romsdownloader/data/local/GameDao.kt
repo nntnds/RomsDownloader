@@ -27,6 +27,6 @@ interface GameDao {
     @Query("SELECT * FROM games WHERE Id = :id")
     suspend fun getGameById(id: String): GameEntity
 
-    @Query("SELECT * FROM games WHERE name LIKE :query OR alternateNames LIKE :query")
-    suspend fun searchGame(query: String): List<GameEntity>
+    @Query("SELECT * FROM games WHERE name LIKE '%' || :query || '%' OR alternateNames LIKE '%' || :query || '%'")
+    fun searchGame(query: String): Flow<List<GameEntity>>
 }

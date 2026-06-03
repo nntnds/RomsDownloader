@@ -1,9 +1,10 @@
 package com.nntndscvtcvt.romsdownloader.presentation.favorite
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,9 +23,11 @@ fun FavoriteScreen(
 ) {
     val state by favoriteViewModel.uiState.collectAsStateWithLifecycle()
 
-    Column {
-        FavoriteScreenTopBar()
-
+    Scaffold(
+        topBar = {
+            FavoriteScreenTopBar()
+        }
+    ) { innerPadding ->
         when(val state = state) {
             is FavoriteState.Empty -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -37,7 +40,7 @@ fun FavoriteScreen(
             }
             is FavoriteState.Success -> {
                 MyLazyVerticalGrid(
-                    modifier = Modifier,
+                    modifier = Modifier.padding(innerPadding),
                     gamesData = state.favorites,
                     onNavigate = onNavigate
                 )

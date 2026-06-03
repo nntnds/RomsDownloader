@@ -40,7 +40,6 @@ class HomeViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, HomeState.Loading)
 
-
     init {
         viewModelScope.launch {
             try {

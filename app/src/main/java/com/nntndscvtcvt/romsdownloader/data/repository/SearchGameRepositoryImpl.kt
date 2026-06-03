@@ -4,17 +4,16 @@ import com.nntndscvtcvt.romsdownloader.data.local.GameDao
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 import com.nntndscvtcvt.romsdownloader.domain.repository.SearchGameRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class SearchGameRepositoryImpl(
     val gameDao: GameDao
 ) : SearchGameRepository {
-    override fun searchGame(query: String): Flow<Result<List<GameEntity>>> = flow {
-        try {
-            val result = gameDao.searchGame(query)
-            emit(Result.success(result))
-        } catch (e: Exception) {
-            emit(Result.failure(e))
-        }
+    override fun searchGame(query: String): Flow<Result<List<GameEntity>>> {
+        return gameDao.searchGame(query)
+            .map { Result.success(it) }
+            .catch { emit(Result.failure(it)) }
     }
 }
