@@ -37,8 +37,8 @@ fun MyLazyVerticalGrid(
 ) {
     LazyVerticalGrid(
         modifier = modifier
-            .padding(start = 12.dp, end = 12.dp, top = 12.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(start = 12.dp, end = 12.dp),
         columns = GridCells.Fixed(3),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
