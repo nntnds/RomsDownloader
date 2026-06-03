@@ -2,14 +2,16 @@ package com.nntndscvtcvt.romsdownloader.presentation.download.components
 
 import android.app.DownloadManager
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -17,14 +19,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -49,10 +47,12 @@ fun DownloadsList(
 ) {
     val stopButton = painterResource(R.drawable.outline_stop_24)
     val refreshButton = painterResource(R.drawable.outline_refresh_24)
+    val checkCircle = painterResource(R.drawable.outline_check_circle_24)
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .height(106.dp)
             .padding(horizontal = 12.dp)
             .clip(CardDefaults.shape)
             .combinedClickable(
@@ -60,12 +60,19 @@ fun DownloadsList(
                 onLongClick = onLongPress
             ),
         colors = CardDefaults.cardColors(
-            containerColor = if (!isSelected) MaterialTheme.colorScheme.surfaceContainerLow
-            else MaterialTheme.colorScheme.primaryContainer
-        )
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ),
+        border = if (isSelected) {
+            androidx.compose.foundation.BorderStroke(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.primary
+            )
+        } else null
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -81,8 +88,9 @@ fun DownloadsList(
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
+
             Column(
-                modifier = Modifier.weight(0.75f),
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
@@ -118,23 +126,33 @@ fun DownloadsList(
                     )
                 }
             }
-
-            if (!isSelectedMode && item.status != DownloadManager.STATUS_SUCCESSFUL) {
-                IconButton(
-                    onClick = {
-                        when {
-                            item.isStopped || item.status == DownloadManager.STATUS_FAILED -> onRefresh()
-                            else -> onStop()
+            Box(
+                modifier = Modifier.size(40.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                when {
+                    isSelectedMode -> { }
+                    item.status == DownloadManager.STATUS_SUCCESSFUL -> {
+                        Icon(checkCircle, null)
+                    }
+                    else -> {
+                        IconButton(
+                            onClick = {
+                                when {
+                                    item.isStopped || item.status == DownloadManager.STATUS_FAILED -> onRefresh()
+                                    else -> onStop()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painter = when {
+                                    item.isStopped || item.status == DownloadManager.STATUS_FAILED -> refreshButton
+                                    else -> stopButton
+                                },
+                                contentDescription = null
+                            )
                         }
                     }
-                ) {
-                    Icon(
-                        painter = when {
-                            item.isStopped || item.status == DownloadManager.STATUS_FAILED -> refreshButton
-                            else -> stopButton
-                        },
-                        contentDescription = null
-                    )
                 }
             }
         }

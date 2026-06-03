@@ -1,5 +1,6 @@
 package com.nntndscvtcvt.romsdownloader.data.repository
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -30,14 +31,16 @@ class GameRepositoryImpl(
         .catch { emit(Result.failure(it)) }
 
     override suspend fun sync() {
-        val remoteVersion = getRemoteVersion()
-        val savedVersion = datastore.data.first()[SAVED_VERSION_KEY] ?: -1
-        val isEmpty = gameDao.getCount() == 0
+        try {
+            val remoteVersion = getRemoteVersion()
+            val savedVersion = datastore.data.first()[SAVED_VERSION_KEY] ?: -1
+            val isEmpty = gameDao.getCount() == 0
 
-        if (isEmpty || savedVersion < remoteVersion) {
-            saveAllGames()
-            datastore.edit { it[SAVED_VERSION_KEY] = remoteVersion }
-        }
+            if (isEmpty || savedVersion < remoteVersion) {
+                saveAllGames()
+                datastore.edit { it[SAVED_VERSION_KEY] = remoteVersion }
+            }
+        } catch (e: Exception) { Log.e("Error", "Sync failed", e) }
     }
 
     private suspend fun getRemoteVersion(): Int {
@@ -54,9 +57,10 @@ class GameRepositoryImpl(
             .documents.mapNotNull { documentSnapshot ->
                 documentSnapshot.toObject(GameModelDto::class.java)?.toDomain(documentSnapshot.id)
             }
-        gameDao.clearAll()
         entities.chunked(500).forEach {
             gameDao.insertAll(it)
         }
+        val serverIds = entities.map { it.id }.toSet()
+        gameDao.deleteNotInIds(serverIds)
     }
 }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,8 +32,8 @@ class DownloadViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun cookieCheck() = viewModelScope.launch {
-        val sig = cookieRepository.loggedInSig.first() ?: ""
-        val user = cookieRepository.loggedInUser.first() ?: ""
+        val sig = cookieRepository.loggedInSig.firstOrNull() ?: ""
+        val user = cookieRepository.loggedInUser.firstOrNull() ?: ""
         val result = downloadRepository.checkAccess(sig, user)
 
         _snackbarEvent.emit(if (result) "Cookie are working" else "Log in to your account")
@@ -64,9 +65,10 @@ class DownloadViewModel(
     }
 
     fun deleteSelected() = viewModelScope.launch {
-        _selectedIds.value.forEach { downloadId ->
-            downloadRepository.deleteDownload(downloadId)
+        val idsToDelete = _selectedIds.value.toList()
+        if (idsToDelete.isNotEmpty()) {
+            downloadRepository.deleteMultiple(idsToDelete)
+            clearSelection()
         }
-        clearSelection()
     }
 }

@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -46,7 +45,7 @@ fun MyLazyVerticalGrid(
         items(
             items = gamesData,
             key = { it.id },
-            contentType = { "games_data" }
+            contentType = { it::class.java }
         ) { data ->
             GameCard(data, onNavigate)
         }
@@ -81,8 +80,8 @@ private fun GameCard(
                     .build(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                placeholder = ColorPainter(Color.LightGray),
-                error = ColorPainter(Color.DarkGray),
+                placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
+                error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
             )
             Column(
                 modifier = Modifier

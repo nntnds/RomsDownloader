@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,9 @@ interface DownloadDao {
 
     @Query("DELETE FROM downloads WHERE downloadId = :downloadId")
     suspend fun delete(downloadId: Long)
+
+    @Query("DELETE FROM downloads WHERE downloadId IN (:ids)")
+    suspend fun deleteMultiple(ids: List<Long>)
 
     @Query("SELECT * FROM downloads WHERE downloadId = :downloadId")
     suspend fun getById(downloadId: Long): DownloadEntity?

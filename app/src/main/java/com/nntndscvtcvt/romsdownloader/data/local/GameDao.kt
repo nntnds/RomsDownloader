@@ -9,11 +9,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDao {
-    @Query("SELECT * FROM games ORDER BY name ASC LIMIT 99")
-    fun getAllGames(): Flow<List<GameEntity>>
+    @Query("SELECT * FROM games ORDER BY name ASC LIMIT :limit OFFSET :offset")
+    fun getAllGames(limit: Int = 50, offset: Int = 0): Flow<List<GameEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(games: List<GameEntity>)
+
+    @Query("DELETE FROM games WHERE Id NOT IN (:ids)")
+    suspend fun deleteNotInIds(ids: Set<String>)
 
     @Query("DELETE FROM games")
     suspend fun clearAll()
@@ -24,6 +27,6 @@ interface GameDao {
     @Query("SELECT * FROM games WHERE Id = :id")
     suspend fun getGameById(id: String): GameEntity
 
-    @Query("SELECT * FROM games WHERE name LIKE '%' || :query || '%' OR alternateNames LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM games WHERE name LIKE :query OR alternateNames LIKE :query")
     suspend fun searchGame(query: String): List<GameEntity>
 }

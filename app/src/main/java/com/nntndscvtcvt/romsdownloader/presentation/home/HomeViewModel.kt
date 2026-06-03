@@ -1,5 +1,6 @@
 package com.nntndscvtcvt.romsdownloader.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
@@ -44,7 +45,7 @@ class HomeViewModel(
         viewModelScope.launch {
             try {
                 gameRepository.sync()
-            } catch (e: Exception) {  }
+            } catch (e: Exception) { Log.e("Error", "Sync failed", e) }
         }
     }
 

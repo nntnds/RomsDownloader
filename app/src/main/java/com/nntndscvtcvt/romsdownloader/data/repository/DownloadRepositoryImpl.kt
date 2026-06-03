@@ -10,6 +10,7 @@ import com.nntndscvtcvt.romsdownloader.domain.model.DownloadEntity
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -24,96 +25,83 @@ class DownloadRepositoryImpl(
     private val context: Application,
     private val downloadDao: DownloadDao
 ) : DownloadRepository {
-    override suspend fun checkAccess(sig: String, user: String): Boolean = withContext(Dispatchers.IO) {
-            runCatching {
-                client.newCall(
-                    Request.Builder()
-                        .url("https://archive.org/download/sony_playstation2_numberssymbols/_Sony%20PlayStation%202_thumb.jpg")
-                        .head()
-                        .addHeader("Cookie", "logged-in-sig=$sig; logged-in-user=$user")
-                        .build()
-                ).execute().code == 200
-            }.getOrDefault(false)
-        }
 
-    override fun downloadFile(
-        url: String,
-        sig: String,
-        user: String,
-        fileName: String
-    ): Long {
+    private val downloadManager: DownloadManager by lazy {
+        context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+    }
+
+    private companion object {
+        const val CHECK_ACCESS_URL = "https://archive.org/download/sony_playstation2_numberssymbols/_Sony%20PlayStation%202_thumb.jpg"
+        const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
+
+    override suspend fun checkAccess(sig: String, user: String): Boolean = withContext(Dispatchers.IO) {
+        runCatching {
+            client.newCall(
+                Request.Builder()
+                    .url(CHECK_ACCESS_URL)
+                    .head()
+                    .addHeader("Cookie", createCookieHeader(sig, user))
+                    .build()
+            ).execute().code == 200
+        }.getOrDefault(false)
+    }
+
+    override fun downloadFile(url: String, sig: String, user: String, fileName: String): Long {
         return buildRequest(url, fileName, sig, user)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getActiveDownloads(): Flow<List<DownloadItem>> {
+        return downloadDao.getAllDownloads().flatMapLatest { entities ->
+            flow {
+                while (true) {
+                    val items = entities.mapNotNull { downloadEntity ->
+                        getDownloadItem(downloadEntity)
+                    }
+                    emit(items)
+                    delay(1000L)
+                }
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
     override suspend fun stopDownload(downloadId: Long) {
-        val entity = downloadDao.getById(downloadId) ?: return
-        val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        manager.remove(downloadId)
-        downloadDao.setStopped(downloadId)
+        runCatching {
+            downloadManager.remove(downloadId)
+            downloadDao.setStopped(downloadId)
+        }.onFailure {
+            // TODO()
+        }
     }
 
     override suspend fun retryDownload(downloadId: Long, sig: String, user: String): Long {
         val entity = downloadDao.getById(downloadId) ?: return -1L
-        val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        manager.remove(downloadId)
-        val newId = buildRequest(entity.url, entity.fileName, sig, user)
-        downloadDao.delete(downloadId)
-        downloadDao.insert(entity.copy(downloadId = newId, isStopped = false))
-        return newId
+
+        return runCatching {
+            downloadManager.remove(downloadId)
+            val newId = buildRequest(entity.url, entity.fileName, sig, user)
+
+            if(newId != -1L) {
+                downloadDao.delete(downloadId)
+                downloadDao.insert(entity.copy(downloadId = newId, isStopped = false))
+            }
+            newId
+        }.getOrElse { -1L }
     }
 
     override suspend fun deleteDownload(downloadId: Long) {
-        val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        manager.remove(downloadId)
-        downloadDao.delete(downloadId)
+        runCatching {
+            downloadManager.remove(downloadId)
+            downloadDao.delete(downloadId)
+        }.onFailure {
+            // TODO()
+        }
     }
 
-    override fun getActiveDownloads(): Flow<List<DownloadItem>> {
-        val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-        return downloadDao.getAllDownloads().flatMapLatest { entities ->
-            flow {
-                while (true) {
-                    val items = entities.mapNotNull { entity ->
-                        val query = DownloadManager.Query().setFilterById(entity.downloadId)
-                        val cursor = manager.query(query) ?: return@mapNotNull null
-
-                        cursor.use {
-                            if (!it.moveToFirst()) {
-                                return@mapNotNull DownloadItem(
-                                    id = entity.downloadId,
-                                    gameId = entity.gameId,
-                                    gameName = entity.gameName,
-                                    coverUrl = entity.coverUrl,
-                                    fileName = entity.fileName,
-                                    status = DownloadManager.STATUS_FAILED,
-                                    downloadedMbs = 0,
-                                    isStopped = entity.isStopped,
-                                    url = entity.url
-                                )
-                            }
-
-                            val downloaded = it.getLong(it.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                            val status = it.getInt(it.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
-
-                            DownloadItem(
-                                id = entity.downloadId,
-                                gameId = entity.gameId,
-                                gameName = entity.gameName,
-                                coverUrl = entity.coverUrl,
-                                fileName = entity.fileName,
-                                status = status,
-                                downloadedMbs = downloaded / (1024 * 1024),
-                                isStopped = entity.isStopped,
-                                url = entity.url
-                            )
-                        }
-                    }
-                    emit(items)
-                    delay(500L)
-                }
-            }
-        }.flowOn(Dispatchers.IO)
+    override suspend fun deleteMultiple(ids: List<Long>) {
+        ids.forEach { downloadManager.remove(it) }
+        downloadDao.deleteMultiple(ids)
     }
 
     override suspend fun saveDownload(downloadEntity: DownloadEntity) {
@@ -121,15 +109,69 @@ class DownloadRepositoryImpl(
     }
 
     private fun buildRequest(url: String, filename: String, sig: String, user: String): Long {
-        val request = DownloadManager.Request(url.toUri()).apply {
-            setTitle(filename)
-            setDescription("Downloading...")
-            addRequestHeader("Cookie", "logged-in-sig=$sig; logged-in-user=$user")
-            addRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
-            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
+        return try {
+            val request = DownloadManager.Request(url.toUri()).apply {
+                setTitle(filename)
+                setDescription("Downloading...")
+                addRequestHeader("Cookie", createCookieHeader(sig, user))
+                addRequestHeader("User-Agent", USER_AGENT)
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
+            }
+            downloadManager.enqueue(request)
+        } catch (e: Exception) { -1L }
+    }
+
+    private fun getDownloadItem(entity: DownloadEntity): DownloadItem? {
+        val query = DownloadManager.Query().setFilterById(entity.downloadId)
+        val cursor = downloadManager.query(query) ?: return null
+
+        return cursor.use {
+            if (it.isClosed || it.count == 0 || !it.moveToFirst()) { // If status is failed
+                return@use createFailedDownloadItem(entity)
+            }
+
+            return@use try {
+                val status = it.getInt(
+                    it.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)
+                )
+                val downloaded = it.getLong(
+                    it.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
+                )
+                createDownloadItem(entity, status, downloaded)
+            } catch (e: Exception) { createFailedDownloadItem(entity) }
         }
-        val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        return manager.enqueue(request)
+    }
+
+    private fun createCookieHeader(sig: String, user: String): String {
+        return "logged-in-sig=$sig; logged-in-user=$user"
+    }
+
+    private fun createFailedDownloadItem(entity: DownloadEntity): DownloadItem {
+        return DownloadItem(
+            id = entity.downloadId,
+            gameId = entity.gameId,
+            gameName = entity.gameName,
+            coverUrl = entity.coverUrl,
+            fileName = entity.fileName,
+            status = DownloadManager.STATUS_FAILED,
+            downloadedMbs = 0,
+            isStopped = entity.isStopped,
+            url = entity.url
+        )
+    }
+
+    private fun createDownloadItem(entity: DownloadEntity, status: Int, downloaded: Long): DownloadItem {
+        return DownloadItem(
+            id = entity.downloadId,
+            gameId = entity.gameId,
+            gameName = entity.gameName,
+            coverUrl = entity.coverUrl,
+            fileName = entity.fileName,
+            status = status,
+            downloadedMbs = downloaded / (1024 * 1024),
+            isStopped = entity.isStopped,
+            url = entity.url
+        )
     }
 }
