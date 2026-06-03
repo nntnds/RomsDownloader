@@ -26,14 +26,22 @@ import com.nntndscvtcvt.romsdownloader.presentation.favorite.FavoriteScreen
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameInfoScreen
 import com.nntndscvtcvt.romsdownloader.presentation.home.HomeScreen
 import com.nntndscvtcvt.romsdownloader.presentation.login.LoginScreen
-import com.nntndscvtcvt.romsdownloader.presentation.search.SearchScreen
-import kotlin.reflect.KClass
 
 @Composable
 fun Navigator() {
     val backStack = rememberNavBackStack(AppRoutes.Home)
     val currentRoute = backStack.lastOrNull()
-    val shouldShowBottomBar = currentRoute !is AppRoutes.GameInfo && currentRoute !is AppRoutes.Login
+
+    val shouldShowBottomBar = currentRoute is AppRoutes.Home ||
+            currentRoute is AppRoutes.Downloads ||
+            currentRoute is AppRoutes.Favorites
+
+    val navigateToGameInfo = { id: String ->
+        navigateToTab(backStack, AppRoutes.GameInfo(id))
+    }
+    val onBack = {
+        if (backStack.size > 1) backStack.removeLastOrNull()
+    }
 
     Scaffold(
         bottomBar = {
@@ -48,51 +56,27 @@ fun Navigator() {
         NavDisplay(
             modifier = Modifier.fillMaxSize().padding(innerPadding),
             backStack = backStack,
-            onBack = {
-                backStack.removeLastOrNull()
-            },
+            onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
                 entry<AppRoutes.Home> {
                     HomeScreen(
-                        onNavigate = {
-                            navigateToTab(backStack, AppRoutes.GameInfo(it))
-                        }
-                    )
-                }
-                entry<AppRoutes.Search> {
-                    SearchScreen(
-                        onNavigate = {
-                            navigateToTab(backStack, AppRoutes.GameInfo(it))
-                        }
+                        onNavigate = navigateToGameInfo
                     )
                 }
                 entry<AppRoutes.Downloads> {
                     DownloadScreen(
-                        onNavigate = {
-                            navigateToTab(backStack, AppRoutes.Login)
-                        },
-                        onGameInfoScreen = { navigateToTab(backStack, AppRoutes.GameInfo(it)) }
+                        onNavigate = { navigateToTab(backStack, AppRoutes.Login) },
+                        onGameInfoScreen = navigateToGameInfo
                     )
                 }
                 entry<AppRoutes.Favorites> {
-                    FavoriteScreen(
-                        onNavigate = { navigateToTab(backStack, AppRoutes.GameInfo(it)) }
-                    )
+                    FavoriteScreen(onNavigate = navigateToGameInfo)
                 }
                 entry<AppRoutes.GameInfo> { key ->
-                    GameInfoScreen(
-                        id = key.id,
-                        onBack = {
-                            if (backStack.size > 1) backStack.removeLastOrNull()
-                        }
-                    )
+                    GameInfoScreen(id = key.id, onBack = onBack)
                 }
                 entry<AppRoutes.Login> {
-                    LoginScreen(
-                        onBack = {
-                            if (backStack.size > 1) backStack.removeLastOrNull()
-                        }
-                    )
+                    LoginScreen(onBack = onBack)
                 }
             },
             transitionSpec = {
@@ -136,16 +120,7 @@ private fun navigateToTab(
     backStack: NavBackStack<NavKey>,
     newRoute: AppRoutes
 ) {
-    when (newRoute) {
-        is AppRoutes.Search -> {
-            backStack.removeIf { it is AppRoutes.Search }
-            backStack.add(newRoute)
-        }
-
-        else -> {
-            if (backStack.lastOrNull() == newRoute) return
-            backStack.remove(newRoute)
-            backStack.add(newRoute)
-        }
-    }
+    if (backStack.lastOrNull() == newRoute) return
+    backStack.remove(newRoute)
+    backStack.add(newRoute)
 }

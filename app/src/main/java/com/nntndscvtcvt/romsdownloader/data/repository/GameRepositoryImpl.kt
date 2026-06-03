@@ -4,12 +4,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import com.google.firebase.firestore.FirebaseFirestore
 import com.nntndscvtcvt.romsdownloader.data.dto.GameModelDto
 import com.nntndscvtcvt.romsdownloader.data.dto.toDomain
 import com.nntndscvtcvt.romsdownloader.data.local.GameDao
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

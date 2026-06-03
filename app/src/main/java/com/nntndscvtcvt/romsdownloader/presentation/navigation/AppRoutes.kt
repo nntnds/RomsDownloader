@@ -15,9 +15,6 @@ sealed class AppRoutes : NavKey {
     data object Favorites : AppRoutes()
 
     @Serializable
-    data object Search : AppRoutes()
-
-    @Serializable
     data object Login : AppRoutes()
 
     @Serializable

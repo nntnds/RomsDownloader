@@ -36,7 +36,11 @@ fun FavoriteScreen(
                 }
             }
             is FavoriteState.Success -> {
-                MyLazyVerticalGrid(gamesData = state.favorites, onNavigate)
+                MyLazyVerticalGrid(
+                    modifier = Modifier,
+                    gamesData = state.favorites,
+                    onNavigate = onNavigate
+                )
             }
             is FavoriteState.Error -> {
                 MyShowError(state.error)

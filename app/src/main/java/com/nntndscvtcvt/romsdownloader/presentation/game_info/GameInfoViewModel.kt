@@ -73,6 +73,7 @@ class GameInfoViewModel(
     }
 
     private fun loadGame(id: String) = viewModelScope.launch {
+        _uiState.value = GameInfoState.Idle
         gameInfoRepository.getGameById(id)
             .catch { _uiState.value = GameInfoState.Error(it) }
             .collect { result ->

@@ -3,6 +3,7 @@ package com.nntndscvtcvt.romsdownloader.di
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.google.firebase.firestore.FirebaseFirestore
 import com.nntndscvtcvt.romsdownloader.data.local.AppDatabase
 import com.nntndscvtcvt.romsdownloader.data.repository.CookieRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.data.repository.DownloadRepositoryImpl
@@ -21,8 +22,6 @@ import com.nntndscvtcvt.romsdownloader.presentation.favorite.FavoriteViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameInfoViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.home.HomeViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.login.LoginViewModel
-import com.nntndscvtcvt.romsdownloader.presentation.search.SearchViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -56,7 +55,6 @@ val appModule = module {
     single<DownloadRepository> { DownloadRepositoryImpl(get(), androidApplication(), get()) }
 
     viewModelOf(::HomeViewModel)
-    viewModelOf(::SearchViewModel)
     viewModelOf(::GameInfoViewModel)
     viewModelOf(::FavoriteViewModel)
     viewModelOf(::DownloadViewModel)

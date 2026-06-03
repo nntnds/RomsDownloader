@@ -26,16 +26,17 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
+import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 
 @Composable
 fun MyLazyVerticalGrid(
+    modifier: Modifier,
     gamesData: List<GameEntity>,
     onNavigate: (String) -> Unit,
 ) {
     LazyVerticalGrid(
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 12.dp, end = 12.dp, top = 12.dp)
             .fillMaxSize(),
         columns = GridCells.Fixed(3),
@@ -60,7 +61,8 @@ private fun GameCard(
     val context = LocalContext.current
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),

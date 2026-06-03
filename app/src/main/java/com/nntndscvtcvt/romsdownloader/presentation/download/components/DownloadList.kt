@@ -27,8 +27,8 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
+import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
