@@ -2,11 +2,13 @@ package com.nntndscvtcvt.romsdownloader.presentation.download.components
 
 import android.app.DownloadManager
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -15,10 +17,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -48,13 +54,14 @@ fun DownloadsList(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
+            .clip(CardDefaults.shape)
             .combinedClickable(
                 onClick = onTap,
                 onLongClick = onLongPress
             ),
         colors = CardDefaults.cardColors(
             containerColor = if (!isSelected) MaterialTheme.colorScheme.surfaceContainerLow
-                else MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.primaryContainer
         )
     ) {
         Row(
@@ -64,7 +71,7 @@ fun DownloadsList(
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .weight(0.25f)
+                    .height(72.dp)
                     .aspectRatio(0.7f)
                     .clip(MaterialTheme.shapes.medium),
                 model = ImageRequest.Builder(LocalContext.current)
@@ -80,7 +87,7 @@ fun DownloadsList(
             ) {
                 Text(
                     text = item.fileName,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
@@ -90,16 +97,19 @@ fun DownloadsList(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodySmall
                     )
+
                     item.status == DownloadManager.STATUS_FAILED -> Text(
                         text = "Error",
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall
                     )
+
                     item.status == DownloadManager.STATUS_SUCCESSFUL -> Text(
                         text = "Download finished",
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.bodySmall
                     )
+
                     item.status == DownloadManager.STATUS_RUNNING ||
                             item.status == DownloadManager.STATUS_PENDING -> Text(
                         text = "Downloaded: ${item.downloadedMbs} MB",
@@ -109,13 +119,15 @@ fun DownloadsList(
                 }
             }
 
-            if (!isSelectedMode) {
-                IconButton(onClick = {
-                    when {
-                        item.isStopped || item.status == DownloadManager.STATUS_FAILED -> onRefresh()
-                        else -> onStop()
+            if (!isSelectedMode && item.status != DownloadManager.STATUS_SUCCESSFUL) {
+                IconButton(
+                    onClick = {
+                        when {
+                            item.isStopped || item.status == DownloadManager.STATUS_FAILED -> onRefresh()
+                            else -> onStop()
+                        }
                     }
-                }) {
+                ) {
                     Icon(
                         painter = when {
                             item.isStopped || item.status == DownloadManager.STATUS_FAILED -> refreshButton

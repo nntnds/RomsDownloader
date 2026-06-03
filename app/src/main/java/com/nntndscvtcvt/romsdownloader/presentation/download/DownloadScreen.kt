@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -48,52 +50,61 @@ fun DownloadScreen(
         }
     }
 
-    Column {
-        if (isSelected) {
-            SelectionTopBar(
-                selectedCount = selectedIds.size,
-                onClearSelection = { viewModel.clearSelection() },
-                onSelectAll = { viewModel.selectAll() },
-                onDelete = { viewModel.deleteSelected() }
-            )
-        } else {
-            DownloadScreenTopBar(
-                onNavigate = onNavigate,
-                checkCookie = { viewModel.cookieCheck() }
-            )
-        }
-        if (downloads.isNotEmpty()) {
-            Box(Modifier.fillMaxSize()) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
-                ) {
-                    items(
-                        items = downloads,
-                        key = { item -> item.url }
-                    ) { item ->
-                        DownloadsList(
-                            item = item,
-                            onRefresh = { viewModel.retryDownload(item.id) },
-                            onStop = { viewModel.stopDownload(item.id) },
-                            onTap = {
-                                if (isSelected) viewModel.toggleSelection(item.id)
-                                else onGameInfoScreen(item.gameId)
-                            },
-                            onLongPress = { viewModel.toggleSelection(item.id) },
-                            isSelected = item.id in selectedIds,
-                            isSelectedMode = isSelected
-                        )
-                    }
-                    item { Spacer(Modifier.size(12.dp)) }
-                }
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier.align(Alignment.BottomCenter)
+    Scaffold(
+        topBar = {
+            if (isSelected) {
+                SelectionTopBar(
+                    selectedCount = selectedIds.size,
+                    onClearSelection = { viewModel.clearSelection() },
+                    onSelectAll = { viewModel.selectAll() },
+                    onDelete = { viewModel.deleteSelected() }
+                )
+            } else {
+                DownloadScreenTopBar(
+                    onNavigate = onNavigate,
+                    checkCookie = { viewModel.cookieCheck() }
                 )
             }
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            )
+        }
+    ) { innerPadding ->
+        if (downloads.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                items(
+                    items = downloads,
+                    key = { item -> item.url }
+                ) { item ->
+                    DownloadsList(
+                        item = item,
+                        onRefresh = { viewModel.retryDownload(item.id) },
+                        onStop = { viewModel.stopDownload(item.id) },
+                        onTap = {
+                            if (isSelected) viewModel.toggleSelection(item.id)
+                            else onGameInfoScreen(item.gameId)
+                        },
+                        onLongPress = { viewModel.toggleSelection(item.id) },
+                        isSelected = item.id in selectedIds,
+                        isSelectedMode = isSelected
+                    )
+                }
+                item { Spacer(Modifier.size(12.dp)) }
+            }
         } else {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
                     text = "No downloads yet",
                     style = MaterialTheme.typography.bodyLarge,

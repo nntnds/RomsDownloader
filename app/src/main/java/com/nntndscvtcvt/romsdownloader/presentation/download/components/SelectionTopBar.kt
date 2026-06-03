@@ -3,6 +3,7 @@ package com.nntndscvtcvt.romsdownloader.presentation.download.components
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -23,7 +24,12 @@ fun SelectionTopBar(
 
     TopAppBar(
         windowInsets = WindowInsets(0.dp),
-        title = { Text("$selectedCount selected") },
+        title = {
+            Text(
+                text = selectedCount.toString(),
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
         navigationIcon = {
             IconButton(onClick = onClearSelection) {
                 Icon(closeButton, null)
