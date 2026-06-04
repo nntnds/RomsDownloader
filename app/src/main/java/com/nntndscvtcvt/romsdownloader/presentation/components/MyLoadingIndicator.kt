@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MyLoadingIndicator(modifier: Modifier) {
+fun MyLoadingIndicator(modifier: Modifier = Modifier) {
     Box(modifier.fillMaxSize()) {
         LoadingIndicator(Modifier.align(Alignment.Center))
     }

@@ -25,7 +25,7 @@ fun GameInfoTopBar(
         title = {},
         navigationIcon = {
             IconButton(onClick = onBack) {
-                Icon(backButton, null, modifier = Modifier.size(32.dp))
+                Icon(backButton, null, modifier = Modifier.size(28.dp))
             }
         },
         actions = {

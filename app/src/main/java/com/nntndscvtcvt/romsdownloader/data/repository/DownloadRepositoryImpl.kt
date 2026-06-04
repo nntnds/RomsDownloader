@@ -56,9 +56,7 @@ class DownloadRepositoryImpl(
         return downloadDao.getAllDownloads().flatMapLatest { entities ->
             flow {
                 while (true) {
-                    val items = entities.mapNotNull { downloadEntity ->
-                        getDownloadItem(downloadEntity)
-                    }
+                    val items = entities.mapNotNull { getDownloadItem(it) }
                     emit(items)
                     delay(1000L)
                 }

@@ -37,7 +37,7 @@ fun DownloadScreen(
     viewModel: DownloadViewModel = koinViewModel(),
     onGameInfoScreen: (String) -> Unit
 ) {
-    val downloads by viewModel.downloads.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedIds by viewModel.selectedIds.collectAsStateWithLifecycle()
     val isSelected = selectedIds.isNotEmpty()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -71,11 +71,23 @@ fun DownloadScreen(
             )
         }
     ) { innerPadding ->
-        when {
-            downloads == null -> {
-
+        when(val state = uiState) {
+            is DownloadState.Loading -> { MyLoadingIndicator(Modifier.padding(innerPadding)) }
+            is DownloadState.Empty -> {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No downloads yet",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
-            downloads!!.isNotEmpty() -> {
+            is DownloadState.Success -> {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -83,10 +95,11 @@ fun DownloadScreen(
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     items(
-                        items = downloads!!,
-                        key = { item -> item.id }
+                        items = state.downloads,
+                        key = { it.id }
                     ) { item ->
                         DownloadsList(
+                            modifier = Modifier.animateItem(),
                             item = item,
                             onRefresh = { viewModel.retryDownload(item.id) },
                             onStop = { viewModel.stopDownload(item.id) },
@@ -100,21 +113,6 @@ fun DownloadScreen(
                         )
                     }
                     item { Spacer(Modifier.size(12.dp)) }
-                }
-            }
-
-            else -> {
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No downloads yet",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
             }
         }

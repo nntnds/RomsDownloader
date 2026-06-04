@@ -25,8 +25,11 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.nntndscvtcvt.romsdownloader.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -48,6 +51,12 @@ fun SearchBar(
         if (isSearchActive) focusRequester.requestFocus()
     }
 
+    LifecycleResumeEffect(Unit) {
+        onPauseOrDispose {
+            focusManager.clearFocus()
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,7 +65,7 @@ fun SearchBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        if (isSearchActive) {
+        if (isSearchActive || query.isNotEmpty()) {
             IconButton(onClick = {
                 onSearchActiveChange(false)
                 onClear()
@@ -65,8 +74,11 @@ fun SearchBar(
             }
 
             BasicTextField(
-                value = query,
-                onValueChange = { onSearch(it) },
+                value = TextFieldValue(
+                    text = query,
+                    selection = TextRange(query.length)
+                ),
+                onValueChange = { onSearch(it.text) },
                 modifier = Modifier
                     .weight(1f)
                     .focusRequester(focusRequester),
@@ -91,7 +103,6 @@ fun SearchBar(
                     }
                 }
             )
-
             if (query.isNotEmpty()) {
                 IconButton(onClick = onClear) {
                     Icon(clearButton, null)

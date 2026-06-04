@@ -57,10 +57,6 @@ class GameRepositoryImpl(
             .documents.mapNotNull { documentSnapshot ->
                 documentSnapshot.toObject(GameModelDto::class.java)?.toDomain(documentSnapshot.id)
             }
-        entities.chunked(500).forEach {
-            gameDao.insertAll(it)
-        }
-        val serverIds = entities.map { it.id }.toSet()
-        gameDao.deleteNotInIds(serverIds)
+        gameDao.syncGames(entities)
     }
 }

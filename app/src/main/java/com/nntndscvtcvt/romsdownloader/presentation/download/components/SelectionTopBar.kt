@@ -26,7 +26,7 @@ fun SelectionTopBar(
         windowInsets = WindowInsets(0.dp),
         title = {
             Text(
-                text = selectedCount.toString(),
+                text = "Selected $selectedCount",
                 style = MaterialTheme.typography.titleLarge
             )
         },

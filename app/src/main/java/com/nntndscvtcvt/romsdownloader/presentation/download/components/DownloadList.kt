@@ -37,6 +37,7 @@ import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DownloadsList(
+    modifier: Modifier = Modifier,
     item: DownloadItem,
     onRefresh: () -> Unit,
     onStop: () -> Unit,
@@ -50,7 +51,7 @@ fun DownloadsList(
     val checkCircle = painterResource(R.drawable.outline_check_circle_24)
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(106.dp)
             .padding(horizontal = 12.dp)
@@ -133,23 +134,35 @@ fun DownloadsList(
                 when {
                     isSelectedMode -> { }
                     item.status == DownloadManager.STATUS_SUCCESSFUL -> {
-                        Icon(checkCircle, null)
+                        Icon(
+                            painter = checkCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                     else -> {
                         IconButton(
                             onClick = {
-                                when {
-                                    item.isStopped || item.status == DownloadManager.STATUS_FAILED -> onRefresh()
-                                    else -> onStop()
+                                // Блокируем нажатие, если идет удаление или выделение (опционально)
+                                if (!isSelectedMode) {
+                                    when {
+                                        item.isStopped || item.status == DownloadManager.STATUS_FAILED -> onRefresh()
+                                        else -> onStop()
+                                    }
                                 }
-                            }
+                            },
+                            // Делаем кнопку полупрозрачной, если режим выделения, чтобы было понятно, что она неактивна
+                            enabled = !isSelectedMode
                         ) {
                             Icon(
                                 painter = when {
                                     item.isStopped || item.status == DownloadManager.STATUS_FAILED -> refreshButton
                                     else -> stopButton
                                 },
-                                contentDescription = null
+                                contentDescription = null,
+                                // Если режим выделения, делаем иконку серой
+                                tint = if (isSelectedMode) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }

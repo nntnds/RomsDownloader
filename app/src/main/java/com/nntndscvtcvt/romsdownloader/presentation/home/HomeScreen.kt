@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -27,18 +29,13 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
-    var isSearchActive by rememberSaveable { mutableStateOf(false) }
-
-    LifecycleResumeEffect(Unit) {
-        viewModel.clearSearch()
-        onPauseOrDispose { }
-    }
+    var isSearchActive by remember { mutableStateOf(false) }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             SearchBar(
-                onSearch = { viewModel.loadData(it) },
+                onSearch = { viewModel.searchGame(it) },
                 query = query,
                 onClear = { viewModel.clearSearch() },
                 isSearchActive = isSearchActive,
@@ -47,18 +44,21 @@ fun HomeScreen(
         }
     ) { innerPadding ->
         when (val state = uiState) {
-            is HomeState.Loading -> MyLoadingIndicator(Modifier.padding(innerPadding))
+            is HomeState.Loading -> {
+                MyLoadingIndicator(Modifier.padding(innerPadding))
+            }
             is HomeState.Success -> {
                 MyLazyVerticalGrid(
                     modifier = Modifier.padding(innerPadding),
                     gamesData = state.games,
                     onNavigate = {
-                        viewModel.clearSearch()
                         onNavigate(it)
                     },
                 )
             }
-            is HomeState.Error -> MyShowError(Modifier.padding(innerPadding), state.error)
+            is HomeState.Error -> {
+                MyShowError(Modifier.padding(innerPadding), state.error)
+            }
         }
     }
 }
