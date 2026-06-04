@@ -83,8 +83,12 @@ class DownloadRepositoryImpl(
             val newId = buildRequest(entity.url, entity.fileName, sig, user)
 
             if(newId != -1L) {
-                downloadDao.delete(downloadId)
-                downloadDao.insert(entity.copy(downloadId = newId, isStopped = false))
+//                downloadDao.delete(downloadId)
+//                downloadDao.insert(entity.copy(downloadId = newId, isStopped = false))
+                downloadDao.replaceDownload(
+                    oldId = downloadId,
+                    newEntity = entity.copy(downloadId = newId, isStopped = false)
+                )
             }
             newId
         }.getOrElse { -1L }

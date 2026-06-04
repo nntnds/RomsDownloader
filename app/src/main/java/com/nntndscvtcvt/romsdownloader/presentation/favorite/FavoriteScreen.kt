@@ -31,7 +31,7 @@ fun FavoriteScreen(
     ) { innerPadding ->
         when(val state = state) {
             is FavoriteState.Empty -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
                         text = "No favorite games yet",
                         style = MaterialTheme.typography.bodyLarge,

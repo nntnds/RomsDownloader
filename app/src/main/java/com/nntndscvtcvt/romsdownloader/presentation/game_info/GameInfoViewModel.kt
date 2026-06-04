@@ -47,12 +47,6 @@ class GameInfoViewModel(
             return@launch
         }
 
-        val hasAccess = downloadRepository.checkAccess(sig, user)
-        if (!hasAccess) {
-            _snackbarEvent.emit("Log in to your account")
-            return@launch
-        }
-
         val downloadId = downloadRepository.downloadFile(url, sig, user, fileName)
 
         if (downloadId != -1L) {
