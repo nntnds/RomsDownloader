@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
-
 @Entity(tableName = "games")
 data class GameEntity(
     @PrimaryKey

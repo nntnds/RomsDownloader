@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class GameInfoViewModel(
@@ -25,30 +26,23 @@ class GameInfoViewModel(
     private val downloadRepository: DownloadRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<GameInfoState>(GameInfoState.Idle)
+    private val _uiState = MutableStateFlow<GameInfoState>(GameInfoState.Loading)
     val uiState = _uiState.asStateFlow()
-
-    private val _isFavorite = MutableStateFlow(false)
-    val isFavorite = _isFavorite.asStateFlow()
 
     private val _snackbarEvent = MutableSharedFlow<String>()
     val snackbarEvent = _snackbarEvent.asSharedFlow()
 
     fun getInfo(id: String) {
-        observeFavorite(id)
-        loadGame(id)
-    }
-
-    private fun observeFavorite(id: String) = viewModelScope.launch {
-        favoriteRepository.isFavoriteExist(id).collect { _isFavorite.value = it }
+        _uiState.value = GameInfoState.Loading
+        loadGameAndFavorite(id)
     }
 
     fun startDownload(url: String, fileName: String, gameEntity: GameEntity) = viewModelScope.launch {
-        val sig = cookieRepository.loggedInSig.first() ?: run {
+        val sig = cookieRepository.loggedInSig.firstOrNull() ?: run {
             _snackbarEvent.emit("Log in to your account")
             return@launch
         }
-        val user = cookieRepository.loggedInUser.first() ?: run {
+        val user = cookieRepository.loggedInUser.firstOrNull() ?: run {
             _snackbarEvent.emit("Log in to your account")
             return@launch
         }
@@ -60,44 +54,59 @@ class GameInfoViewModel(
         }
 
         val downloadId = downloadRepository.downloadFile(url, sig, user, fileName)
-        downloadRepository.saveDownload(
-            DownloadEntity(
-                downloadId = downloadId,
-                gameId = gameEntity.id,
-                gameName = gameEntity.name,
-                coverUrl = gameEntity.coverUrl,
-                fileName = fileName,
-                url = url
+
+        if (downloadId != -1L) {
+            downloadRepository.saveDownload(
+                DownloadEntity(
+                    downloadId = downloadId,
+                    gameId = gameEntity.id,
+                    gameName = gameEntity.name,
+                    coverUrl = gameEntity.coverUrl,
+                    fileName = fileName,
+                    url = url
+                )
             )
-        )
+            _snackbarEvent.emit("Download started")
+        } else {
+            _snackbarEvent.emit("Failed to start download")
+        }
     }
 
-    private fun loadGame(id: String) = viewModelScope.launch {
-        _uiState.value = GameInfoState.Idle
-        gameInfoRepository.getGameById(id)
-            .catch { _uiState.value = GameInfoState.Error(it) }
-            .collect { result ->
-                result.onSuccess { game ->
-                    _uiState.value = GameInfoState.Success(
-                        games = game,
-                        gameFileItem = mapDownloadItem(game.downloads)
-                    )
-                }
-                result.onFailure {
-                    _uiState.value = GameInfoState.Error(it)
-                }
-            }
+    private fun loadGameAndFavorite(id: String) = viewModelScope.launch {
+        _uiState.value = GameInfoState.Loading
+
+        combine(
+            gameInfoRepository.getGameById(id),
+            favoriteRepository.isFavoriteExist(id)
+        ) { game, favorite ->
+             game.fold(
+                 onSuccess = { game ->
+                     GameInfoState.Success(
+                         games = game,
+                         gameFileItem = mapDownloadItem(game.downloads),
+                         isFavorite = favorite
+                     )
+                 },
+                 onFailure = { GameInfoState.Error(it) }
+             )
+        }
+        .catch { _uiState.value = GameInfoState.Error(it) }
+        .collect { _uiState.value = it }
     }
 
-    fun toggleFavorite(id: String) = viewModelScope.launch {
-        if (_isFavorite.value) {
-            favoriteRepository.removeFromFavorite(FavoriteEntity(id))
+    fun toggleFavorite() = viewModelScope.launch {
+        val currentState = _uiState.value as? GameInfoState.Success ?: return@launch
+        val gameId = currentState.games.id
+
+        if (currentState.isFavorite) {
+            favoriteRepository.removeFromFavorite(FavoriteEntity(gameId))
             _snackbarEvent.emit("Removed from favorites")
         } else {
-            favoriteRepository.addToFavorite(FavoriteEntity(id))
+            favoriteRepository.addToFavorite(FavoriteEntity(gameId))
             _snackbarEvent.emit("Added to favorites")
         }
     }
+
     private fun mapDownloadItem(downloads: List<Downloads>): List<GameFileItem> {
 
         return downloads.flatMap { download ->

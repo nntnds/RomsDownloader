@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.DownloadScreenTopBar
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.DownloadsList
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.SelectionTopBar
@@ -70,44 +71,51 @@ fun DownloadScreen(
             )
         }
     ) { innerPadding ->
-        if (downloads.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                items(
-                    items = downloads,
-                    key = { item -> item.id }
-                ) { item ->
-                    DownloadsList(
-                        item = item,
-                        onRefresh = { viewModel.retryDownload(item.id) },
-                        onStop = { viewModel.stopDownload(item.id) },
-                        onTap = {
-                            if (isSelected) viewModel.toggleSelection(item.id)
-                            else onGameInfoScreen(item.gameId)
-                        },
-                        onLongPress = { viewModel.toggleSelection(item.id) },
-                        isSelected = item.id in selectedIds,
-                        isSelectedMode = isSelected
+        when {
+            downloads == null -> {
+
+            }
+            downloads!!.isNotEmpty() -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    items(
+                        items = downloads!!,
+                        key = { item -> item.id }
+                    ) { item ->
+                        DownloadsList(
+                            item = item,
+                            onRefresh = { viewModel.retryDownload(item.id) },
+                            onStop = { viewModel.stopDownload(item.id) },
+                            onTap = {
+                                if (isSelected) viewModel.toggleSelection(item.id)
+                                else onGameInfoScreen(item.gameId)
+                            },
+                            onLongPress = { viewModel.toggleSelection(item.id) },
+                            isSelected = item.id in selectedIds,
+                            isSelectedMode = isSelected
+                        )
+                    }
+                    item { Spacer(Modifier.size(12.dp)) }
+                }
+            }
+
+            else -> {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No downloads yet",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                item { Spacer(Modifier.size(12.dp)) }
-            }
-        } else {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No downloads yet",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
         }
     }

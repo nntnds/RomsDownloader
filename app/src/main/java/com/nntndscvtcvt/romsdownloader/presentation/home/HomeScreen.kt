@@ -47,7 +47,7 @@ fun HomeScreen(
         }
     ) { innerPadding ->
         when (val state = uiState) {
-            is HomeState.Loading -> MyLoadingIndicator()
+            is HomeState.Loading -> MyLoadingIndicator(Modifier.padding(innerPadding))
             is HomeState.Success -> {
                 MyLazyVerticalGrid(
                     modifier = Modifier.padding(innerPadding),
@@ -58,7 +58,7 @@ fun HomeScreen(
                     },
                 )
             }
-            is HomeState.Error -> MyShowError(state.error)
+            is HomeState.Error -> MyShowError(Modifier.padding(innerPadding), state.error)
         }
     }
 }

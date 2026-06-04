@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyLazyVerticalGrid
+import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyShowError
 import com.nntndscvtcvt.romsdownloader.presentation.favorite.components.FavoriteScreenTopBar
 import org.koin.androidx.compose.koinViewModel
@@ -38,6 +39,9 @@ fun FavoriteScreen(
                     )
                 }
             }
+            is FavoriteState.Loading -> {
+                MyLoadingIndicator(Modifier.padding(innerPadding))
+            }
             is FavoriteState.Success -> {
                 MyLazyVerticalGrid(
                     modifier = Modifier.padding(innerPadding),
@@ -46,7 +50,7 @@ fun FavoriteScreen(
                 )
             }
             is FavoriteState.Error -> {
-                MyShowError(state.error)
+                MyShowError(Modifier.padding(innerPadding),state.error)
             }
         }
     }

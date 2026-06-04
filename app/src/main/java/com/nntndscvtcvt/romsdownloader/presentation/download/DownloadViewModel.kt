@@ -28,8 +28,8 @@ class DownloadViewModel(
     private val _snackbarEvent = MutableSharedFlow<String>()
     val snackbarEvent = _snackbarEvent.asSharedFlow()
 
-    val downloads: StateFlow<List<DownloadItem>> = downloadRepository.getActiveDownloads()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val downloads: StateFlow<List<DownloadItem>?> = downloadRepository.getActiveDownloads()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     fun cookieCheck() = viewModelScope.launch {
         val sig = cookieRepository.loggedInSig.firstOrNull() ?: ""
@@ -61,7 +61,7 @@ class DownloadViewModel(
     }
 
     fun selectAll() {
-        _selectedIds.value = downloads.value.map { it.id }.toSet()
+        _selectedIds.value = downloads.value?.map { it.id }?.toSet() ?: emptySet()
     }
 
     fun deleteSelected() = viewModelScope.launch {
