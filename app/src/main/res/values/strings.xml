@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">Roms Downloader</string>
+
+    <!--Download screen-->
+    <string name="stopped">Stopped</string>
+    <string name="error">Error</string>
+    <string name="download_finished">Download finished</string>
+    <string name="downloaded_mb">Downloaded: %1$d MB</string>
+    <string name="download_topbar">Downloads</string>
+    <string name="selected_count">Selected %1$d</string>
+    <string name="no_downloads">No downloads yet</string>
+
+    <!--Favorite screen-->
+    <string name="no_favorites">No favorite games yet</string>
+    <string name="favorites">Favorites</string>
+
+    <!--Game info screen-->
+    <string name="no_screenshots">No screenshots available</string>
+    <string name="screenshots">Screenshots</string>
+    <string name="read_more">Read more</string>
+    <string name="hide">Hide</string>
+    <string name="downloads">Downloads</string>
+
+    <!--Home screen-->
+    <string name="search_games">Search games</string>
+    <string name="games">Games</string>
+
+    <!--Login Screen-->
+    <string name="login">Log in</string>
+
+    <!--Navigation-->
+    <string name="nav_home">Home</string>
+    <string name="nav_downloads">Downloads</string>
+    <string name="nav_favorites">Favorites</string>
+
 </resources>

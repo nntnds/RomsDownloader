@@ -25,6 +25,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -94,7 +95,7 @@ fun SearchBar(
                     Box {
                         if (query.isEmpty()) {
                             Text(
-                                "Search games...",
+                                stringResource(R.string.search_games),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.bodyLarge
                             )
@@ -110,7 +111,7 @@ fun SearchBar(
             }
         } else {
             Text(
-                text = "Games",
+                text = stringResource(R.string.games),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(start = 12.dp)
             )

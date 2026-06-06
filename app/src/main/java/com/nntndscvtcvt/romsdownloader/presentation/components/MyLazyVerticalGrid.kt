@@ -44,8 +44,7 @@ fun MyLazyVerticalGrid(
     ) {
         items(
             items = gamesData,
-            key = { it.id },
-            contentType = { it::class.java }
+            key = { it.id }
         ) { data ->
             GameCard(data, onNavigate)
         }

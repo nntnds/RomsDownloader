@@ -1,5 +1,6 @@
 package com.nntndscvtcvt.romsdownloader.presentation.navigation
 
+import androidx.appcompat.R
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -110,7 +112,9 @@ private fun BottomNavigationBar(
                         contentDescription = null
                     )
                 },
-                label = { Text(item.title) },
+                label = { Text(
+                    text = (stringResource(item.title))
+                ) },
             )
         }
     }

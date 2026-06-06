@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyLazyVerticalGrid
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyShowError
@@ -33,7 +35,7 @@ fun FavoriteScreen(
             is FavoriteState.Empty -> {
                 Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "No favorite games yet",
+                        text = stringResource(R.string.no_favorites),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

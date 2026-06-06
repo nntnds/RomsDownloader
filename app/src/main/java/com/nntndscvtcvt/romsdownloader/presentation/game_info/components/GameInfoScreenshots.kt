@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -30,6 +31,7 @@ import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 
@@ -45,7 +47,7 @@ fun GameInfoScreenshots(state: GameEntity) {
         val carouselState = rememberCarouselState { state.screenshots.size }
 
         Text(
-            text = "Screenshots",
+            text = stringResource(R.string.screenshots),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 12.dp),
         )
@@ -61,7 +63,7 @@ fun GameInfoScreenshots(state: GameEntity) {
                     ), contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No screenshots available",
+                    text = stringResource(R.string.no_screenshots),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

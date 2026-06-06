@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -102,26 +103,26 @@ fun DownloadsList(
 
                 when {
                     item.isStopped -> Text(
-                        text = "Stopped",
+                        text = stringResource(R.string.stopped),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodySmall
                     )
 
                     item.status == DownloadManager.STATUS_FAILED -> Text(
-                        text = "Error",
+                        text = stringResource(R.string.error),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall
                     )
 
                     item.status == DownloadManager.STATUS_SUCCESSFUL -> Text(
-                        text = "Download finished",
+                        text = stringResource(R.string.download_finished),
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.bodySmall
                     )
 
                     item.status == DownloadManager.STATUS_RUNNING ||
                             item.status == DownloadManager.STATUS_PENDING -> Text(
-                        text = "Downloaded: ${item.downloadedMbs} MB",
+                        text = stringResource(R.string.downloaded_mb, item.downloadedMbs),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodySmall
                     )
@@ -143,7 +144,6 @@ fun DownloadsList(
                     else -> {
                         IconButton(
                             onClick = {
-                                // Блокируем нажатие, если идет удаление или выделение (опционально)
                                 if (!isSelectedMode) {
                                     when {
                                         item.isStopped || item.status == DownloadManager.STATUS_FAILED -> onRefresh()
@@ -151,7 +151,6 @@ fun DownloadsList(
                                     }
                                 }
                             },
-                            // Делаем кнопку полупрозрачной, если режим выделения, чтобы было понятно, что она неактивна
                             enabled = !isSelectedMode
                         ) {
                             Icon(
@@ -160,7 +159,6 @@ fun DownloadsList(
                                     else -> stopButton
                                 },
                                 contentDescription = null,
-                                // Если режим выделения, делаем иконку серой
                                 tint = if (isSelectedMode) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                                 else MaterialTheme.colorScheme.onSurfaceVariant
                             )

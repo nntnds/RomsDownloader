@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.nntndscvtcvt.romsdownloader.presentation.util.toUserManager
 
 @Composable
 fun MyShowError(modifier: Modifier, e: Throwable) {
@@ -13,6 +14,6 @@ fun MyShowError(modifier: Modifier, e: Throwable) {
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text("Error: $e")
+        Text(text = e.toUserManager())
     }
 }

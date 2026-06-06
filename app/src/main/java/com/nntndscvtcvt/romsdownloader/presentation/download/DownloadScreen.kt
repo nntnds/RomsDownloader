@@ -21,8 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.DownloadScreenTopBar
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.DownloadsList
@@ -81,7 +83,7 @@ fun DownloadScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No downloads yet",
+                        text = stringResource(R.string.no_downloads),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

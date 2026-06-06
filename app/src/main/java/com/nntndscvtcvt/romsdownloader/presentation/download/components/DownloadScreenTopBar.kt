@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.R
 
@@ -16,7 +17,7 @@ fun DownloadScreenTopBar(onNavigate: () -> Unit, checkCookie: () -> Unit) {
     val cookieButton = painterResource(R.drawable.outline_cookie_24)
     TopAppBar(
         windowInsets = WindowInsets(0.dp),
-        title = { Text("Downloads") },
+        title = { Text(stringResource(R.string.download_topbar)) },
         actions = {
             IconButton(checkCookie) {
                 Icon(cookieButton, null)

@@ -14,8 +14,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 
 @Composable
@@ -42,7 +44,11 @@ fun GameInfoOverview(state: GameEntity) {
         TextButton(
             onClick = { isExpanded = !isExpanded },
         ) {
-            Text(if (!isExpanded) "Read more" else "Hide")
+            Text(
+                text = stringResource(
+                    id = if (!isExpanded) R.string.read_more else R.string.hide
+                )
+            )
         }
     }
 }
