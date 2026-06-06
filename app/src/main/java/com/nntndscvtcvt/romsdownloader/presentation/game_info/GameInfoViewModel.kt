@@ -10,6 +10,7 @@ import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameFavoriteRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameInfoRepository
+import com.nntndscvtcvt.romsdownloader.presentation.utils.cut
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -115,8 +116,5 @@ class GameInfoViewModel(
         }
     }
 
-    private fun String.cut(startChars: Int = 15, endChars: Int = 15): String {
-        if (length <= startChars + endChars) return this
-        return "${take(startChars)}...${takeLast(endChars)}"
-    }
+
 }

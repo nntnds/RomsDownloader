@@ -21,12 +21,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun MyLazyVerticalGrid(
@@ -37,10 +37,10 @@ fun MyLazyVerticalGrid(
     LazyVerticalGrid(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 12.dp, end = 12.dp),
-        columns = GridCells.Fixed(3),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(horizontal = Dimens.PaddingLarge),
+        columns = GridCells.Fixed(Dimens.GridColumns),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
+        verticalArrangement = Arrangement.spacedBy(Dimens.GridSpacing)
     ) {
         items(
             items = gamesData,
@@ -59,8 +59,7 @@ private fun GameCard(
     val context = LocalContext.current
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
@@ -70,7 +69,7 @@ private fun GameCard(
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(0.7f),
+                    .aspectRatio(Dimens.ImageAspectRatio),
                 model = ImageRequest.Builder(context)
                     .data(COVER_URL + data.coverUrl)
                     .memoryCachePolicy(CachePolicy.ENABLED)
@@ -84,14 +83,14 @@ private fun GameCard(
             )
             Column(
                 modifier = Modifier
-                    .padding(4.dp)
-                    .heightIn(32.dp),
+                    .padding(horizontal = Dimens.PaddingSmall)
+                    .heightIn(Dimens.CardTextHeight),
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 4.dp),
+                        .padding(horizontal = Dimens.PaddingSmall),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     text = data.name,

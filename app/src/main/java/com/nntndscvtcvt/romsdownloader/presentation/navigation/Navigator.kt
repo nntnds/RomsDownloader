@@ -1,6 +1,5 @@
 package com.nntndscvtcvt.romsdownloader.presentation.navigation
 
-import androidx.appcompat.R
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut

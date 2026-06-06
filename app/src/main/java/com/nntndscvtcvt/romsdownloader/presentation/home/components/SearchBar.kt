@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.nntndscvtcvt.romsdownloader.R
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -62,7 +63,7 @@ fun SearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp)
-            .padding(horizontal = 4.dp),
+            .padding(horizontal = Dimens.PaddingSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -113,7 +114,7 @@ fun SearchBar(
             Text(
                 text = stringResource(R.string.games),
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(start = 12.dp)
+                modifier = Modifier.padding(start = Dimens.PaddingLarge)
             )
             IconButton(
                 onClick = { onSearchActiveChange(true) }

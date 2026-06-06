@@ -34,13 +34,14 @@ import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun GameInfoScreenshots(state: GameEntity) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = Dimens.PaddingLarge)
     ) {
         var isFullScreen by rememberSaveable { mutableStateOf(false) }
         var imageUrl by rememberSaveable { mutableStateOf("") }
@@ -49,14 +50,14 @@ fun GameInfoScreenshots(state: GameEntity) {
         Text(
             text = stringResource(R.string.screenshots),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 12.dp),
+            modifier = Modifier.padding(bottom = Dimens.PaddingLarge),
         )
 
         if (state.screenshots.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(205.dp)
+                    .height(Dimens.ScreenshotImageHeight)
                     .background(
                         color = MaterialTheme.colorScheme.surfaceContainerLow,
                         shape = MaterialTheme.shapes.medium
@@ -72,7 +73,7 @@ fun GameInfoScreenshots(state: GameEntity) {
             HorizontalMultiBrowseCarousel(
                 state = carouselState,
                 preferredItemWidth = 360.dp,
-                itemSpacing = 8.dp,
+                itemSpacing = Dimens.PaddingMedium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
@@ -81,7 +82,7 @@ fun GameInfoScreenshots(state: GameEntity) {
 
                 AsyncImage(
                     modifier = Modifier
-                        .height(205.dp)
+                        .height(Dimens.ScreenshotImageHeight)
                         .maskClip(MaterialTheme.shapes.medium)
                         .clickable {
                             isFullScreen = !isFullScreen
@@ -105,7 +106,7 @@ fun GameInfoScreenshots(state: GameEntity) {
                             .clickable {
                                 isFullScreen = !isFullScreen
                             }
-                            .padding(horizontal = 12.dp, vertical = 12.dp),
+                            .padding(Dimens.PaddingLarge),
                         contentAlignment = Alignment.Center) {
                         AsyncImage(
                             modifier = Modifier

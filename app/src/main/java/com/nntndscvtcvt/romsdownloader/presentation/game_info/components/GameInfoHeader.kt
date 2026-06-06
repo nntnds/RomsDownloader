@@ -24,19 +24,20 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun GameInfoHeader(state: GameEntity) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(Dimens.PaddingLarge),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingLarge)
     ) {
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth(0.4f)
-                .aspectRatio(0.7f)
+                .aspectRatio(Dimens.ImageAspectRatio)
                 .clip(RoundedCornerShape(12.dp)),
             model = ImageRequest.Builder(LocalContext.current).crossfade(true)
                 .data(COVER_URL + state.coverUrl).memoryCachePolicy(CachePolicy.ENABLED).build(),
@@ -44,7 +45,7 @@ fun GameInfoHeader(state: GameEntity) {
             contentScale = ContentScale.Crop,
         )
         Column(
-            modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)
+            modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Dimens.ColumnVerticalArrangement)
         ) {
             Text(
                 text = state.name,
@@ -60,8 +61,8 @@ fun GameInfoHeader(state: GameEntity) {
                 overflow = TextOverflow.Ellipsis
             )
             FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingSmall),
+                verticalArrangement = Arrangement.spacedBy(Dimens.PaddingSmall)
             ) {
                 state.genres.forEach {
                     Text(
@@ -73,7 +74,7 @@ fun GameInfoHeader(state: GameEntity) {
                                 color = MaterialTheme.colorScheme.surfaceContainerLow,
                                 shape = RoundedCornerShape(32.dp)
                             )
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .padding(horizontal = Dimens.PaddingMedium, vertical = Dimens.PaddingSmall)
                     )
                 }
             }

@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameFileItem
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun LazyListScope.gameInfoDownloads(
@@ -29,14 +30,14 @@ fun LazyListScope.gameInfoDownloads(
         Text(
             text = stringResource(R.string.downloads),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 8.dp),
+            modifier = Modifier.padding(Dimens.PaddingLarge),
         )
     }
 
     itemsIndexed(
         items = downloads, key = { _, item -> item.url }) { index, item ->
         SegmentedListItem(
-            modifier = Modifier.padding(horizontal = 12.dp),
+            modifier = Modifier.padding(Dimens.PaddingLarge),
             onClick = {
                 startDownload(item.url, "${item.title}.${item.type}")
             },

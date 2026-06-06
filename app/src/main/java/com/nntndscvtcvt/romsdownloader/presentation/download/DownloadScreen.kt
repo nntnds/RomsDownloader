@@ -29,6 +29,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicato
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.DownloadScreenTopBar
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.DownloadsList
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.SelectionTopBar
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
@@ -94,7 +95,7 @@ fun DownloadScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                    verticalArrangement = Arrangement.spacedBy(Dimens.ColumnVerticalArrangement)
                 ) {
                     items(
                         items = state.downloads,

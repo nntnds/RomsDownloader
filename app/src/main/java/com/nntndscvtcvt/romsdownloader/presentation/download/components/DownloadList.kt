@@ -1,6 +1,7 @@
 package com.nntndscvtcvt.romsdownloader.presentation.download.components
 
 import android.app.DownloadManager
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -54,8 +56,8 @@ fun DownloadsList(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(106.dp)
-            .padding(horizontal = 12.dp)
+            .height(Dimens.CardHeight)
+            .padding(horizontal = Dimens.PaddingLarge)
             .clip(CardDefaults.shape)
             .combinedClickable(
                 onClick = onTap,
@@ -65,8 +67,8 @@ fun DownloadsList(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ),
         border = if (isSelected) {
-            androidx.compose.foundation.BorderStroke(
-                width = 2.dp,
+            BorderStroke(
+                width = Dimens.BorderStroke,
                 color = MaterialTheme.colorScheme.primary
             )
         } else null
@@ -74,14 +76,14 @@ fun DownloadsList(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(Dimens.PaddingLarge),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .height(72.dp)
-                    .aspectRatio(0.7f)
+                    .height(Dimens.ImageHeight)
+                    .aspectRatio(Dimens.ImageAspectRatio)
                     .clip(MaterialTheme.shapes.medium),
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(COVER_URL + item.coverUrl)
@@ -93,7 +95,7 @@ fun DownloadsList(
 
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(Dimens.ColumnVerticalArrangement)
             ) {
                 Text(
                     text = item.fileName,

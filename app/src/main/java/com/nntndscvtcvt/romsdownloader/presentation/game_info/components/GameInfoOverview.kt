@@ -16,16 +16,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun GameInfoOverview(state: GameEntity) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp, top = 12.dp, end = 12.dp),
+            .padding(Dimens.PaddingLarge),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var isExpanded by rememberSaveable { mutableStateOf(false) }
