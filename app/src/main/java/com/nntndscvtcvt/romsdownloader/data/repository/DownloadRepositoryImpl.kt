@@ -6,6 +6,8 @@ import android.content.Context
 import android.os.Environment
 import androidx.core.net.toUri
 import com.nntndscvtcvt.romsdownloader.data.local.DownloadDao
+import com.nntndscvtcvt.romsdownloader.data.util.Constants.CHECK_ACCESS_URL
+import com.nntndscvtcvt.romsdownloader.data.util.Constants.USER_AGENT
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadEntity
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import kotlin.time.Duration.Companion.milliseconds
 
 class DownloadRepositoryImpl(
     private val client: OkHttpClient,
@@ -28,11 +31,6 @@ class DownloadRepositoryImpl(
 
     private val downloadManager: DownloadManager by lazy {
         context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-    }
-
-    private companion object {
-        const val CHECK_ACCESS_URL = "https://archive.org/download/sony_playstation2_numberssymbols/_Sony%20PlayStation%202_thumb.jpg"
-        const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     }
 
     override suspend fun checkAccess(sig: String, user: String): Boolean = withContext(Dispatchers.IO) {
@@ -58,7 +56,7 @@ class DownloadRepositoryImpl(
                 while (true) {
                     val items = entities.mapNotNull { getDownloadItem(it) }
                     emit(items)
-                    delay(1000L)
+                    delay(1000L.milliseconds)
                 }
             }
         }.flowOn(Dispatchers.IO)
