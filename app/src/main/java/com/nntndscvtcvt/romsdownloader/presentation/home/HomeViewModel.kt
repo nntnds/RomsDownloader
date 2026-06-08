@@ -1,6 +1,5 @@
 package com.nntndscvtcvt.romsdownloader.presentation.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
@@ -9,6 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -35,12 +35,10 @@ class HomeViewModel(
     }
 
     private fun initializeData() = viewModelScope.launch {
-        try {
-            gameRepository.sync()
-            observeGames()
-        } catch (e: Exception) {
-            _uiState.value = HomeState.Error(e)
-        }
+        gameRepository.sync().fold(
+            onSuccess = { observeGames() },
+            onFailure = { _uiState.value = HomeState.Error(it) }
+        )
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -55,11 +53,9 @@ class HomeViewModel(
                     searchGameRepository.searchGame(query.trim())
                 }
             }
+            .catch { _uiState.value = HomeState.Error(it) }
             .collect { result ->
-                _uiState.value = result.fold(
-                    onSuccess = { HomeState.Success(it) },
-                    onFailure = { HomeState.Error(it) }
-                )
+                _uiState.value = HomeState.Success(result)
             }
     }
 

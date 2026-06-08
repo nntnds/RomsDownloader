@@ -1,8 +1,7 @@
 package com.nntndscvtcvt.romsdownloader.domain.repository
 
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
-import kotlinx.coroutines.flow.Flow
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 
 interface GameInfoRepository {
-    fun getGameById(id: String): Flow<Result<GameEntity>>
+    suspend fun getGameById(id: String): Result<Game>
 }

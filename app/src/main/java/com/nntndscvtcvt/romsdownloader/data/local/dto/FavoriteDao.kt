@@ -5,7 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.nntndscvtcvt.romsdownloader.domain.model.FavoriteEntity
+import com.nntndscvtcvt.romsdownloader.data.local.model.FavoriteEntity
+import com.nntndscvtcvt.romsdownloader.data.local.model.GameEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,6 +20,6 @@ interface FavoriteDao {
     @Query("SELECT EXISTS(SELECT 1 FROM favorites where id = :id)")
     fun isFavoriteExist(id: String): Flow<Boolean>
 
-    @Query("SELECT * FROM favorites")
-    fun getAllFavorites(): Flow<List<FavoriteEntity>>
+    @Query("SELECT games.* FROM games INNER JOIN favorites ON games.id = favorites.id")
+    fun getAllFavorites(): Flow<List<GameEntity>>
 }

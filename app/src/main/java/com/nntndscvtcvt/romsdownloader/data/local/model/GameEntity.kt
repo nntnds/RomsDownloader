@@ -1,4 +1,4 @@
-package com.nntndscvtcvt.romsdownloader.domain.model
+package com.nntndscvtcvt.romsdownloader.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -13,7 +13,7 @@ data class GameEntity(
     val cooperative: Boolean,
     val coverUrl: String,
     val developer: String,
-    val downloads: List<Downloads>,
+    val downloads: List<GameDownloadsEntity>,
     val genres: List<String>,
     val name: String,
     val overview: String,
@@ -23,16 +23,16 @@ data class GameEntity(
 )
 
 @Serializable
-data class Downloads(
+data class GameDownloadsEntity(
     val fileType: String,
-    val files: List<DownloadFile>,
+    val files: List<GameDownloadFileEntity>,
     val size: String,
     val title: String,
     val zipUrl: String,
 )
 
 @Serializable
-data class DownloadFile(
+data class GameDownloadFileEntity(
     val type: String,
     val url: String
 )

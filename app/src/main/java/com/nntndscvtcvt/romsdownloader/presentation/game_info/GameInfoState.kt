@@ -1,11 +1,11 @@
 package com.nntndscvtcvt.romsdownloader.presentation.game_info
 
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 
 sealed interface GameInfoState {
     data object Loading : GameInfoState
     data class Success(
-        val games: GameEntity,
+        val games: Game,
         val gameFileItem: List<GameFileItem>,
         val isFavorite: Boolean
     ) : GameInfoState

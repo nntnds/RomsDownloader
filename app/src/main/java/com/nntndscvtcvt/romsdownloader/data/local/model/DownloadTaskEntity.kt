@@ -1,10 +1,10 @@
-package com.nntndscvtcvt.romsdownloader.domain.model
+package com.nntndscvtcvt.romsdownloader.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "downloads")
-data class DownloadEntity(
+data class DownloadTaskEntity(
     @PrimaryKey val downloadId: Long,
     val gameId: String,
     val gameName: String,

@@ -1,7 +1,7 @@
 package com.nntndscvtcvt.romsdownloader.data.local.converter
 
 import androidx.room.TypeConverter
-import com.nntndscvtcvt.romsdownloader.domain.model.Downloads
+import com.nntndscvtcvt.romsdownloader.data.local.model.GameDownloadsEntity
 import kotlinx.serialization.json.Json
 
 class GameConverter {
@@ -12,8 +12,8 @@ class GameConverter {
     fun toList(string: String): List<String> = Json.Default.decodeFromString(string)
 
     @TypeConverter
-    fun fromDownload(downloads: List<Downloads>): String = Json.encodeToString(downloads)
+    fun fromDownload(downloads: List<GameDownloadsEntity>): String = Json.encodeToString(downloads)
 
     @TypeConverter
-    fun toDownload(string: String): List<Downloads> = Json.Default.decodeFromString(string)
+    fun toDownload(string: String): List<GameDownloadsEntity> = Json.Default.decodeFromString(string)
 }

@@ -36,17 +36,31 @@ class DownloadViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, DownloadState.Loading)
 
     fun cookieCheck() = viewModelScope.launch {
-        val sig = cookieRepository.loggedInSig.firstOrNull() ?: ""
-        val user = cookieRepository.loggedInUser.firstOrNull() ?: ""
-        val result = downloadRepository.checkAccess(sig, user)
+        val sig = cookieRepository.loggedInSig.firstOrNull()
+        val user = cookieRepository.loggedInUser.firstOrNull()
 
-        _snackbarEvent.emit(if (result) "Cookie are working" else "Log in to your account")
+        if (sig == null || user == null) {
+            _snackbarEvent.emit("Log in to your account")
+            return@launch
+        }
+
+        val result = downloadRepository.checkAccess(sig, user)
+        _snackbarEvent.emit(if (result.isSuccess) "Cookie are working" else "Log in to your account")
     }
 
     fun retryDownload(downloadId: Long) = viewModelScope.launch {
-        val sig = cookieRepository.loggedInSig.first() ?: ""
-        val user = cookieRepository.loggedInUser.first() ?: ""
-        downloadRepository.retryDownload(downloadId, sig, user)
+        val sig = cookieRepository.loggedInSig.firstOrNull()
+        val user = cookieRepository.loggedInUser.firstOrNull()
+
+        if (sig == null || user == null) {
+            _snackbarEvent.emit("Log in to your account")
+            return@launch
+        }
+
+        downloadRepository.retryDownload(downloadId, sig, user).fold(
+            onSuccess = { _snackbarEvent.emit("Download restarted") },
+            onFailure = { _snackbarEvent.emit("Failed to retry download") }
+        )
     }
 
     fun stopDownload(downloadId: Long) = viewModelScope.launch {

@@ -1,4 +1,4 @@
-package com.nntndscvtcvt.romsdownloader.domain.model
+package com.nntndscvtcvt.romsdownloader.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

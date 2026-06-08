@@ -5,19 +5,19 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.nntndscvtcvt.romsdownloader.domain.model.DownloadEntity
+import com.nntndscvtcvt.romsdownloader.data.local.model.DownloadTaskEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DownloadDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(downloadEntity: DownloadEntity)
+    suspend fun insert(downloadTaskEntity: DownloadTaskEntity)
 
     @Query("SELECT * FROM downloads")
-    fun getAllDownloads(): Flow<List<DownloadEntity>>
+    fun getAllDownloads(): Flow<List<DownloadTaskEntity>>
 
     @Transaction
-    suspend fun replaceDownload(oldId: Long, newEntity: DownloadEntity) {
+    suspend fun replaceDownload(oldId: Long, newEntity: DownloadTaskEntity) {
         delete(oldId)
         insert(newEntity)
     }
@@ -29,7 +29,7 @@ interface DownloadDao {
     suspend fun deleteMultiple(ids: List<Long>)
 
     @Query("SELECT * FROM downloads WHERE downloadId = :downloadId")
-    suspend fun getById(downloadId: Long): DownloadEntity?
+    suspend fun getById(downloadId: Long): DownloadTaskEntity?
 
     @Query("UPDATE downloads SET isStopped = 1 WHERE downloadId = :downloadId")
     suspend fun setStopped(downloadId: Long)

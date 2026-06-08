@@ -2,6 +2,7 @@ package com.nntndscvtcvt.romsdownloader.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,13 +26,13 @@ import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun MyLazyVerticalGrid(
     modifier: Modifier,
-    gamesData: List<GameEntity>,
+    gamesData: List<Game>,
     onNavigate: (String) -> Unit,
 ) {
     LazyVerticalGrid(
@@ -40,7 +41,8 @@ fun MyLazyVerticalGrid(
             .padding(horizontal = Dimens.PaddingLarge),
         columns = GridCells.Fixed(Dimens.GridColumns),
         horizontalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
-        verticalArrangement = Arrangement.spacedBy(Dimens.GridSpacing)
+        verticalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
+        contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
     ) {
         items(
             items = gamesData,
@@ -53,13 +55,14 @@ fun MyLazyVerticalGrid(
 
 @Composable
 private fun GameCard(
-    data: GameEntity,
+    data: Game,
     onNavigate: (String) -> Unit
 ) {
     val context = LocalContext.current
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),

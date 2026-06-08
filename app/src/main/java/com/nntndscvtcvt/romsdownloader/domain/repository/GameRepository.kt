@@ -1,9 +1,9 @@
 package com.nntndscvtcvt.romsdownloader.domain.repository
 
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
-    fun getAllGames(): Flow<Result<List<GameEntity>>>
-    suspend fun sync()
+    fun getAllGames(): Flow<List<Game>>
+    suspend fun sync(): Result<Unit>
 }

@@ -7,11 +7,19 @@ import com.nntndscvtcvt.romsdownloader.data.local.converter.GameConverter
 import com.nntndscvtcvt.romsdownloader.data.local.dto.DownloadDao
 import com.nntndscvtcvt.romsdownloader.data.local.dto.FavoriteDao
 import com.nntndscvtcvt.romsdownloader.data.local.dto.GameDao
-import com.nntndscvtcvt.romsdownloader.domain.model.DownloadEntity
-import com.nntndscvtcvt.romsdownloader.domain.model.FavoriteEntity
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.data.local.model.DownloadTaskEntity
+import com.nntndscvtcvt.romsdownloader.data.local.model.FavoriteEntity
+import com.nntndscvtcvt.romsdownloader.data.local.model.GameEntity
 
-@Database(entities = [GameEntity::class, FavoriteEntity::class, DownloadEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        GameEntity::class,
+        FavoriteEntity::class,
+        DownloadTaskEntity::class
+    ],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(GameConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gameDao(): GameDao

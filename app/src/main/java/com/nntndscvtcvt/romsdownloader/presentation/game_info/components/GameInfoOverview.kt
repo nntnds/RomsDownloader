@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
-fun GameInfoOverview(state: GameEntity) {
+fun GameInfoOverview(state: Game) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

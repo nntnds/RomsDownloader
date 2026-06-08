@@ -10,14 +10,14 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameFileItem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun GameInfoContent(
     modifier: Modifier,
-    state: GameEntity,
+    state: Game,
     downloads: List<GameFileItem>,
     startDownload: (String, String) -> Unit
 ) {

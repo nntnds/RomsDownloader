@@ -27,13 +27,19 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import java.util.concurrent.TimeUnit
 
 private val Context.datastore by preferencesDataStore(name = "app_prefs")
 
 val appModule = module {
     single { FirebaseFirestore.getInstance() }
     single { androidContext().datastore }
-    single { OkHttpClient() }
+    single {
+        OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build()
+    }
 
     single {
         Room.databaseBuilder(
@@ -50,7 +56,7 @@ val appModule = module {
     single<GameRepository> { GameRepositoryImpl(get(), get(), get()) }
     single<SearchGameRepository> { SearchGameRepositoryImpl(get()) }
     single<GameInfoRepository> { GameInfoRepositoryImpl(get()) }
-    single<GameFavoriteRepository> { GameFavoriteRepositoryImpl(get(), get()) }
+    single<GameFavoriteRepository> { GameFavoriteRepositoryImpl(get()) }
     single<CookieRepository> { CookieRepositoryImpl(get()) }
     single<DownloadRepository> { DownloadRepositoryImpl(get(), androidApplication(), get()) }
 

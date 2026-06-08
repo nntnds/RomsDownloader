@@ -2,10 +2,9 @@ package com.nntndscvtcvt.romsdownloader.presentation.game_info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nntndscvtcvt.romsdownloader.domain.model.DownloadEntity
+import com.nntndscvtcvt.romsdownloader.domain.model.DownloadTask
 import com.nntndscvtcvt.romsdownloader.domain.model.Downloads
-import com.nntndscvtcvt.romsdownloader.domain.model.FavoriteEntity
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameFavoriteRepository
@@ -38,12 +37,11 @@ class GameInfoViewModel(
         loadGameAndFavorite(id)
     }
 
-    fun startDownload(url: String, fileName: String, gameEntity: GameEntity) = viewModelScope.launch {
-        val sig = cookieRepository.loggedInSig.firstOrNull() ?: run {
-            _snackbarEvent.emit("Log in to your account")
-            return@launch
-        }
-        val user = cookieRepository.loggedInUser.firstOrNull() ?: run {
+    fun startDownload(url: String, fileName: String, game: Game) = viewModelScope.launch {
+        val sig = cookieRepository.loggedInSig.firstOrNull()
+        val user = cookieRepository.loggedInUser.firstOrNull()
+
+        if (sig == null || user == null) {
             _snackbarEvent.emit("Log in to your account")
             return@launch
         }
@@ -52,11 +50,11 @@ class GameInfoViewModel(
 
         if (downloadId != -1L) {
             downloadRepository.saveDownload(
-                DownloadEntity(
+                DownloadTask(
                     downloadId = downloadId,
-                    gameId = gameEntity.id,
-                    gameName = gameEntity.name,
-                    coverUrl = gameEntity.coverUrl,
+                    gameId = game.id,
+                    gameName = game.name,
+                    coverUrl = game.coverUrl,
                     fileName = fileName,
                     url = url
                 )
@@ -70,23 +68,20 @@ class GameInfoViewModel(
     private fun loadGameAndFavorite(id: String) = viewModelScope.launch {
         _uiState.value = GameInfoState.Loading
 
-        combine(
-            gameInfoRepository.getGameById(id),
-            favoriteRepository.isFavoriteExist(id)
-        ) { game, favorite ->
-             game.fold(
-                 onSuccess = { game ->
-                     GameInfoState.Success(
-                         games = game,
-                         gameFileItem = mapDownloadItem(game.downloads),
-                         isFavorite = favorite
-                     )
-                 },
-                 onFailure = { GameInfoState.Error(it) }
-             )
-        }
-        .catch { _uiState.value = GameInfoState.Error(it) }
-        .collect { _uiState.value = it }
+        gameInfoRepository.getGameById(id).fold(
+            onFailure = { _uiState.value = GameInfoState.Error(it) },
+            onSuccess = { game ->
+                favoriteRepository.isFavoriteExist(game.id)
+                    .catch { _uiState.value = GameInfoState.Error(it) }
+                    .collect { isFavorite ->
+                        _uiState.value = GameInfoState.Success(
+                            games = game,
+                            gameFileItem = mapDownloadItem(game.downloads),
+                            isFavorite = isFavorite
+                        )
+                    }
+            }
+        )
     }
 
     fun toggleFavorite() = viewModelScope.launch {
@@ -94,16 +89,15 @@ class GameInfoViewModel(
         val gameId = currentState.games.id
 
         if (currentState.isFavorite) {
-            favoriteRepository.removeFromFavorite(FavoriteEntity(gameId))
+            favoriteRepository.removeFromFavorite(gameId)
             _snackbarEvent.emit("Removed from favorites")
         } else {
-            favoriteRepository.addToFavorite(FavoriteEntity(gameId))
+            favoriteRepository.addToFavorite(gameId)
             _snackbarEvent.emit("Added to favorites")
         }
     }
 
     private fun mapDownloadItem(downloads: List<Downloads>): List<GameFileItem> {
-
         return downloads.flatMap { download ->
             download.files.map { file ->
                 GameFileItem(

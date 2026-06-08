@@ -24,11 +24,11 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
-import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
-fun GameInfoHeader(state: GameEntity) {
+fun GameInfoHeader(state: Game) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
