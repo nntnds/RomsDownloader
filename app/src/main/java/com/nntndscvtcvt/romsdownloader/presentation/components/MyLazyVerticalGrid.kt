@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
-import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
+import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 

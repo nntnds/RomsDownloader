@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,7 +27,7 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
-    var isSearchActive by remember { mutableStateOf(false) }
+    val isSearchActive by viewModel.isSearchActive.collectAsStateWithLifecycle()
 
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -36,7 +37,7 @@ fun HomeScreen(
                 query = query,
                 onClear = { viewModel.clearSearch() },
                 isSearchActive = isSearchActive,
-                onSearchActiveChange = { isSearchActive = it }
+                onSearchActiveChange = { viewModel.toggleIsActive(it) }
             )
         }
     ) { innerPadding ->

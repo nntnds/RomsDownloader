@@ -16,7 +16,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,19 +52,17 @@ fun SearchBar(
     val focusManager = LocalFocusManager.current
 
     LaunchedEffect(isSearchActive) {
-        if (isSearchActive) focusRequester.requestFocus()
+        if (isSearchActive && query.isEmpty()) focusRequester.requestFocus()
     }
 
-    LifecycleResumeEffect(Unit) {
-        onPauseOrDispose {
-            focusManager.clearFocus()
-        }
+    DisposableEffect(Unit) {
+        onDispose { focusManager.clearFocus() }
     }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(TopAppBarDefaults.TopAppBarExpandedHeight)
             .padding(horizontal = Dimens.PaddingSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -72,7 +72,11 @@ fun SearchBar(
                 onSearchActiveChange(false)
                 onClear()
             }) {
-                Icon(painter = backButton, modifier = Modifier.size(28.dp), contentDescription = null)
+                Icon(
+                    painter = backButton,
+                    modifier = Modifier.size(28.dp),
+                    contentDescription = null
+                )
             }
 
             BasicTextField(

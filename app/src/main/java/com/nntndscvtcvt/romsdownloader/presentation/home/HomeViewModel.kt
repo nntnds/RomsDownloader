@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class HomeViewModel(
     private val gameRepository: GameRepository,
@@ -25,6 +26,9 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow<HomeState>(HomeState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    private val _isSearchActive = MutableStateFlow(false)
+    val isSearchActive = _isSearchActive.asStateFlow()
 
     init {
         initializeData()
@@ -42,7 +46,7 @@ class HomeViewModel(
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private suspend fun observeGames() {
         _query
-            .debounce(300)
+            .debounce(300.milliseconds)
             .distinctUntilChanged()
             .flatMapLatest { query ->
                 if (query.isBlank()) {
@@ -52,9 +56,6 @@ class HomeViewModel(
                 }
             }
             .collect { result ->
-                result.onSuccess { games ->
-                    Log.d("HomeVM", "Games loaded: ${games.size} items")
-                }
                 _uiState.value = result.fold(
                     onSuccess = { HomeState.Success(it) },
                     onFailure = { HomeState.Error(it) }
@@ -65,4 +66,9 @@ class HomeViewModel(
     fun searchGame(query: String) = _query.update { query }
 
     fun clearSearch() = _query.update { "" }
+
+    fun toggleIsActive(value: Boolean) {
+        _isSearchActive.update { value }
+        if (!value) _query.update { "" }
+    }
 }

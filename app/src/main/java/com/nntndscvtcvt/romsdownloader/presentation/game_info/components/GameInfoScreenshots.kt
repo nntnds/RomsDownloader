@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -32,7 +33,7 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
+import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
@@ -88,10 +89,16 @@ fun GameInfoScreenshots(state: GameEntity) {
                             isFullScreen = !isFullScreen
                             imageUrl = url
                         },
-                    model = ImageRequest.Builder(LocalContext.current).crossfade(true)
-                        .data(COVER_URL + url).memoryCachePolicy(CachePolicy.ENABLED).build(),
+                    model = ImageRequest
+                        .Builder(LocalContext.current)
+                        .crossfade(true)
+                        .data(COVER_URL + url)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
+                    placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
+                    error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
                 )
             }
             if (isFullScreen) {
@@ -118,6 +125,8 @@ fun GameInfoScreenshots(state: GameEntity) {
                                 .build(),
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
+                            placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
+                            error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
                         )
                     }
                 }

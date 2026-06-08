@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nntndscvtcvt.romsdownloader.data.dto.GameModelDto
 import com.nntndscvtcvt.romsdownloader.data.dto.toDomain
-import com.nntndscvtcvt.romsdownloader.data.local.GameDao
+import com.nntndscvtcvt.romsdownloader.data.local.dto.GameDao
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +50,7 @@ class GameRepositoryImpl(
             .getLong("version")?.toInt() ?: 0
     }
 
-    private suspend fun saveAllGames() = withContext(Dispatchers.IO){
+    private suspend fun saveAllGames() = withContext(Dispatchers.IO) {
         val entities = firestore.collection("games")
             .get()
             .await()

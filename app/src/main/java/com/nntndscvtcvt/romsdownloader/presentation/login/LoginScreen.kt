@@ -14,8 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import com.nntndscvtcvt.romsdownloader.data.util.Constants.ARCHIVE_URL
-import com.nntndscvtcvt.romsdownloader.data.util.Constants.LOGIN_URL
+import com.nntndscvtcvt.romsdownloader.data.utils.Constants.ARCHIVE_URL
+import com.nntndscvtcvt.romsdownloader.data.utils.Constants.LOGIN_URL
 import com.nntndscvtcvt.romsdownloader.presentation.login.components.LoginScreenTopBar
 import org.koin.androidx.compose.koinViewModel
 

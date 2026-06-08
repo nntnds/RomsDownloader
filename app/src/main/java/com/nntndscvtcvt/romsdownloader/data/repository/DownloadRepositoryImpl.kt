@@ -5,9 +5,9 @@ import android.app.DownloadManager
 import android.content.Context
 import android.os.Environment
 import androidx.core.net.toUri
-import com.nntndscvtcvt.romsdownloader.data.local.DownloadDao
-import com.nntndscvtcvt.romsdownloader.data.util.Constants.CHECK_ACCESS_URL
-import com.nntndscvtcvt.romsdownloader.data.util.Constants.USER_AGENT
+import com.nntndscvtcvt.romsdownloader.data.local.dto.DownloadDao
+import com.nntndscvtcvt.romsdownloader.data.utils.Constants.CHECK_ACCESS_URL
+import com.nntndscvtcvt.romsdownloader.data.utils.Constants.USER_AGENT
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadEntity
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository

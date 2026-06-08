@@ -1,4 +1,4 @@
-package com.nntndscvtcvt.romsdownloader.data.local
+package com.nntndscvtcvt.romsdownloader.data.local.dto
 
 import androidx.room.Dao
 import androidx.room.Insert

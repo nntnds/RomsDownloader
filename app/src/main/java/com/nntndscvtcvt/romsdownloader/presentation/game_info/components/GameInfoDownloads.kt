@@ -21,7 +21,8 @@ import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun LazyListScope.gameInfoDownloads(
-    downloads: List<GameFileItem>, startDownload: (String, String) -> Unit
+    downloads: List<GameFileItem>,
+    startDownload: (String, String) -> Unit
 ) {
     val leadingIcon = R.drawable.outline_download_24
     val trailingIcon = R.drawable.outline_keyboard_arrow_right_24
@@ -35,9 +36,11 @@ fun LazyListScope.gameInfoDownloads(
     }
 
     itemsIndexed(
-        items = downloads, key = { _, item -> item.url }) { index, item ->
+        items = downloads,
+        key = { _, item -> item.url }
+    ) { index, item ->
         SegmentedListItem(
-            modifier = Modifier.padding(Dimens.PaddingLarge),
+            modifier = Modifier.padding(horizontal = Dimens.PaddingLarge),
             onClick = {
                 startDownload(item.url, "${item.title}.${item.type}")
             },

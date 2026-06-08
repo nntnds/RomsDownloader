@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,7 +23,7 @@ import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.nntndscvtcvt.romsdownloader.data.util.Constants.COVER_URL
+import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.GameEntity
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
@@ -43,6 +44,8 @@ fun GameInfoHeader(state: GameEntity) {
                 .data(COVER_URL + state.coverUrl).memoryCachePolicy(CachePolicy.ENABLED).build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
+            placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
+            error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
         )
         Column(
             modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Dimens.ColumnVerticalArrangement)

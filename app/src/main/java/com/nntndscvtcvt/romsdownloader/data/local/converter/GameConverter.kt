@@ -1,4 +1,4 @@
-package com.nntndscvtcvt.romsdownloader.data.local
+package com.nntndscvtcvt.romsdownloader.data.local.converter
 
 import androidx.room.TypeConverter
 import com.nntndscvtcvt.romsdownloader.domain.model.Downloads
@@ -9,11 +9,11 @@ class GameConverter {
     fun fromList(list: List<String>): String = Json.encodeToString(list)
 
     @TypeConverter
-    fun toList(string: String): List<String> = Json.decodeFromString(string)
+    fun toList(string: String): List<String> = Json.Default.decodeFromString(string)
 
     @TypeConverter
     fun fromDownload(downloads: List<Downloads>): String = Json.encodeToString(downloads)
 
     @TypeConverter
-    fun toDownload(string: String): List<Downloads> = Json.decodeFromString(string)
+    fun toDownload(string: String): List<Downloads> = Json.Default.decodeFromString(string)
 }
