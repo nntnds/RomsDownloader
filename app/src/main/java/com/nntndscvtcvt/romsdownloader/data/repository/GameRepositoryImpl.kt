@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nntndscvtcvt.romsdownloader.data.dto.GameDto
-import com.nntndscvtcvt.romsdownloader.data.local.dto.GameDao
+import com.nntndscvtcvt.romsdownloader.data.local.dao.GameDao
 import com.nntndscvtcvt.romsdownloader.data.mappers.toDomain
 import com.nntndscvtcvt.romsdownloader.data.mappers.toEntity
 import com.nntndscvtcvt.romsdownloader.domain.model.Game

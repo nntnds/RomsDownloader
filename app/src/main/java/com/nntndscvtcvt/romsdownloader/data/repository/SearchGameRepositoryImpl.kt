@@ -1,6 +1,6 @@
 package com.nntndscvtcvt.romsdownloader.data.repository
 
-import com.nntndscvtcvt.romsdownloader.data.local.dto.GameDao
+import com.nntndscvtcvt.romsdownloader.data.local.dao.GameDao
 import com.nntndscvtcvt.romsdownloader.data.mappers.toDomain
 import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.domain.repository.SearchGameRepository

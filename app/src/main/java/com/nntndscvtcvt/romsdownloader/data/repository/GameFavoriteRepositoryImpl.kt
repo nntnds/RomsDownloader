@@ -1,6 +1,6 @@
 package com.nntndscvtcvt.romsdownloader.data.repository
 
-import com.nntndscvtcvt.romsdownloader.data.local.dto.FavoriteDao
+import com.nntndscvtcvt.romsdownloader.data.local.dao.FavoriteDao
 import com.nntndscvtcvt.romsdownloader.data.local.model.FavoriteEntity
 import com.nntndscvtcvt.romsdownloader.data.mappers.toDomain
 import com.nntndscvtcvt.romsdownloader.domain.model.Game

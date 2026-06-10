@@ -5,7 +5,7 @@ import android.app.DownloadManager
 import android.content.Context
 import android.os.Environment
 import androidx.core.net.toUri
-import com.nntndscvtcvt.romsdownloader.data.local.dto.DownloadDao
+import com.nntndscvtcvt.romsdownloader.data.local.dao.DownloadDao
 import com.nntndscvtcvt.romsdownloader.data.local.model.DownloadTaskEntity
 import com.nntndscvtcvt.romsdownloader.data.mappers.toEntity
 import com.nntndscvtcvt.romsdownloader.data.utils.Constants.CHECK_ACCESS_URL
@@ -17,8 +17,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -54,20 +54,12 @@ class DownloadRepositoryImpl(
         return buildRequest(url, fileName, sig, user)
     }
 
-    override fun getActiveDownloads(): Flow<List<DownloadItem>> = callbackFlow {
-        val job = launch {
-            while (isActive) {
-                val entities = downloadDao.getAllDownloads().first()
-                val items = entities.mapNotNull { entity ->
-                    getDownloadItem(entity)
-                }
-                trySend(items)
-                delay(1000L.milliseconds)
-            }
-        }
-
-        awaitClose {
-            job.cancel()
+    override fun getActiveDownloads(): Flow<List<DownloadItem>> = flow {
+        while (true) {
+            val entities = downloadDao.getAllDownloads()
+            val items = entities.mapNotNull { getDownloadItem(it) }
+            emit(items)
+            delay(1000L.milliseconds)
         }
     }.flowOn(Dispatchers.IO)
 
@@ -96,12 +88,8 @@ class DownloadRepositoryImpl(
         }
 
     override suspend fun deleteDownload(downloadId: Long) {
-        runCatching {
-            downloadManager.remove(downloadId)
-            downloadDao.delete(downloadId)
-        }.onFailure {
-            // TODO()
-        }
+        downloadManager.remove(downloadId)
+        downloadDao.delete(downloadId)
     }
 
     override suspend fun deleteMultiple(ids: List<Long>) {

@@ -1,4 +1,4 @@
-package com.nntndscvtcvt.romsdownloader.data.local.dto
+package com.nntndscvtcvt.romsdownloader.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -14,7 +14,7 @@ interface DownloadDao {
     suspend fun insert(downloadTaskEntity: DownloadTaskEntity)
 
     @Query("SELECT * FROM downloads")
-    fun getAllDownloads(): Flow<List<DownloadTaskEntity>>
+    fun getAllDownloads(): List<DownloadTaskEntity>
 
     @Transaction
     suspend fun replaceDownload(oldId: Long, newEntity: DownloadTaskEntity) {
