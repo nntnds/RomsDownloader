@@ -9,7 +9,7 @@ class GameInfoRepositoryImpl(
     val gameDao: GameDao
 ) : GameInfoRepository {
 
-    override suspend fun getGameById(id: String): Result<Game> = runCatching {
+    override suspend fun getGameById(id: Int): Result<Game> = runCatching {
         gameDao.getGameById(id).toDomain()
     }
 }

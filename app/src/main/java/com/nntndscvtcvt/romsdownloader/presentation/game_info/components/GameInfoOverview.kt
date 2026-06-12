@@ -17,11 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
-fun GameInfoOverview(state: Game) {
+fun GameInfoOverview(overview: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +28,8 @@ fun GameInfoOverview(state: Game) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var isExpanded by rememberSaveable { mutableStateOf(false) }
-        val cleanOverview = state.overview.replace(Regex("\\s+"), " ")
+        val cleanOverview = overview.replace(Regex("\\s+"), " ")
+        var isOverflowing by rememberSaveable { mutableStateOf(false) }
 
         Text(
             text = cleanOverview,
@@ -39,16 +39,21 @@ fun GameInfoOverview(state: Game) {
             maxLines = if (!isExpanded) 6 else Int.MAX_VALUE,
             modifier = Modifier
                 .fillMaxWidth()
-                .animateContentSize()
+                .animateContentSize(),
+            onTextLayout = { textLayoutResult ->
+                isOverflowing = textLayoutResult.hasVisualOverflow
+            }
         )
-        TextButton(
-            onClick = { isExpanded = !isExpanded },
-        ) {
-            Text(
-                text = stringResource(
-                    id = if (!isExpanded) R.string.read_more else R.string.hide
+        if (isOverflowing || isExpanded) {
+            TextButton(
+                onClick = { isExpanded = !isExpanded }
+            ) {
+                Text(
+                    text = stringResource(
+                        id = if (!isExpanded) R.string.read_more else R.string.hide
+                    )
                 )
-            )
+            }
         }
     }
 }

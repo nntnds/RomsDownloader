@@ -4,7 +4,7 @@ import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadTask
 import kotlinx.coroutines.flow.Flow
 
-interface DownloadRepository {
+interface DownloadFileRepository {
     suspend fun checkAccess(sig: String, user: String): Result<Boolean>
     fun downloadFile(url: String, sig: String, user: String, fileName: String): Long
     fun getActiveDownloads(): Flow<List<DownloadItem>>

@@ -14,9 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.settings.Console
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
@@ -26,10 +26,14 @@ fun ConsoleItem(
     item: Console,
     index: Int,
     totalCount: Int,
-    installIcon: Painter
+    downloadConsoleGame: (String) -> Unit
 ) {
+    val installIcon = painterResource(R.drawable.outline_download_24)
+
     SegmentedListItem(
-        onClick = { /* TODO */ },
+        onClick = {
+            downloadConsoleGame(item.consoleName)
+        },
         shapes = ListItemDefaults.segmentedShapes(index, totalCount),
         colors = ListItemDefaults.segmentedColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -41,7 +45,7 @@ fun ConsoleItem(
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(0.4f),
                         shape = MaterialTheme.shapes.medium
                     ),
                 contentAlignment = Alignment.Center

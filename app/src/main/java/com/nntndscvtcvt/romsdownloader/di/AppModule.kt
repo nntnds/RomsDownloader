@@ -6,13 +6,13 @@ import androidx.room.Room
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nntndscvtcvt.romsdownloader.data.local.AppDatabase
 import com.nntndscvtcvt.romsdownloader.data.repository.CookieRepositoryImpl
-import com.nntndscvtcvt.romsdownloader.data.repository.DownloadRepositoryImpl
+import com.nntndscvtcvt.romsdownloader.data.repository.DownloadFileRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.data.repository.GameFavoriteRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.data.repository.GameInfoRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.data.repository.GameRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.data.repository.SearchGameRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
-import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
+import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameFavoriteRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameInfoRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
@@ -38,7 +38,7 @@ val appModule = module {
     single {
         OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
             .build()
     }
 
@@ -47,7 +47,7 @@ val appModule = module {
             context = androidContext(),
             klass = AppDatabase::class.java,
             name = "roms_database.db"
-        ).build()
+        ).fallbackToDestructiveMigration(true).build()
     }
 
     single { get<AppDatabase>().gameDao() }
@@ -59,7 +59,7 @@ val appModule = module {
     single<GameInfoRepository> { GameInfoRepositoryImpl(get()) }
     single<GameFavoriteRepository> { GameFavoriteRepositoryImpl(get()) }
     single<CookieRepository> { CookieRepositoryImpl(get()) }
-    single<DownloadRepository> { DownloadRepositoryImpl(get(), androidApplication(), get()) }
+    single<DownloadFileRepository> { DownloadFileRepositoryImpl(get(), androidApplication(), get()) }
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::GameInfoViewModel)

@@ -6,7 +6,7 @@ import com.nntndscvtcvt.romsdownloader.domain.model.DownloadTask
 import com.nntndscvtcvt.romsdownloader.domain.model.Downloads
 import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
-import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
+import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameFavoriteRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameInfoRepository
 import com.nntndscvtcvt.romsdownloader.presentation.utils.cut
@@ -22,7 +22,7 @@ class GameInfoViewModel(
     private val gameInfoRepository: GameInfoRepository,
     private val favoriteRepository: GameFavoriteRepository,
     private val cookieRepository: CookieRepository,
-    private val downloadRepository: DownloadRepository,
+    private val downloadFileRepository: DownloadFileRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<GameInfoState>(GameInfoState.Loading)
@@ -31,7 +31,7 @@ class GameInfoViewModel(
     private val _snackbarEvent = MutableSharedFlow<String>()
     val snackbarEvent = _snackbarEvent.asSharedFlow()
 
-    fun getInfo(id: String) {
+    fun getInfo(id: Int) {
         _uiState.value = GameInfoState.Loading
         loadGameAndFavorite(id)
     }
@@ -45,13 +45,13 @@ class GameInfoViewModel(
             return@launch
         }
 
-        val downloadId = downloadRepository.downloadFile(url, sig, user, fileName)
+        val downloadId = downloadFileRepository.downloadFile(url, sig, user, fileName)
 
         if (downloadId != -1L) {
-            downloadRepository.saveDownload(
+            downloadFileRepository.saveDownload(
                 DownloadTask(
                     downloadId = downloadId,
-                    gameId = game.id,
+                    gameId = game.databaseID,
                     gameName = game.name,
                     coverUrl = game.coverUrl,
                     fileName = fileName,
@@ -64,13 +64,13 @@ class GameInfoViewModel(
         }
     }
 
-    private fun loadGameAndFavorite(id: String) = viewModelScope.launch {
+    private fun loadGameAndFavorite(id: Int) = viewModelScope.launch {
         _uiState.value = GameInfoState.Loading
 
         gameInfoRepository.getGameById(id).fold(
             onFailure = { _uiState.value = GameInfoState.Error(it) },
             onSuccess = { game ->
-                favoriteRepository.isFavoriteExist(game.id)
+                favoriteRepository.isFavoriteExist(game.databaseID)
                     .catch { _uiState.value = GameInfoState.Error(it) }
                     .collect { isFavorite ->
                         _uiState.value = GameInfoState.Success(
@@ -85,7 +85,7 @@ class GameInfoViewModel(
 
     fun toggleFavorite() = viewModelScope.launch {
         val currentState = _uiState.value as? GameInfoState.Success ?: return@launch
-        val gameId = currentState.games.id
+        val gameId = currentState.games.databaseID
 
         if (currentState.isFavorite) {
             favoriteRepository.removeFromFavorite(gameId)

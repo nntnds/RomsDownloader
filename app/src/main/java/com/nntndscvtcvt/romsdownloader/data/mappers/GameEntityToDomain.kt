@@ -8,27 +8,21 @@ import com.nntndscvtcvt.romsdownloader.domain.model.Downloads
 import com.nntndscvtcvt.romsdownloader.domain.model.Game
 
 fun GameEntity.toDomain(): Game = Game(
-    id = this.id,
-    communityRating = this.communityRating,
-    alternateNames = this.alternateNames,
-    cooperative = this.cooperative,
-    coverUrl = this.coverUrl,
-    developer = this.developer,
-    downloads = this.downloads.map { it.toDomain() },
-    genres = this.genres,
+    databaseID = this.databaseID,
     name = this.name,
     overview = this.overview,
-    publisher = this.publisher,
-    releaseDate = this.releaseDate,
+    platform = this.platform,
+    genres = this.genres,
+    developer = this.developer,
+    alternateNames = this.alternateNames,
+    coverUrl = this.coverUrl,
     screenshots = this.screenshots,
+    downloads = this.downloads.map { it.toDomain() }
 )
 
 fun GameDownloadsEntity.toDomain(): Downloads = Downloads(
-    fileType = this.fileType,
-    files = this.files.map { it.toDomain() },
-    size = this.size,
     title = this.title,
-    zipUrl = this.zipUrl,
+    files = this.files.map { it.toDomain() }
 )
 
 fun GameDownloadFileEntity.toDomain(): DownloadFile = DownloadFile(

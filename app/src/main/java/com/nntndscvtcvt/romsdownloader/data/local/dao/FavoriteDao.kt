@@ -17,9 +17,9 @@ interface FavoriteDao {
     @Delete
     suspend fun removeFromFavorite(favorite: FavoriteEntity)
 
-    @Query("SELECT EXISTS(SELECT 1 FROM favorites where id = :id)")
-    fun isFavoriteExist(id: String): Flow<Boolean>
+    @Query("SELECT EXISTS(SELECT 1 FROM favorites where databaseId = :id)")
+    fun isFavoriteExist(id: Int): Flow<Boolean>
 
-    @Query("SELECT games.* FROM games INNER JOIN favorites ON games.id = favorites.id")
+    @Query("SELECT games.* FROM games INNER JOIN favorites ON games.databaseID = favorites.databaseId")
     fun getAllFavorites(): Flow<List<GameEntity>>
 }

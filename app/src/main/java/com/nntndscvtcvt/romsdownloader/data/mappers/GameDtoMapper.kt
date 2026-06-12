@@ -7,31 +7,25 @@ import com.nntndscvtcvt.romsdownloader.data.local.model.GameDownloadFileEntity
 import com.nntndscvtcvt.romsdownloader.data.local.model.GameDownloadsEntity
 import com.nntndscvtcvt.romsdownloader.data.local.model.GameEntity
 
-fun GameDto.toEntity(id: String): GameEntity = GameEntity(
-        id = id,
-        communityRating = this.communityRating ?: "",
-        alternateNames = this.alternateNames,
-        cooperative = this.cooperative ?: false,
-        coverUrl = this.coverUrl ?: "",
-        developer = this.developer ?: "",
-        downloads = this.downloads.map { it.toEntity() },
-        genres = this.genres,
-        name = this.name ?: "",
-        overview = this.overview ?: "",
-        publisher = this.publisher ?: "",
-        releaseDate = this.releaseDate ?: "",
-        screenshots = this.screenshots,
+fun GameDto.toEntity(): GameEntity = GameEntity(
+    databaseID = this.databaseId ?: 0,
+    name = this.name ?: "",
+    overview = this.overview ?: "",
+    platform = this.platform ?: "",
+    genres = this.genres ?: emptyList(),
+    developer = this.developer ?: "",
+    alternateNames = this.alternateNames ?: emptyList(),
+    coverUrl = this.coverUrl ?: "",
+    screenshots = this.screenshots ?: emptyList(),
+    downloads = this.downloads?.map { it.toEntity() } ?: emptyList()
 )
 
 fun DownloadDto.toEntity(): GameDownloadsEntity = GameDownloadsEntity(
-    title = this.title,
-    fileType = this.fileType,
-    size = this.size ?: "",
-    zipUrl = this.zipUrl ?: "",
-    files = this.files.map { it.toEntity() }
+    title = this.title ?: "",
+    files = this.files?.map { it.toEntity() } ?: emptyList()
 )
 
 fun DownloadFileDto.toEntity(): GameDownloadFileEntity = GameDownloadFileEntity(
-    type = this.type,
-    url = this.url
+    type = this.type ?: "",
+    url = this.url ?: ""
 )

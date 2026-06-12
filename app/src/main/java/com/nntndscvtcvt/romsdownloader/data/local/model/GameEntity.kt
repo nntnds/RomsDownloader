@@ -3,34 +3,27 @@ package com.nntndscvtcvt.romsdownloader.data.local.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
 
 @Entity(tableName = "games")
 data class GameEntity(
-    @PrimaryKey
-    val id: String,
-    val communityRating: String,
-    val alternateNames: List<String>,
-    val cooperative: Boolean,
-    val coverUrl: String,
-    val developer: String,
-    val downloads: List<GameDownloadsEntity>,
-    val genres: List<String>,
+    @PrimaryKey val databaseID: Int,
     val name: String,
     val overview: String,
-    val publisher: String,
-    val releaseDate: String,
+    val platform: String,
+    val genres: List<String>,
+    val developer: String,
+    val alternateNames: List<String>,
+    val coverUrl: String,
     val screenshots: List<String>,
+    val downloads: List<GameDownloadsEntity>
 )
 
 @Serializable
 data class GameDownloadsEntity(
-    val fileType: String,
-    val files: List<GameDownloadFileEntity>,
-    val size: String,
     val title: String,
-    val zipUrl: String,
+    val files: List<GameDownloadFileEntity>
 )
-
 @Serializable
 data class GameDownloadFileEntity(
     val type: String,

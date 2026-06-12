@@ -8,14 +8,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,11 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.Game
@@ -38,7 +32,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 fun GamesGrid(
     modifier: Modifier,
     gamesData: List<Game>,
-    navigateToGameInfo: (String) -> Unit,
+    navigateToGameInfo: (Int) -> Unit,
 ) {
     LazyVerticalGrid(
         modifier = modifier
@@ -51,7 +45,7 @@ fun GamesGrid(
     ) {
         items(
             items = gamesData,
-            key = { it.id }
+            key = { it.databaseID }
         ) { game ->
             GameCard(
                 game = game,
@@ -65,16 +59,14 @@ fun GamesGrid(
 @Composable
 private fun GameCard(
     game: Game,
-    navigateToGameInfo: (String) -> Unit,
+    navigateToGameInfo: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
-            .clickable {
-                navigateToGameInfo(game.id)
-            }
+            .clickable { navigateToGameInfo(game.databaseID) }
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -91,16 +83,14 @@ private fun GameCard(
             error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
         )
 
-        Spacer(Modifier.size(Dimens.PaddingSmall))
+//        Spacer(Modifier.size(Dimens.PaddingSmall))
 
         Text(
             text = game.name,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Dimens.PaddingMedium)
+            modifier = Modifier.padding(Dimens.PaddingSmall)
         )
     }
 }

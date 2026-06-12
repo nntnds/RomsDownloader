@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
     fun getAllGames(): Flow<List<Game>>
-    suspend fun sync(): Result<Unit>
+    suspend fun downloadConsoleGames(consoleName: String): Result<Unit>
 }

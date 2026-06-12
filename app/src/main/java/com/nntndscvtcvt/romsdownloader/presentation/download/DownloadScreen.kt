@@ -36,7 +36,7 @@ import org.koin.androidx.compose.koinViewModel
 fun DownloadScreen(
     navigateToSettings: () -> Unit,
     viewModel: DownloadViewModel = koinViewModel(),
-    navigateToGameInfo: (String) -> Unit
+    navigateToGameInfo: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedIds by viewModel.selectedIds.collectAsStateWithLifecycle()

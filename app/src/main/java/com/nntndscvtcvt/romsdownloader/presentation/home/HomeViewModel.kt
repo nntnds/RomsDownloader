@@ -35,10 +35,11 @@ class HomeViewModel(
     }
 
     private fun initializeData() = viewModelScope.launch {
-        gameRepository.sync().fold(
-            onSuccess = { observeGames() },
-            onFailure = { _uiState.value = HomeState.Error(it) }
-        )
+//        gameRepository.sync().fold(
+//            onSuccess = { observeGames() },
+//            onFailure = { _uiState.value = HomeState.Error(it) }
+//        )
+        observeGames()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -59,12 +60,22 @@ class HomeViewModel(
             }
     }
 
-    fun searchGame(query: String) = _query.update { query }
+    fun searchGame(query: String) {
+        _query.update { query }
+        if (query.isNotBlank() && !_isSearchActive.value) {
+            _isSearchActive.update { true }
+        }
+    }
 
-    fun clearSearch() = _query.update { "" }
+    fun clearSearch() {
+        _query.update { "" }
+        _isSearchActive.update { false }
+    }
 
     fun toggleIsActive(value: Boolean) {
         _isSearchActive.update { value }
-        if (!value) _query.update { "" }
+        if (!value) {
+            clearSearch()
+        }
     }
 }

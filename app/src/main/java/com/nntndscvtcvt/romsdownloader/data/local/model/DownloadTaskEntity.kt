@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "downloads")
 data class DownloadTaskEntity(
     @PrimaryKey val downloadId: Long,
-    val gameId: String,
+    val gameId: Int,
     val gameName: String,
     val coverUrl: String,
     val fileName: String,

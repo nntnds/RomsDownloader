@@ -1,27 +1,21 @@
 package com.nntndscvtcvt.romsdownloader.domain.model
 
 data class Game(
-    val id: String,
-    val communityRating: String,
-    val alternateNames: List<String>,
-    val cooperative: Boolean,
-    val coverUrl: String,
-    val developer: String,
-    val downloads: List<Downloads>,
-    val genres: List<String>,
+    val databaseID: Int,
     val name: String,
     val overview: String,
-    val publisher: String,
-    val releaseDate: String,
+    val platform: String,
+    val genres: List<String>,
+    val developer: String,
+    val alternateNames: List<String>,
+    val coverUrl: String,
     val screenshots: List<String>,
+    val downloads: List<Downloads>
 )
 
 data class Downloads(
-    val fileType: String,
-    val files: List<DownloadFile>,
-    val size: String,
     val title: String,
-    val zipUrl: String,
+    val files: List<DownloadFile>
 )
 
 data class DownloadFile(

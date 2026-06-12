@@ -12,7 +12,7 @@ import com.nntndscvtcvt.romsdownloader.data.utils.Constants.CHECK_ACCESS_URL
 import com.nntndscvtcvt.romsdownloader.data.utils.Constants.USER_AGENT
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadTask
-import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
+import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -23,11 +23,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import kotlin.time.Duration.Companion.milliseconds
 
-class DownloadRepositoryImpl(
+class DownloadFileRepositoryImpl(
     private val client: OkHttpClient,
     private val context: Application,
     private val downloadDao: DownloadDao
-) : DownloadRepository {
+) : DownloadFileRepository {
 
     private val downloadManager: DownloadManager by lazy {
         context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -63,7 +63,7 @@ class DownloadRepositoryImpl(
         runCatching {
             downloadManager.remove(downloadId)
             downloadDao.setStopped(downloadId)
-        }.onFailure {  }
+        }
     }
 
     override suspend fun retryDownload(downloadId: Long, sig: String, user: String): Result<Long> =

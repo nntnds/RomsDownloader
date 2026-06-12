@@ -3,7 +3,7 @@ package com.nntndscvtcvt.romsdownloader.presentation.download
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
-import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
+import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class DownloadViewModel(
     private val cookieRepository: CookieRepository,
-    private val downloadRepository: DownloadRepository,
+    private val downloadFileRepository: DownloadFileRepository,
 ) : ViewModel() {
 
     private val _selectedIds = MutableStateFlow<Set<Long>>(emptySet())
@@ -27,7 +27,7 @@ class DownloadViewModel(
     private val _snackbarEvent = MutableSharedFlow<String>()
     val snackbarEvent = _snackbarEvent.asSharedFlow()
 
-    val uiState: StateFlow<DownloadState> = downloadRepository.getActiveDownloads()
+    val uiState: StateFlow<DownloadState> = downloadFileRepository.getActiveDownloads()
         .map { items ->
             if (items.isEmpty()) DownloadState.Empty
             else DownloadState.Success(items)
@@ -43,7 +43,7 @@ class DownloadViewModel(
             return@launch
         }
 
-        val result = downloadRepository.checkAccess(sig, user)
+        val result = downloadFileRepository.checkAccess(sig, user)
         _snackbarEvent.emit(if (result.isSuccess) "Cookie are working" else "Log in to your account")
     }
 
@@ -56,14 +56,14 @@ class DownloadViewModel(
             return@launch
         }
 
-        downloadRepository.retryDownload(downloadId, sig, user).fold(
+        downloadFileRepository.retryDownload(downloadId, sig, user).fold(
             onSuccess = { _snackbarEvent.emit("Download restarted") },
             onFailure = { _snackbarEvent.emit("Failed to retry download") }
         )
     }
 
     fun stopDownload(downloadId: Long) = viewModelScope.launch {
-        downloadRepository.stopDownload(downloadId)
+        downloadFileRepository.stopDownload(downloadId)
     }
 
     fun toggleSelection(downloadId: Long) {
@@ -85,7 +85,7 @@ class DownloadViewModel(
     fun deleteSelected() = viewModelScope.launch {
         val idsToDelete = _selectedIds.value.toList()
         if (idsToDelete.isEmpty()) return@launch
-        downloadRepository.deleteMultiple(idsToDelete)
+        downloadFileRepository.deleteMultiple(idsToDelete)
         clearSelection()
     }
 }

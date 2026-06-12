@@ -2,7 +2,7 @@ package com.nntndscvtcvt.romsdownloader.domain.model
 
 data class DownloadItem(
     val id: Long,
-    val gameId: String,
+    val gameId: Int,
     val gameName: String,
     val coverUrl: String,
     val fileName: String,

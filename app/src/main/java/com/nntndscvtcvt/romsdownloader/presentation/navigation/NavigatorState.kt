@@ -16,7 +16,7 @@ class NavigatorState(
         if (backStack.size > 1) backStack.removeLastOrNull()
     }
 
-    fun navigateToGameInfo(id: String) = navigate(AppRoutes.GameInfo(id))
+    fun navigateToGameInfo(id: Int) = navigate(AppRoutes.GameInfo(id))
     fun navigateToSettings() = navigate(AppRoutes.Settings)
     fun navigateToLogin() = navigate(AppRoutes.Login)
 }

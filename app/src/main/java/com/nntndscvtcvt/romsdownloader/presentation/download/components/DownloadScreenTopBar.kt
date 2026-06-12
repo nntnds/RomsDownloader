@@ -23,11 +23,12 @@ fun DownloadScreenTopBar(
         windowInsets = WindowInsets(0.dp),
         title = { Text(stringResource(R.string.download_topbar)) },
         actions = {
+            /* TODO (Убрать кнопку) */
             IconButton(
                 onClick = checkCookie
             ) {
                 Icon(cookieButton, null)
-            } /* TODO (Убрать кнопку) */
+            }
             IconButton(
                 onClick = navigateToSettings
             ) {

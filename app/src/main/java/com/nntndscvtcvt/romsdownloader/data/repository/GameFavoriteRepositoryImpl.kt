@@ -11,15 +11,15 @@ import kotlinx.coroutines.flow.map
 class GameFavoriteRepositoryImpl(
     private val favoriteDao: FavoriteDao,
 ) : GameFavoriteRepository {
-    override suspend fun addToFavorite(id: String) {
+    override suspend fun addToFavorite(id: Int) {
         favoriteDao.addToFavorite(FavoriteEntity(id))
     }
 
-    override suspend fun removeFromFavorite(id: String) {
+    override suspend fun removeFromFavorite(id: Int) {
         favoriteDao.removeFromFavorite(FavoriteEntity(id))
     }
 
-    override fun isFavoriteExist(id: String): Flow<Boolean> {
+    override fun isFavoriteExist(id: Int): Flow<Boolean> {
         return favoriteDao.isFavoriteExist(id)
     }
 

@@ -38,7 +38,7 @@ fun LoginSection(
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(0.4f),
                         shape = MaterialTheme.shapes.medium
                     ),
                 contentAlignment = Alignment.Center

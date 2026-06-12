@@ -9,9 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
 import com.nntndscvtcvt.romsdownloader.presentation.components.GamesGrid
 import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
-import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
 import com.nntndscvtcvt.romsdownloader.presentation.home.components.SearchBar
 import org.koin.androidx.compose.koinViewModel
 
@@ -19,7 +19,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
-    navigateToGameInfo: (String) -> Unit,
+    navigateToGameInfo: (Int) -> Unit,
     navigateToSettings: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -30,11 +30,11 @@ fun HomeScreen(
         contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             SearchBar(
-                onSearch = { viewModel.searchGame(it) },
+                onSearch = viewModel::searchGame,
                 query = query,
-                onClear = { viewModel.clearSearch() },
+                onClear = viewModel::clearSearch,
                 isSearchActive = isSearchActive,
-                onSearchActiveChange = { viewModel.toggleIsActive(it) },
+                onSearchActiveChange = viewModel::toggleIsActive,
                 navigateToSettings = navigateToSettings
             )
         }

@@ -18,22 +18,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
 import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoHeader
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoOverview
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoScreenshots
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoTopBar
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.gameInfoDownloads
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun GameInfoScreen(
-    id: String,
+    id: Int,
     onBack: () -> Unit,
-    viewModel: GameInfoViewModel = koinViewModel(key = id)
+    viewModel: GameInfoViewModel = koinViewModel(key = id.toString())
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -70,14 +71,14 @@ fun GameInfoScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(innerPadding),
                     verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
-                    contentPadding = PaddingValues(bottom = 16.dp)
+                    contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
                 ) {
                     item {
                         GameInfoHeader(state.games)
                     }
 
                     item {
-                        GameInfoOverview(state.games)
+                        GameInfoOverview(state.games.overview)
                     }
 
                     item {
