@@ -1,7 +1,9 @@
 package com.nntndscvtcvt.romsdownloader.presentation.game_info
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -55,9 +57,10 @@ fun GameInfoScreen(
         is GameInfoState.Error -> MyShowError(Modifier, e = state.error)
         is GameInfoState.Success -> {
             Scaffold(
+                contentWindowInsets = WindowInsets(0.dp),
                 topBar = {
                     GameInfoTopBar(
-                        isFavorite = state.isFavorite,
+                        isFavorite = isFavorite,
                         onBack = onBack,
                         onFavoriteClick = { viewModel.toggleFavorite() }
                     )
@@ -68,7 +71,8 @@ fun GameInfoScreen(
             ) { innerPadding ->
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
+                    verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+                    contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     item {
                         GameInfoHeader(state.games)
@@ -87,7 +91,6 @@ fun GameInfoScreen(
                             viewModel.startDownload(url, fileName, state.games)
                         }
                     )
-                    item { Spacer(Modifier.height(12.dp)) }
                 }
             }
         }
