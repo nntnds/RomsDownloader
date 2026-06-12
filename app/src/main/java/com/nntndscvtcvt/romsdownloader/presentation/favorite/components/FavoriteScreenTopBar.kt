@@ -14,7 +14,7 @@ fun FavoriteScreenTopBar() {
         windowInsets = WindowInsets(0.dp),
         title = {
             Text(
-                text = stringResource(R.string.favorites)
+                text = stringResource(R.string.favorites_topbar)
             )
         },
     )

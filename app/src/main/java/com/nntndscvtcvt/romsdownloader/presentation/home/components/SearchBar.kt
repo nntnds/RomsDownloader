@@ -73,8 +73,8 @@ fun SearchBar(
             }) {
                 Icon(
                     painter = backButton,
-                    modifier = Modifier.size(28.dp),
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(Dimens.iconMediumHeight)
                 )
             }
 
@@ -115,7 +115,7 @@ fun SearchBar(
             }
         } else {
             Text(
-                text = stringResource(R.string.games),
+                text = stringResource(R.string.search_games),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(start = Dimens.PaddingLarge)
             )

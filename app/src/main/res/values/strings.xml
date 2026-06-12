@@ -12,7 +12,7 @@
 
     <!--Favorite screen-->
     <string name="no_favorites">No favorite games yet</string>
-    <string name="favorites">Favorites</string>
+    <string name="favorites_topbar">Favorites</string>
 
     <!--Game info screen-->
     <string name="no_screenshots">No screenshots available</string>
@@ -23,14 +23,23 @@
 
     <!--Home screen-->
     <string name="search_games">Search games</string>
-    <string name="games">Games</string>
+    <string name="games_topbar">Games</string>
 
     <!--Login Screen-->
-    <string name="login">Log in</string>
+    <string name="login_topbar">Log in</string>
+
+    <!--Settings Screen-->
+    <string name="settings_topbar">Settings</string>
+    <string name="login_headline_text">Log into archive.org</string>
+    <string name="log_in_header">Log in</string>
+    <string name="consoles_header">Consoles</string>
+    <string name="supporting_content">Required to download games</string>
+    <string name="subtitle_topbar">manage app data and settings download</string>
 
     <!--Navigation-->
     <string name="nav_home">Home</string>
     <string name="nav_downloads">Downloads</string>
     <string name="nav_favorites">Favorites</string>
+    <string name="nav_settings">Settings</string>
 
 </resources>

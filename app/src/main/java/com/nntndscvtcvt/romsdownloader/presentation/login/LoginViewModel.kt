@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
 import kotlinx.coroutines.launch
-import java.net.URLDecoder
 
 class LoginViewModel(
     private val repository: CookieRepository

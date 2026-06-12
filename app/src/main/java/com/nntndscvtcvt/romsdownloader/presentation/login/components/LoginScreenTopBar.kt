@@ -12,6 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.R
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun LoginScreenTopBar(onBack: () -> Unit, onRefreshClick: () -> Unit, onClear: () -> Unit) {
@@ -21,10 +22,14 @@ fun LoginScreenTopBar(onBack: () -> Unit, onRefreshClick: () -> Unit, onClear: (
 
     TopAppBar(
         windowInsets = WindowInsets(0.dp),
-        title = { Text(text = stringResource(R.string.login)) },
+        title = { Text(text = stringResource(R.string.login_topbar)) },
         navigationIcon = {
             IconButton(onClick = onBack) {
-                Icon(backButton, null, modifier = Modifier.size(32.dp))
+                Icon(
+                    painter = backButton,
+                    contentDescription = null,
+                    modifier = Modifier.size(Dimens.iconMediumHeight)
+                )
             }
         },
         actions = {

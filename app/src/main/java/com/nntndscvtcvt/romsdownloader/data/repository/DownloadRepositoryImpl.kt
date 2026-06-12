@@ -14,14 +14,10 @@ import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadTask
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request

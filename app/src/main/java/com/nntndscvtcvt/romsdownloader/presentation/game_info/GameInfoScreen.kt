@@ -1,6 +1,13 @@
 package com.nntndscvtcvt.romsdownloader.presentation.game_info
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -9,14 +16,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyShowError
-import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoContent
+import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoHeader
+import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoOverview
+import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoScreenshots
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoTopBar
+import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.gameInfoDownloads
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun GameInfoScreen(
     id: String,
@@ -54,14 +66,29 @@ fun GameInfoScreen(
                     SnackbarHost(hostState = snackbarHostState)
                 }
             ) { innerPadding ->
-                GameInfoContent(
-                    modifier = Modifier.padding(innerPadding),
-                    state = state.games,
-                    downloads = state.gameFileItem,
-                    startDownload = { url, fileName ->
-                        viewModel.startDownload(url, fileName, state.games)
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(innerPadding),
+                    verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
+                ) {
+                    item {
+                        GameInfoHeader(state.games)
                     }
-                )
+
+                    item {
+                        GameInfoOverview(state.games)
+                    }
+
+                    item {
+                        GameInfoScreenshots(state.games)
+                    }
+                    gameInfoDownloads(
+                        downloads = state.gameFileItem,
+                        startDownload = { url, fileName ->
+                            viewModel.startDownload(url, fileName, state.games)
+                        }
+                    )
+                    item { Spacer(Modifier.height(12.dp)) }
+                }
             }
         }
     }

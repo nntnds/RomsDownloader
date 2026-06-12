@@ -27,6 +27,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.favorite.FavoriteScreen
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameInfoScreen
 import com.nntndscvtcvt.romsdownloader.presentation.home.HomeScreen
 import com.nntndscvtcvt.romsdownloader.presentation.login.LoginScreen
+import com.nntndscvtcvt.romsdownloader.presentation.settings.SettingsScreen
 
 @Composable
 fun Navigator() {
@@ -78,6 +79,12 @@ fun Navigator() {
                 }
                 entry<AppRoutes.Login> {
                     LoginScreen(onBack = onBack)
+                }
+                entry<AppRoutes.Settings> {
+                    SettingsScreen(
+                        onNavigate = { navigateToTab(backStack, AppRoutes.Login) },
+                        onBack = onBack
+                    )
                 }
             },
             transitionSpec = {

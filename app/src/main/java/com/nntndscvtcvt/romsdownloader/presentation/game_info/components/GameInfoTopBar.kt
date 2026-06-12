@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.R
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun GameInfoTopBar(
@@ -25,7 +26,11 @@ fun GameInfoTopBar(
         title = {},
         navigationIcon = {
             IconButton(onClick = onBack) {
-                Icon(backButton, null, modifier = Modifier.size(28.dp))
+                Icon(
+                    painter = backButton,
+                    contentDescription = null,
+                    modifier = Modifier.size(Dimens.iconMediumHeight)
+                )
             }
         },
         actions = {

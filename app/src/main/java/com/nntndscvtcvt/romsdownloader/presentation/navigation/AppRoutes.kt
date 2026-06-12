@@ -18,5 +18,8 @@ sealed class AppRoutes : NavKey {
     data object Login : AppRoutes()
 
     @Serializable
+    data object Settings : AppRoutes()
+
+    @Serializable
     data class GameInfo(val id: String) : AppRoutes()
 }

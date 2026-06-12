@@ -50,7 +50,7 @@ class GameRepositoryImpl(
     }
 
     private suspend fun saveAllGames() = withContext(Dispatchers.IO) {
-        val entities = firestore.collection("games")
+        val entities = firestore.collection("psp_games")
             .get()
             .await()
             .documents.mapNotNull { documentSnapshot ->

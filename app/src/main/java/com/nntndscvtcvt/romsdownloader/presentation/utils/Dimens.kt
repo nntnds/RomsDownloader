@@ -3,6 +3,9 @@ package com.nntndscvtcvt.romsdownloader.presentation.utils
 import androidx.compose.ui.unit.dp
 
 object Dimens {
+    val iconLargeHeight = 32.dp
+    val iconMediumHeight = 28.dp
+
     val PaddingSmall = 4.dp
     val PaddingMedium = 8.dp
     val PaddingLarge = 12.dp
