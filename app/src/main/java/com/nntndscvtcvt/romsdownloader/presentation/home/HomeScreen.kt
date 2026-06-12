@@ -9,9 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyLazyVerticalGrid
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyShowError
+import com.nntndscvtcvt.romsdownloader.presentation.components.GamesGrid
+import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
 import com.nntndscvtcvt.romsdownloader.presentation.home.components.SearchBar
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,10 +41,10 @@ fun HomeScreen(
     ) { innerPadding ->
         when (val state = uiState) {
             is HomeState.Loading -> {
-                MyLoadingIndicator(Modifier.padding(innerPadding))
+                LoadingScreen(Modifier.padding(innerPadding))
             }
             is HomeState.Success -> {
-                MyLazyVerticalGrid(
+                GamesGrid(
                     modifier = Modifier.padding(innerPadding),
                     gamesData = state.games,
                     navigateToGameInfo = {
@@ -53,7 +53,7 @@ fun HomeScreen(
                 )
             }
             is HomeState.Error -> {
-                MyShowError(Modifier.padding(innerPadding), state.error)
+                ErrorScreen(Modifier.padding(innerPadding), state.error)
             }
         }
     }

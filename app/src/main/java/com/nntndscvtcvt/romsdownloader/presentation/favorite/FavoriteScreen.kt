@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyLazyVerticalGrid
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyShowError
+import com.nntndscvtcvt.romsdownloader.presentation.components.GamesGrid
+import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
 import com.nntndscvtcvt.romsdownloader.presentation.favorite.components.FavoriteScreenTopBar
 import org.koin.androidx.compose.koinViewModel
 
@@ -45,17 +45,17 @@ fun FavoriteScreen(
                 }
             }
             is FavoriteState.Loading -> {
-                MyLoadingIndicator(Modifier.padding(innerPadding))
+                LoadingScreen(Modifier.padding(innerPadding))
             }
             is FavoriteState.Success -> {
-                MyLazyVerticalGrid(
+                GamesGrid(
                     modifier = Modifier.padding(innerPadding),
                     gamesData = state.favorites,
                     navigateToGameInfo = { navigateToGameInfo(it) }
                 )
             }
             is FavoriteState.Error -> {
-                MyShowError(Modifier.padding(innerPadding),state.error)
+                ErrorScreen(Modifier.padding(innerPadding),state.error)
             }
         }
     }

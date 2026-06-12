@@ -1,13 +1,16 @@
 package com.nntndscvtcvt.romsdownloader.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -17,11 +20,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
@@ -30,7 +35,7 @@ import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
-fun MyLazyVerticalGrid(
+fun GamesGrid(
     modifier: Modifier,
     gamesData: List<Game>,
     navigateToGameInfo: (String) -> Unit,
@@ -47,59 +52,55 @@ fun MyLazyVerticalGrid(
         items(
             items = gamesData,
             key = { it.id }
-        ) { data ->
-            GameCard(data, navigateToGameInfo)
+        ) { game ->
+            GameCard(
+                game = game,
+                navigateToGameInfo = navigateToGameInfo,
+                modifier = Modifier.animateItem()
+            )
         }
     }
 }
 
 @Composable
 private fun GameCard(
-    data: Game,
-    navigateToGameInfo: (String) -> Unit
+    game: Game,
+    navigateToGameInfo: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        ),
-        onClick = { navigateToGameInfo(data.id) }
-    ) {
-        Column {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(Dimens.ImageAspectRatio),
-                model = ImageRequest.Builder(context)
-                    .data(COVER_URL + data.coverUrl)
-                    .memoryCachePolicy(CachePolicy.ENABLED)
-                    .diskCachePolicy(CachePolicy.ENABLED)
-                    .size(300, 430)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
-                error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
-            )
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = Dimens.PaddingSmall)
-                    .heightIn(Dimens.CardTextHeight),
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = Dimens.PaddingSmall),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    text = data.name,
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.titleSmall,
-                )
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.medium)
+            .clickable {
+                navigateToGameInfo(game.id)
             }
-        }
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(COVER_URL + game.coverUrl)
+                .size(300, 430)
+                .build(),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(Dimens.ImageAspectRatio)
+                .clip(MaterialTheme.shapes.medium),
+            contentScale = ContentScale.Crop,
+            placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
+            error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
+        )
+
+        Spacer(Modifier.size(Dimens.PaddingSmall))
+
+        Text(
+            text = game.name,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.PaddingMedium)
+        )
     }
 }

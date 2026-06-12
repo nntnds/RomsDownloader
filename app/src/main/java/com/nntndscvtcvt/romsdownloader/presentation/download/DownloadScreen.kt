@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
+import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.DownloadScreenTopBar
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.DownloadsList
 import com.nntndscvtcvt.romsdownloader.presentation.download.components.SelectionTopBar
@@ -73,7 +73,7 @@ fun DownloadScreen(
         }
     ) { innerPadding ->
         when(val state = uiState) {
-            is DownloadState.Loading -> { MyLoadingIndicator(Modifier.padding(innerPadding)) }
+            is DownloadState.Loading -> { LoadingScreen(Modifier.padding(innerPadding)) }
             is DownloadState.Empty -> {
                 Box(
                     Modifier

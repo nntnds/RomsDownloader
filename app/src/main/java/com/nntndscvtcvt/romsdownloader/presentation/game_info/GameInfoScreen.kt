@@ -18,8 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
-import com.nntndscvtcvt.romsdownloader.presentation.components.MyShowError
+import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoHeader
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoOverview
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoScreenshots
@@ -51,8 +51,8 @@ fun GameInfoScreen(
     }
 
     when (val state = state) {
-        is GameInfoState.Loading -> MyLoadingIndicator(Modifier)
-        is GameInfoState.Error -> MyShowError(Modifier, e = state.error)
+        is GameInfoState.Loading -> LoadingScreen(Modifier)
+        is GameInfoState.Error -> ErrorScreen(Modifier, e = state.error)
         is GameInfoState.Success -> {
             Scaffold(
                 contentWindowInsets = WindowInsets(0.dp),
