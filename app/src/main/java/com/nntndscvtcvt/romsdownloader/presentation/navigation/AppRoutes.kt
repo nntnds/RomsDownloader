@@ -23,3 +23,7 @@ sealed class AppRoutes : NavKey {
     @Serializable
     data class GameInfo(val id: String) : AppRoutes()
 }
+
+fun NavKey?.showBottomBar(): Boolean = this is AppRoutes.Home ||
+        this is AppRoutes.Downloads ||
+        this is AppRoutes.Favorites

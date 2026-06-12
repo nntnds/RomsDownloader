@@ -8,17 +8,10 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
@@ -34,103 +27,70 @@ fun Navigator() {
     val backStack = rememberNavBackStack(AppRoutes.Home)
     val currentRoute = backStack.lastOrNull()
 
-    val shouldShowBottomBar = currentRoute is AppRoutes.Home ||
-            currentRoute is AppRoutes.Downloads ||
-            currentRoute is AppRoutes.Favorites
-
-    val navigateToGameInfo = { id: String ->
-        navigateToTab(backStack, AppRoutes.GameInfo(id))
-    }
-    val onBack = {
-        if (backStack.size > 1) backStack.removeLastOrNull()
-    }
+    val navigator = remember { NavigatorState(backStack) }
 
     Scaffold(
         bottomBar = {
-            if (shouldShowBottomBar) {
+            if (currentRoute.showBottomBar()) {
                 BottomNavigationBar(
                     currentRoute = currentRoute,
-                    onNavigate = { navigateToTab(backStack, it) }
+                    onNavigate = navigator::navigate
                 )
             }
         }
     ) { innerPadding ->
         NavDisplay(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
                 entry<AppRoutes.Home> {
                     HomeScreen(
-                        onNavigate = navigateToGameInfo
+                        navigateToGameInfo = navigator::navigateToGameInfo,
+                        navigateToSettings = navigator::navigateToSettings
                     )
                 }
                 entry<AppRoutes.Downloads> {
                     DownloadScreen(
-                        onNavigate = { navigateToTab(backStack, AppRoutes.Login) },
-                        onGameInfoScreen = navigateToGameInfo
+                        navigateToSettings = navigator::navigateToSettings,
+                        navigateToGameInfo = navigator::navigateToGameInfo
                     )
                 }
                 entry<AppRoutes.Favorites> {
-                    FavoriteScreen(onNavigate = navigateToGameInfo)
+                    FavoriteScreen(
+                        navigateToGameInfo = navigator::navigateToGameInfo,
+                        navigateToSettings = navigator::navigateToSettings
+                    )
                 }
                 entry<AppRoutes.GameInfo> { key ->
-                    GameInfoScreen(id = key.id, onBack = onBack)
+                    GameInfoScreen(
+                        id = key.id,
+                        onBack = navigator::navigateBack
+                    )
                 }
                 entry<AppRoutes.Login> {
-                    LoginScreen(onBack = onBack)
+                    LoginScreen(
+                        onBack = navigator::navigateBack
+                    )
                 }
                 entry<AppRoutes.Settings> {
                     SettingsScreen(
-                        onNavigate = { navigateToTab(backStack, AppRoutes.Login) },
-                        onBack = onBack
+                        navigateToLogin = navigator::navigateToLogin,
+                        onBack = navigator::navigateBack
                     )
                 }
             },
             transitionSpec = {
-                fadeIn(tween(100)) togetherWith fadeOut(tween(100))
+                fadeIn(tween(250)) togetherWith fadeOut(tween(250))
             },
             popTransitionSpec = {
-                fadeIn(tween(100)) togetherWith fadeOut(tween(100))
+                fadeIn(tween(250)) togetherWith fadeOut(tween(250))
             },
             predictivePopTransitionSpec = {
                 slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
             }
         )
     }
-}
-
-@Composable
-private fun BottomNavigationBar(
-    currentRoute: NavKey?,
-    onNavigate: (AppRoutes) -> Unit
-) {
-    NavigationBar {
-        DESTINATIONS.forEach { (newRoute, item) ->
-            val isSelected = currentRoute == newRoute
-
-            NavigationBarItem(
-                selected = isSelected,
-                onClick = { onNavigate(newRoute) },
-                icon = {
-                    Icon(
-                        painter = painterResource(if (isSelected) item.selectedIcon else item.icon),
-                        contentDescription = null
-                    )
-                },
-                label = { Text(
-                    text = (stringResource(item.title))
-                ) },
-            )
-        }
-    }
-}
-
-private fun navigateToTab(
-    backStack: NavBackStack<NavKey>,
-    newRoute: AppRoutes
-) {
-    if (backStack.lastOrNull() == newRoute) return
-    backStack.remove(newRoute)
-    backStack.add(newRoute)
 }

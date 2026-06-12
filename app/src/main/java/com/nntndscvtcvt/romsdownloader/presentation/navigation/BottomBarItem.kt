@@ -24,10 +24,5 @@ val DESTINATIONS = mapOf(
         icon = R.drawable.outline_favorite_24,
         selectedIcon = R.drawable.baseline_favorite_24,
         title = R.string.nav_favorites
-    ),
-    AppRoutes.Settings to BottomBarItem(
-        icon = R.drawable.outline_settings_24,
-        selectedIcon = R.drawable.baseline_settings_24,
-        title = R.string.nav_settings
-    ),
+    )
 )
