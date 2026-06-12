@@ -33,7 +33,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 fun MyLazyVerticalGrid(
     modifier: Modifier,
     gamesData: List<Game>,
-    onNavigate: (String) -> Unit,
+    navigateToGameInfo: (String) -> Unit,
 ) {
     LazyVerticalGrid(
         modifier = modifier
@@ -48,7 +48,7 @@ fun MyLazyVerticalGrid(
             items = gamesData,
             key = { it.id }
         ) { data ->
-            GameCard(data, onNavigate)
+            GameCard(data, navigateToGameInfo)
         }
     }
 }
@@ -56,17 +56,16 @@ fun MyLazyVerticalGrid(
 @Composable
 private fun GameCard(
     data: Game,
-    onNavigate: (String) -> Unit
+    navigateToGameInfo: (String) -> Unit
 ) {
     val context = LocalContext.current
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
-        onClick = { onNavigate(data.id) }
+        onClick = { navigateToGameInfo(data.id) }
     ) {
         Column {
             AsyncImage(

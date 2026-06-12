@@ -12,18 +12,26 @@ import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.R
 
 @Composable
-fun DownloadScreenTopBar(onNavigate: () -> Unit, checkCookie: () -> Unit) {
-    val loginButton = painterResource(R.drawable.outline_login_24)
+fun DownloadScreenTopBar(
+    navigateToSettings: () -> Unit,
+    checkCookie: () -> Unit
+) {
     val cookieButton = painterResource(R.drawable.outline_cookie_24)
+    val settingsButton = painterResource(R.drawable.outline_settings_24)
+
     TopAppBar(
         windowInsets = WindowInsets(0.dp),
         title = { Text(stringResource(R.string.download_topbar)) },
         actions = {
-            IconButton(checkCookie) {
+            IconButton(
+                onClick = checkCookie
+            ) {
                 Icon(cookieButton, null)
-            }
-            IconButton(onNavigate) {
-                Icon(loginButton, null)
+            } /* TODO (Убрать кнопку) */
+            IconButton(
+                onClick = navigateToSettings
+            ) {
+                Icon(settingsButton, null)
             }
         }
     )

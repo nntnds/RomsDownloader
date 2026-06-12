@@ -22,18 +22,21 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun FavoriteScreen(
     favoriteViewModel: FavoriteViewModel = koinViewModel(),
-    onNavigate: (String) -> Unit
+    navigateToGameInfo: (String) -> Unit,
+    navigateToSettings: () -> Unit
 ) {
     val state by favoriteViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
-            FavoriteScreenTopBar()
+            FavoriteScreenTopBar(navigateToSettings)
         }
     ) { innerPadding ->
         when(val state = state) {
             is FavoriteState.Empty -> {
-                Box(Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
                         text = stringResource(R.string.no_favorites),
                         style = MaterialTheme.typography.bodyLarge,
@@ -48,7 +51,7 @@ fun FavoriteScreen(
                 MyLazyVerticalGrid(
                     modifier = Modifier.padding(innerPadding),
                     gamesData = state.favorites,
-                    onNavigate = onNavigate
+                    navigateToGameInfo = { navigateToGameInfo(it) }
                 )
             }
             is FavoriteState.Error -> {

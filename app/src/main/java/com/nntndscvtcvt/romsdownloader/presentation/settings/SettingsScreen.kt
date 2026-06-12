@@ -28,11 +28,13 @@ import com.nntndscvtcvt.romsdownloader.presentation.settings.components.ConsoleI
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.LoginSection
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.SectionHeader
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsScreen(
-    onNavigate: () -> Unit,
+    viewModel: SettingsViewModel = koinViewModel(),
+    navigateToLogin: () -> Unit,
     onBack: () -> Unit
 ) {
     val installIcon = painterResource(R.drawable.outline_download_24)
@@ -68,7 +70,7 @@ fun SettingsScreen(
                 SectionHeader(stringResource(R.string.log_in_header))
             }
             item {
-                LoginSection(onNavigate)
+                LoginSection(navigateToLogin)
             }
 
             item {

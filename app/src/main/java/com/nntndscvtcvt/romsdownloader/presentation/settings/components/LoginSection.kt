@@ -20,13 +20,13 @@ import com.nntndscvtcvt.romsdownloader.R
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LoginSection(
-    onNavigate: () -> Unit
+    onLoginScreen: () -> Unit
 ) {
     val loginIcon = painterResource(R.drawable.outline_login_24)
     val archiveIcon = painterResource(R.drawable.outline_account_balance_24)
 
     SegmentedListItem(
-        onClick = onNavigate,
+        onClick = onLoginScreen,
         shapes = ListItemDefaults.shapes(MaterialTheme.shapes.large),
         colors = ListItemDefaults.segmentedColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,

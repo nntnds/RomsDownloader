@@ -2,10 +2,9 @@ package com.nntndscvtcvt.romsdownloader.presentation.download
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.components.MyLoadingIndicator
@@ -36,9 +34,9 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DownloadScreen(
-    onNavigate: () -> Unit,
+    navigateToSettings: () -> Unit,
     viewModel: DownloadViewModel = koinViewModel(),
-    onGameInfoScreen: (String) -> Unit
+    navigateToGameInfo: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedIds by viewModel.selectedIds.collectAsStateWithLifecycle()
@@ -63,7 +61,7 @@ fun DownloadScreen(
                 )
             } else {
                 DownloadScreenTopBar(
-                    onNavigate = onNavigate,
+                    navigateToSettings = navigateToSettings,
                     checkCookie = { viewModel.cookieCheck() }
                 )
             }
@@ -95,7 +93,8 @@ fun DownloadScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.ColumnVerticalArrangement)
+                    verticalArrangement = Arrangement.spacedBy(Dimens.ColumnVerticalArrangement),
+                    contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
                 ) {
                     items(
                         items = state.downloads,
@@ -108,14 +107,13 @@ fun DownloadScreen(
                             onStop = { viewModel.stopDownload(item.id) },
                             onTap = {
                                 if (isSelected) viewModel.toggleSelection(item.id)
-                                else onGameInfoScreen(item.gameId)
+                                else navigateToGameInfo(item.gameId)
                             },
                             onLongPress = { viewModel.toggleSelection(item.id) },
                             isSelected = item.id in selectedIds,
                             isSelectedMode = isSelected
                         )
                     }
-                    item { Spacer(Modifier.size(12.dp)) }
                 }
             }
         }

@@ -19,7 +19,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
-    onNavigate: (String) -> Unit
+    navigateToGameInfo: (String) -> Unit,
+    navigateToSettings: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -33,7 +34,8 @@ fun HomeScreen(
                 query = query,
                 onClear = { viewModel.clearSearch() },
                 isSearchActive = isSearchActive,
-                onSearchActiveChange = { viewModel.toggleIsActive(it) }
+                onSearchActiveChange = { viewModel.toggleIsActive(it) },
+                navigateToSettings = navigateToSettings
             )
         }
     ) { innerPadding ->
@@ -45,8 +47,8 @@ fun HomeScreen(
                 MyLazyVerticalGrid(
                     modifier = Modifier.padding(innerPadding),
                     gamesData = state.games,
-                    onNavigate = {
-                        onNavigate(it)
+                    navigateToGameInfo = {
+                        navigateToGameInfo(it)
                     },
                 )
             }
