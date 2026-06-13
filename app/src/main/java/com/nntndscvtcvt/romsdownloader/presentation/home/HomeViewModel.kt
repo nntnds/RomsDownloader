@@ -31,15 +31,7 @@ class HomeViewModel(
     val isSearchActive = _isSearchActive.asStateFlow()
 
     init {
-        initializeData()
-    }
-
-    private fun initializeData() = viewModelScope.launch {
-//        gameRepository.sync().fold(
-//            onSuccess = { observeGames() },
-//            onFailure = { _uiState.value = HomeState.Error(it) }
-//        )
-        observeGames()
+        viewModelScope.launch { observeGames() }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -69,7 +61,6 @@ class HomeViewModel(
 
     fun clearSearch() {
         _query.update { "" }
-        _isSearchActive.update { false }
     }
 
     fun toggleIsActive(value: Boolean) {
