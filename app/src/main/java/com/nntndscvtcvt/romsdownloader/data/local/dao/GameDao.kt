@@ -16,14 +16,14 @@ interface GameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(games: List<GameEntity>)
 
-    @Transaction
-    suspend fun syncGames(games: List<GameEntity>) {
-        clearAll()
-        insertAll(games)
-    }
+    @Query("DELETE FROM games WHERE platform = :consoleName")
+    suspend fun deletePlatformGames(consoleName: String)
 
-    @Query("DELETE FROM games")
-    suspend fun clearAll()
+    @Query("SELECT COUNT(*) FROM games WHERE platform = :platform")
+    fun getGamesCount(platform: String): Flow<Int>
+
+    @Query("DELETE FROM games WHERE platform = :consoleName")
+    suspend fun clearPlatformGames(consoleName: String)
 
     @Query("SELECT COUNT(*) FROM games")
     suspend fun getCount(): Int
