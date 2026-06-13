@@ -34,7 +34,23 @@
     <string name="log_in_header">Log in</string>
     <string name="consoles_header">Consoles</string>
     <string name="supporting_content">Required to download games</string>
-    <string name="subtitle_topbar">manage app data and settings download</string>
+    <string name="subtitle_topbar">Manage app data and settings download</string>
+
+    <string name="archive_org_connection">Archive.org connection</string>
+    <string name="checking">Checking…</string>
+    <string name="archive_org_is_reachable">archive.org is reachable</string>
+    <string name="cannot_reach_archive_org">Cannot reach archive.org</string>
+    <string name="log_into_your_account">Log into your account</string>
+    <string name="tap_to_check">Tap to check</string>
+
+    <string name="dialog_delete_message">All downloaded games for this platform will be permanently removed from your device.</string>
+    <string name="dialog_redownload_message">Games are already downloaded. Do you want to update?</string>
+    <string name="dialog_redownload">Redownload %1$s?</string>
+    <string name="action_title">Delete %1$s?</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_update">Update</string>
+
 
     <!--Navigation-->
     <string name="nav_home">Home</string>

@@ -54,7 +54,7 @@ val appModule = module {
     single { get<AppDatabase>().favoriteDao() }
     single { get<AppDatabase>().downloadDao() }
 
-    single<GameRepository> { GameRepositoryImpl(get(), get(), get()) }
+    single<GameRepository> { GameRepositoryImpl(get(), get()) }
     single<SearchGameRepository> { SearchGameRepositoryImpl(get()) }
     single<GameInfoRepository> { GameInfoRepositoryImpl(get()) }
     single<GameFavoriteRepository> { GameFavoriteRepositoryImpl(get()) }
