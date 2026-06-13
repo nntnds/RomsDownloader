@@ -60,10 +60,7 @@ fun DownloadScreen(
                     onDelete = { viewModel.deleteSelected() }
                 )
             } else {
-                DownloadScreenTopBar(
-                    navigateToSettings = navigateToSettings,
-                    checkCookie = { viewModel.cookieCheck() }
-                )
+                DownloadScreenTopBar(navigateToSettings)
             }
         },
         snackbarHost = {

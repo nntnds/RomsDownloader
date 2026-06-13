@@ -1,4 +1,4 @@
-package com.nntndscvtcvt.romsdownloader.presentation.settings.components
+package com.nntndscvtcvt.romsdownloader.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth

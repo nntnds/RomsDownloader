@@ -28,7 +28,7 @@ fun LoginScreenTopBar(onBack: () -> Unit, onRefreshClick: () -> Unit, onClear: (
                 Icon(
                     painter = backButton,
                     contentDescription = null,
-                    modifier = Modifier.size(Dimens.iconMediumHeight)
+                    modifier = Modifier.size(Dimens.iconMediumSize)
                 )
             }
         },

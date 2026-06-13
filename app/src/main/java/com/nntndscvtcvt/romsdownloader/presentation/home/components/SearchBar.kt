@@ -105,7 +105,7 @@ fun SearchBar(
                     Icon(
                         painter = backButton,
                         contentDescription = null,
-                        modifier = Modifier.size(Dimens.iconMediumHeight)
+                        modifier = Modifier.size(Dimens.iconMediumSize)
                     )
                 }
             }
@@ -119,7 +119,7 @@ fun SearchBar(
                         Icon(
                             painter = clearButton,
                             contentDescription = null,
-                            modifier = Modifier.size(Dimens.iconMediumHeight)
+                            modifier = Modifier.size(Dimens.iconMediumSize)
                         )
                     }
                 }

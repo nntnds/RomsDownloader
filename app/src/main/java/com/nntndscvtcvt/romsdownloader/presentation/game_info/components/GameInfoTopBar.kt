@@ -29,7 +29,7 @@ fun GameInfoTopBar(
                 Icon(
                     painter = backButton,
                     contentDescription = null,
-                    modifier = Modifier.size(Dimens.iconMediumHeight)
+                    modifier = Modifier.size(Dimens.iconMediumSize)
                 )
             }
         },

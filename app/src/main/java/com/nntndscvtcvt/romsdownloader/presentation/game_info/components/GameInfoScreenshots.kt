@@ -39,96 +39,86 @@ import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun GameInfoScreenshots(state: Game) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Dimens.PaddingLarge)
-    ) {
-        var isFullScreen by rememberSaveable { mutableStateOf(false) }
-        var imageUrl by rememberSaveable { mutableStateOf("") }
-        val carouselState = rememberCarouselState { state.screenshots.size }
+    var isFullScreen by rememberSaveable { mutableStateOf(false) }
+    var imageUrl by rememberSaveable { mutableStateOf("") }
+    val carouselState = rememberCarouselState { state.screenshots.size }
 
-        Text(
-            text = stringResource(R.string.screenshots),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = Dimens.PaddingLarge),
-        )
+    if (state.screenshots.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(Dimens.ScreenshotImageHeight)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                    shape = MaterialTheme.shapes.medium
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.no_screenshots),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    } else {
+        HorizontalMultiBrowseCarousel(
+            state = carouselState,
+            preferredItemWidth = 360.dp,
+            itemSpacing = Dimens.PaddingMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = Dimens.PaddingLarge)
+        ) { index ->
+            val url = state.screenshots[index]
 
-        if (state.screenshots.isEmpty()) {
-            Box(
+            AsyncImage(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .height(Dimens.ScreenshotImageHeight)
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceContainerLow,
-                        shape = MaterialTheme.shapes.medium
-                    ), contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.no_screenshots),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    .maskClip(MaterialTheme.shapes.medium)
+                    .clickable {
+                        isFullScreen = !isFullScreen
+                        imageUrl = url
+                    },
+                model = ImageRequest
+                    .Builder(LocalContext.current)
+                    .crossfade(true)
+                    .data(COVER_URL + url)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
+                error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
+            )
+        }
+        if (isFullScreen) {
+            Dialog(
+                onDismissRequest = { isFullScreen = false }, properties = DialogProperties(
+                    usePlatformDefaultWidth = false
                 )
-            }
-        } else {
-            HorizontalMultiBrowseCarousel(
-                state = carouselState,
-                preferredItemWidth = 360.dp,
-                itemSpacing = Dimens.PaddingMedium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) { index ->
-                val url = state.screenshots[index]
-
-                AsyncImage(
+            ) {
+                Box(
                     modifier = Modifier
-                        .height(Dimens.ScreenshotImageHeight)
-                        .maskClip(MaterialTheme.shapes.medium)
+                        .fillMaxSize()
                         .clickable {
                             isFullScreen = !isFullScreen
-                            imageUrl = url
-                        },
-                    model = ImageRequest
-                        .Builder(LocalContext.current)
-                        .crossfade(true)
-                        .data(COVER_URL + url)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
-                    error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
-                )
-            }
-            if (isFullScreen) {
-                Dialog(
-                    onDismissRequest = { isFullScreen = false }, properties = DialogProperties(
-                        usePlatformDefaultWidth = false
-                    )
-                ) {
-                    Box(
+                        }
+                        .padding(Dimens.PaddingLarge),
+                    contentAlignment = Alignment.Center) {
+                    AsyncImage(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .clickable {
-                                isFullScreen = !isFullScreen
-                            }
-                            .padding(Dimens.PaddingLarge),
-                        contentAlignment = Alignment.Center) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(MaterialTheme.shapes.small)
-                                .clickable { isFullScreen = !isFullScreen },
-                            model = ImageRequest.Builder(LocalContext.current).crossfade(true)
-                                .data(COVER_URL + imageUrl).memoryCachePolicy(CachePolicy.ENABLED)
-                                .build(),
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit,
-                            placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
-                            error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
-                        )
-                    }
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.small)
+                            .clickable { isFullScreen = !isFullScreen },
+                        model = ImageRequest.Builder(LocalContext.current).crossfade(true)
+                            .data(COVER_URL + imageUrl).memoryCachePolicy(CachePolicy.ENABLED)
+                            .build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
+                        error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
+                    )
                 }
             }
         }

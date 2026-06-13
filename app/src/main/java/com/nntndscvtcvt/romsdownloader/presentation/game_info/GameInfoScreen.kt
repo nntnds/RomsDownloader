@@ -1,11 +1,15 @@
 package com.nntndscvtcvt.romsdownloader.presentation.game_info
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
@@ -16,15 +20,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
 import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.SectionHeader
+import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoDownloads
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoHeader
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoOverview
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoScreenshots
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoTopBar
-import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.gameInfoDownloads
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
@@ -69,8 +76,9 @@ fun GameInfoScreen(
                 }
             ) { innerPadding ->
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize().padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                     contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
                 ) {
                     item {
@@ -82,14 +90,36 @@ fun GameInfoScreen(
                     }
 
                     item {
+                        Spacer(Modifier.size(Dimens.PaddingLarge))
+                        SectionHeader(stringResource(R.string.screenshots))
+                        Spacer(Modifier.size(Dimens.PaddingLarge))
+                    }
+
+                    item {
                         GameInfoScreenshots(state.games)
                     }
-                    gameInfoDownloads(
-                        downloads = state.gameFileItem,
-                        startDownload = { url, fileName ->
-                            viewModel.startDownload(url, fileName, state.games)
+
+                    item {
+                        Spacer(Modifier.size(Dimens.PaddingLarge))
+                        Column(
+                            modifier = Modifier.padding(horizontal = Dimens.PaddingLarge),
+                            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
+                        ) {
+                            SectionHeader(stringResource(R.string.downloads))
+
+                            Spacer(Modifier.size(Dimens.PaddingLarge))
+                            state.gameFileItem.forEachIndexed { index, item ->
+                                GameInfoDownloads(
+                                    downloads = state.gameFileItem,
+                                    item = item,
+                                    index = index,
+                                    startDownload = { url, fileName ->
+                                        viewModel.startDownload(url, fileName, state.games)
+                                    }
+                                )
+                            }
                         }
-                    )
+                    }
                 }
             }
         }

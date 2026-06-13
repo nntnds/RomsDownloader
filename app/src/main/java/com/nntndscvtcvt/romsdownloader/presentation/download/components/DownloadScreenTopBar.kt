@@ -14,21 +14,13 @@ import com.nntndscvtcvt.romsdownloader.R
 @Composable
 fun DownloadScreenTopBar(
     navigateToSettings: () -> Unit,
-    checkCookie: () -> Unit
 ) {
-    val cookieButton = painterResource(R.drawable.outline_cookie_24)
     val settingsButton = painterResource(R.drawable.outline_settings_24)
 
     TopAppBar(
         windowInsets = WindowInsets(0.dp),
         title = { Text(stringResource(R.string.download_topbar)) },
         actions = {
-            /* TODO (Убрать кнопку) */
-            IconButton(
-                onClick = checkCookie
-            ) {
-                Icon(cookieButton, null)
-            }
             IconButton(
                 onClick = navigateToSettings
             ) {
