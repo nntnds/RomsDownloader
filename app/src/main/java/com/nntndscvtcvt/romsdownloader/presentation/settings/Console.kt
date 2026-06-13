@@ -5,22 +5,22 @@ import com.nntndscvtcvt.romsdownloader.R
 
 data class Console(
     val consoleName: String,
+    val platform: String,
     @DrawableRes val icon: Int,
     val size: String,
-    val gamesCount: String
 )
 
 val consoles = listOf(
     Console(
         consoleName = "PSP",
+        platform = "Sony PSP",
         icon = R.drawable.psp_ic,
-        size = "2,3 MB",
-        gamesCount = "1357 games"
+        size = "2,1 MB"
     ),
     Console(
         consoleName = "PS2",
+        platform = "Sony Playstation 2",
         icon = R.drawable.ps2_ic,
-        size = "5,6 MB",
-        gamesCount = "2894 games"
+        size = "5,4 MB",
     )
 )
