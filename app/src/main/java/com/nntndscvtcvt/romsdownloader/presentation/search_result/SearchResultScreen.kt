@@ -21,11 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.components.GameCard
-import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -65,7 +64,7 @@ fun SearchResultScreen(
     ) { innerPadding ->
         when (val state = uiState) {
             SearchResultState.Loading -> {
-                LoadingScreen(Modifier.padding(innerPadding))
+                ShowLoading(Modifier.padding(innerPadding))
             }
 
             is SearchResultState.Success -> {

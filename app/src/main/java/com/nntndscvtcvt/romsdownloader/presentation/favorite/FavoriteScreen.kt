@@ -20,9 +20,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.ShowError
 import com.nntndscvtcvt.romsdownloader.presentation.components.GameCard
-import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
 import com.nntndscvtcvt.romsdownloader.presentation.favorite.components.FavoriteScreenTopBar
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import org.koin.androidx.compose.koinViewModel
@@ -61,7 +61,7 @@ fun FavoriteScreen(
             }
 
             is FavoriteState.Loading -> {
-                LoadingScreen(Modifier.padding(innerPadding))
+                ShowLoading(Modifier.padding(innerPadding))
             }
 
             is FavoriteState.Success -> {
@@ -88,7 +88,7 @@ fun FavoriteScreen(
             }
 
             is FavoriteState.Error -> {
-                ErrorScreen(Modifier.padding(innerPadding), state.error)
+                ShowError(Modifier.padding(innerPadding), state.error)
             }
         }
     }

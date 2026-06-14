@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import com.nntndscvtcvt.romsdownloader.presentation.utils.toUserMessage
 
 @Composable
-fun ErrorScreen(modifier: Modifier, e: Throwable) {
+fun ShowError(modifier: Modifier, e: Throwable) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

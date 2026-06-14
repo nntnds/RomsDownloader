@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
-import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.ShowError
+import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
 import com.nntndscvtcvt.romsdownloader.presentation.home.components.PlatformSection
 import com.nntndscvtcvt.romsdownloader.presentation.home.components.SearchBar
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
@@ -54,7 +54,7 @@ fun HomeScreen(
     ) { innerPadding ->
         when (val state = uiState) {
             HomeState.Loading -> {
-                LoadingScreen(Modifier.padding(innerPadding))
+                ShowLoading(Modifier.padding(innerPadding))
             }
             is HomeState.Success -> {
                 val platformList = remember(state.games) { state.games.entries.toList() }
@@ -89,7 +89,7 @@ fun HomeScreen(
                 }
             }
             is HomeState.Error -> {
-                ErrorScreen(Modifier.padding(innerPadding), state.error)
+                ShowError(Modifier.padding(innerPadding), state.error)
             }
         }
     }

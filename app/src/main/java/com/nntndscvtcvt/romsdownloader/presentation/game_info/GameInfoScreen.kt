@@ -4,12 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemDefaults
@@ -24,11 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
-import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
+import com.nntndscvtcvt.romsdownloader.presentation.components.ShowError
+import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
 import com.nntndscvtcvt.romsdownloader.presentation.components.SectionHeader
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoDownloads
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoHeader
@@ -63,8 +59,8 @@ fun GameInfoScreen(
     }
 
     when (val state = state) {
-        is GameInfoState.Loading -> LoadingScreen(Modifier)
-        is GameInfoState.Error -> ErrorScreen(Modifier, e = state.error)
+        is GameInfoState.Loading -> ShowLoading(Modifier)
+        is GameInfoState.Error -> ShowError(Modifier, e = state.error)
         is GameInfoState.Success -> {
             Scaffold(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
