@@ -17,12 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.nntndscvtcvt.romsdownloader.presentation.search_result.SearchResultScreen
 import com.nntndscvtcvt.romsdownloader.presentation.download.DownloadScreen
 import com.nntndscvtcvt.romsdownloader.presentation.favorite.FavoriteScreen
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameInfoScreen
 import com.nntndscvtcvt.romsdownloader.presentation.home.HomeScreen
 import com.nntndscvtcvt.romsdownloader.presentation.login.LoginScreen
+import com.nntndscvtcvt.romsdownloader.presentation.search_result.SearchResultScreen
 import com.nntndscvtcvt.romsdownloader.presentation.settings.SettingsScreen
 
 @Composable

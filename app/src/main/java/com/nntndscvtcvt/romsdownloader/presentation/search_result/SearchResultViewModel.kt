@@ -2,12 +2,10 @@ package com.nntndscvtcvt.romsdownloader.presentation.search_result
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.domain.repository.SearchGameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SearchResultViewModel(

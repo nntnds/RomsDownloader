@@ -20,8 +20,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.presentation.components.ShowError
 import com.nntndscvtcvt.romsdownloader.presentation.components.GameCard
+import com.nntndscvtcvt.romsdownloader.presentation.components.ShowError
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
 import com.nntndscvtcvt.romsdownloader.presentation.favorite.components.FavoriteScreenTopBar
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens

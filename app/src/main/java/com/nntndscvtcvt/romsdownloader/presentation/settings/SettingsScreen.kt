@@ -1,6 +1,5 @@
 package com.nntndscvtcvt.romsdownloader.presentation.settings
 
-import android.graphics.pdf.models.ListItem
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -12,9 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.ListItemShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedListItem
@@ -34,9 +31,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadGamesState
 import com.nntndscvtcvt.romsdownloader.presentation.components.SectionHeader
+import com.nntndscvtcvt.romsdownloader.presentation.settings.components.ConsoleItem
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.LogInSection
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.SettingsTopBar
-import com.nntndscvtcvt.romsdownloader.presentation.settings.components.ConsoleItem
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
