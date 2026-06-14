@@ -14,12 +14,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
@@ -40,7 +42,9 @@ fun DownloadScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedIds by viewModel.selectedIds.collectAsStateWithLifecycle()
+
     val isSelected = selectedIds.isNotEmpty()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
@@ -51,16 +55,18 @@ fun DownloadScreen(
     }
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             if (isSelected) {
                 SelectionTopBar(
                     selectedCount = selectedIds.size,
                     onClearSelection = { viewModel.clearSelection() },
                     onSelectAll = { viewModel.selectAll() },
-                    onDelete = { viewModel.deleteSelected() }
+                    onDelete = { viewModel.deleteSelected() },
+                    scrollBehavior = scrollBehavior
                 )
             } else {
-                DownloadScreenTopBar(navigateToSettings)
+                DownloadScreenTopBar(navigateToSettings, scrollBehavior)
             }
         },
         snackbarHost = {

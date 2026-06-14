@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +40,8 @@ fun SearchBar(
     onClear: () -> Unit,
     isSearchActive: Boolean,
     onSearchActiveChange: (Boolean) -> Unit,
-    navigateToSettings: () -> Unit
+    navigateToSettings: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     val backButton = painterResource(R.drawable.outline_keyboard_arrow_left_24)
     val searchButton = painterResource(R.drawable.outline_search_24)
@@ -57,7 +60,8 @@ fun SearchBar(
     }
 
     TopAppBar(
-        windowInsets = WindowInsets(0.dp),
+        windowInsets = WindowInsets.statusBars,
+        scrollBehavior = scrollBehavior,
         title = {
             if (isSearchActive || query.isNotEmpty()) {
                 BasicTextField(
@@ -119,7 +123,7 @@ fun SearchBar(
                         Icon(
                             painter = clearButton,
                             contentDescription = null,
-                            modifier = Modifier.size(Dimens.iconMediumSize)
+                            modifier = Modifier.size(Dimens.iconDefaultSize)
                         )
                     }
                 }
@@ -144,7 +148,8 @@ fun SearchBar(
             containerColor = MaterialTheme.colorScheme.surface,
             titleContentColor = MaterialTheme.colorScheme.onSurface,
             actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
         )
     )
 }

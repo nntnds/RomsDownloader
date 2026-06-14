@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.presentation.components.ErrorScreen
 import com.nntndscvtcvt.romsdownloader.presentation.components.LoadingScreen
-import com.nntndscvtcvt.romsdownloader.presentation.home.components.GameCarousel
 import com.nntndscvtcvt.romsdownloader.presentation.home.components.PlatformSection
 import com.nntndscvtcvt.romsdownloader.presentation.home.components.SearchBar
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens

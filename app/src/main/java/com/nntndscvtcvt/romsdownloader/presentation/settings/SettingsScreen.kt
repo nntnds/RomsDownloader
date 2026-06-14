@@ -14,11 +14,13 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
@@ -42,6 +44,7 @@ fun SettingsScreen(
     val connectionStatus by viewModel.connectionStatus.collectAsStateWithLifecycle()
     val gamesCount by viewModel.gamesCount.collectAsStateWithLifecycle()
 
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
@@ -52,8 +55,12 @@ fun SettingsScreen(
     }
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            SettingsTopBar(onBack)
+            SettingsTopBar(
+                onBack = onBack,
+                scrollBehavior = scrollBehavior
+            )
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)

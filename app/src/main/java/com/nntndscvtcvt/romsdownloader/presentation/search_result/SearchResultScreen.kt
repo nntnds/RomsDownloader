@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -13,10 +14,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,15 +39,18 @@ fun SearchResultScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val backButton = painterResource(R.drawable.outline_keyboard_arrow_left_24)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     LaunchedEffect(platform, query) {
         viewModel.loadGames(platform, query)
     }
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                windowInsets = WindowInsets(0.dp),
+                windowInsets = WindowInsets.statusBars,
+                scrollBehavior = scrollBehavior,
                 title = { Text(platform) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
@@ -61,6 +67,7 @@ fun SearchResultScreen(
             SearchResultState.Loading -> {
                 LoadingScreen(Modifier.padding(innerPadding))
             }
+
             is SearchResultState.Success -> {
                 LazyVerticalGrid(
                     modifier = Modifier
@@ -84,6 +91,7 @@ fun SearchResultScreen(
                     }
                 }
             }
+
             else -> {}
         }
     }

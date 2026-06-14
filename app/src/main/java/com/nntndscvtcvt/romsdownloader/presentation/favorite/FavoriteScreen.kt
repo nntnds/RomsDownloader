@@ -11,10 +11,12 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
@@ -32,10 +34,15 @@ fun FavoriteScreen(
     navigateToSettings: () -> Unit
 ) {
     val state by favoriteViewModel.uiState.collectAsStateWithLifecycle()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            FavoriteScreenTopBar(navigateToSettings)
+            FavoriteScreenTopBar(
+                navigateToSettings = navigateToSettings,
+                scrollBehavior = scrollBehavior,
+            )
         }
     ) { innerPadding ->
         when (val state = state) {
