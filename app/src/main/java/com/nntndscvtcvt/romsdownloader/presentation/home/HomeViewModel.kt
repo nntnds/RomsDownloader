@@ -48,7 +48,8 @@ class HomeViewModel(
             }
             .catch { _uiState.value = HomeState.Error(it) }
             .collect { result ->
-                _uiState.value = HomeState.Success(result)
+                val grouped = result.groupBy { it.platform }
+                _uiState.value = HomeState.Success(grouped)
             }
     }
 

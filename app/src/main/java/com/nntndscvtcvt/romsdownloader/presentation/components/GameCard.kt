@@ -1,23 +1,22 @@
 package com.nntndscvtcvt.romsdownloader.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -29,35 +28,7 @@ import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
-fun GamesGrid(
-    modifier: Modifier,
-    gamesData: List<Game>,
-    navigateToGameInfo: (Int) -> Unit,
-) {
-    LazyVerticalGrid(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = Dimens.PaddingLarge),
-        columns = GridCells.Fixed(Dimens.GridColumns),
-        horizontalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
-        verticalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
-        contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
-    ) {
-        items(
-            items = gamesData,
-            key = { it.databaseID }
-        ) { game ->
-            GameCard(
-                game = game,
-                navigateToGameInfo = navigateToGameInfo,
-                modifier = Modifier.animateItem()
-            )
-        }
-    }
-}
-
-@Composable
-private fun GameCard(
+fun GameCard(
     game: Game,
     navigateToGameInfo: (Int) -> Unit,
     modifier: Modifier = Modifier
@@ -66,7 +37,9 @@ private fun GameCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
-            .clickable { navigateToGameInfo(game.databaseID) }
+            .clickable(
+                onClick = { navigateToGameInfo(game.databaseID) },
+            )
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -82,9 +55,6 @@ private fun GameCard(
             placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
             error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
         )
-
-//        Spacer(Modifier.size(Dimens.PaddingSmall))
-
         Text(
             text = game.name,
             maxLines = 2,
