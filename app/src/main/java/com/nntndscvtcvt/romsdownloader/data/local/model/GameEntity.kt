@@ -3,7 +3,6 @@ package com.nntndscvtcvt.romsdownloader.data.local.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Serializer
 
 @Entity(tableName = "games")
 data class GameEntity(
