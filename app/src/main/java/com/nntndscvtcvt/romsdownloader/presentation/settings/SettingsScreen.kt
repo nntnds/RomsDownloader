@@ -23,10 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadGamesState
-import com.nntndscvtcvt.romsdownloader.presentation.settings.components.console.ConsoleItem
-import com.nntndscvtcvt.romsdownloader.presentation.settings.components.LoginSection
 import com.nntndscvtcvt.romsdownloader.presentation.components.SectionHeader
+import com.nntndscvtcvt.romsdownloader.presentation.settings.components.LoginSection
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.SettingsTopBar
+import com.nntndscvtcvt.romsdownloader.presentation.settings.components.console.ConsoleItem
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
