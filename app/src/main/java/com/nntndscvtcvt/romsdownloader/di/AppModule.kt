@@ -22,6 +22,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.favorite.FavoriteViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameInfoViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.home.HomeViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.login.LoginViewModel
+import com.nntndscvtcvt.romsdownloader.presentation.search_result.SearchResultViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.settings.SettingsViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
@@ -67,4 +68,5 @@ val appModule = module {
     viewModelOf(::DownloadViewModel)
     viewModelOf(::LoginViewModel)
     viewModelOf(::SettingsViewModel)
+    viewModelOf(::SearchResultViewModel)
 }

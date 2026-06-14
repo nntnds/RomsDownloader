@@ -22,6 +22,9 @@ sealed class AppRoutes : NavKey {
 
     @Serializable
     data class GameInfo(val id: Int) : AppRoutes()
+
+    @Serializable
+    data class SearchResult(val platform: String, val query: String) : AppRoutes()
 }
 
 fun NavKey?.showBottomBar(): Boolean = this is AppRoutes.Home ||
