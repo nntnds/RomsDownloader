@@ -19,4 +19,6 @@ class NavigatorState(
     fun navigateToGameInfo(id: Int) = navigate(AppRoutes.GameInfo(id))
     fun navigateToSettings() = navigate(AppRoutes.Settings)
     fun navigateToLogin() = navigate(AppRoutes.Login)
+    fun navigateToSearchResult(platform: String, query: String) =
+        navigate(AppRoutes.SearchResult(platform, query))
 }
