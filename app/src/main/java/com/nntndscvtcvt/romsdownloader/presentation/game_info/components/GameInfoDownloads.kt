@@ -32,6 +32,9 @@ fun GameInfoDownloads(
         onClick = {
             startDownload(item.url, "${item.title}.${item.type}")
         },
+        shapes = if (downloads.size == 1) ListItemDefaults.shapes(MaterialTheme.shapes.medium)
+            else ListItemDefaults.segmentedShapes(index = index, count = downloads.size),
+        modifier = Modifier.padding(horizontal = Dimens.PaddingLarge),
         leadingContent = {
             Icon(
                 painter = painterResource(leadingIcon),
@@ -47,8 +50,6 @@ fun GameInfoDownloads(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
-        shapes = if (downloads.size == 1) ListItemDefaults.shapes(MaterialTheme.shapes.medium)
-        else ListItemDefaults.segmentedShapes(index = index, count = downloads.size),
 
         colors = ListItemDefaults.segmentedColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow

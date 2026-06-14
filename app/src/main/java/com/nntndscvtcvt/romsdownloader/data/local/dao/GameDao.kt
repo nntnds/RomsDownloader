@@ -4,14 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.nntndscvtcvt.romsdownloader.data.local.model.GameEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDao {
-    @Query("SELECT * FROM games ORDER BY name ASC LIMIT :limit")
-    fun getAllGames(limit: Int = 10): Flow<List<GameEntity>>
+    @Query("SELECT * FROM games ORDER BY name")
+    fun getAllGames(): Flow<List<GameEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(games: List<GameEntity>)

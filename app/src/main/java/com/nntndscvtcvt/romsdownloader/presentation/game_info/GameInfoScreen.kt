@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
@@ -97,17 +97,17 @@ fun GameInfoScreen(
 
                     item {
                         GameInfoScreenshots(state.games)
+                        Spacer(Modifier.size(Dimens.PaddingLarge))
                     }
 
                     item {
-                        Spacer(Modifier.size(Dimens.PaddingLarge))
                         Column(
-                            modifier = Modifier.padding(horizontal = Dimens.PaddingLarge),
                             verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
                         ) {
                             SectionHeader(stringResource(R.string.downloads))
 
                             Spacer(Modifier.size(Dimens.PaddingLarge))
+
                             state.gameFileItem.forEachIndexed { index, item ->
                                 GameInfoDownloads(
                                     downloads = state.gameFileItem,
