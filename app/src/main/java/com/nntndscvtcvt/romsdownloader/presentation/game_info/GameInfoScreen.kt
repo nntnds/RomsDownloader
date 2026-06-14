@@ -1,5 +1,7 @@
 package com.nntndscvtcvt.romsdownloader.presentation.game_info
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
@@ -20,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
@@ -34,6 +39,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInf
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
+import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -43,9 +49,11 @@ fun GameInfoScreen(
     viewModel: GameInfoViewModel = koinViewModel(key = id.toString())
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val useExternalDownloader by viewModel.useExternalDownloader.collectAsStateWithLifecycle()
     val isFavorite = (state as? GameInfoState.Success)?.isFavorite ?: false
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val context = LocalContext.current
 
     LaunchedEffect(id) {
         viewModel.getInfo(id)
@@ -80,15 +88,12 @@ fun GameInfoScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
+                    verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+                    contentPadding = PaddingValues(bottom = Dimens.PaddingLarge),
                 ) {
-                    item {
-                        GameInfoHeader(state.games)
-                    }
+                    item { GameInfoHeader(state.games) }
 
-                    item {
-                        GameInfoOverview(state.games.overview)
-                    }
+                    item { GameInfoOverview(state.games.overview) }
 
                     item {
                         Spacer(Modifier.size(Dimens.PaddingLarge))
@@ -102,24 +107,32 @@ fun GameInfoScreen(
                     }
 
                     item {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
-                        ) {
-                            SectionHeader(stringResource(R.string.downloads))
+                        SectionHeader(stringResource(R.string.downloads))
+                        Spacer(Modifier.size(Dimens.PaddingLarge))
+                    }
 
-                            Spacer(Modifier.size(Dimens.PaddingLarge))
-
-                            state.gameFileItem.forEachIndexed { index, item ->
-                                GameInfoDownloads(
-                                    downloads = state.gameFileItem,
-                                    item = item,
-                                    index = index,
-                                    startDownload = { url, fileName ->
-                                        viewModel.startDownload(url, fileName, state.games)
+                    itemsIndexed(
+                        items = state.gameFileItem,
+                        key = { _, item -> item.title }
+                    ) { index, item ->
+                        GameInfoDownloads(
+                            downloads = state.gameFileItem,
+                            item = item,
+                            index = index,
+                            startDownload = { url, fileName ->
+                                if (useExternalDownloader) {
+                                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                                        setDataAndType(url.toUri(), "application/octet-stream")
+                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     }
-                                )
+                                    try {
+                                        context.startActivity(Intent.createChooser(intent, "Download with..."))
+                                    } catch (e: Exception) { }
+                                } else {
+                                    viewModel.startDownload(url, fileName, state.games)
+                                }
                             }
-                        }
+                        )
                     }
                 }
             }

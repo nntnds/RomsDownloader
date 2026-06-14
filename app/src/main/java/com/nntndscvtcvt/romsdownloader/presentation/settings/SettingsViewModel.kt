@@ -6,20 +6,24 @@ import com.nntndscvtcvt.romsdownloader.domain.model.DownloadGamesState
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
+import com.nntndscvtcvt.romsdownloader.domain.repository.SettingsRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val gameRepository: GameRepository,
     private val cookieRepository: CookieRepository,
-    private val downloadFileRepository: DownloadFileRepository
+    private val downloadFileRepository: DownloadFileRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val _connectionStatus = MutableStateFlow<ConnectionStatus>(ConnectionStatus.Idle)
@@ -34,6 +38,9 @@ class SettingsViewModel(
     private val _gamesCount = MutableStateFlow<Map<String, Int>>(emptyMap())
     val gamesCount = _gamesCount.asStateFlow()
 
+    val useExternalDownloader = settingsRepository.getUseExternalDownloader()
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
     private val downloadJob = mutableMapOf<String, Job>()
 
     init {
@@ -44,6 +51,10 @@ class SettingsViewModel(
                 }
             }
         }
+    }
+
+    fun toggleExternalDownloader(value: Boolean) = viewModelScope.launch {
+        settingsRepository.setUseExternalDownloader(value)
     }
 
     fun downloadConsoleGames(consoleName: String) {

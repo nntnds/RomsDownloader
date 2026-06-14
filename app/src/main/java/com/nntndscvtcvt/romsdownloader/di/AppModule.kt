@@ -11,12 +11,14 @@ import com.nntndscvtcvt.romsdownloader.data.repository.GameFavoriteRepositoryImp
 import com.nntndscvtcvt.romsdownloader.data.repository.GameInfoRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.data.repository.GameRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.data.repository.SearchGameRepositoryImpl
+import com.nntndscvtcvt.romsdownloader.data.repository.SettingsRepositoryImpl
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameFavoriteRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameInfoRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.SearchGameRepository
+import com.nntndscvtcvt.romsdownloader.domain.repository.SettingsRepository
 import com.nntndscvtcvt.romsdownloader.presentation.download.DownloadViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.favorite.FavoriteViewModel
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameInfoViewModel
@@ -61,6 +63,7 @@ val appModule = module {
     single<GameFavoriteRepository> { GameFavoriteRepositoryImpl(get()) }
     single<CookieRepository> { CookieRepositoryImpl(get()) }
     single<DownloadFileRepository> { DownloadFileRepositoryImpl(get(), androidApplication(), get()) }
+    single<SettingsRepository> { SettingsRepositoryImpl(get()) }
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::GameInfoViewModel)

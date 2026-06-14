@@ -51,7 +51,7 @@ fun PlatformSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .then(
-                    if (isSearch) Modifier.clickable { /* TODO */ }
+                    if (isSearch) Modifier.clickable {  }
                     else Modifier
                 ),
             horizontalArrangement = Arrangement.SpaceBetween,

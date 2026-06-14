@@ -11,7 +11,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.settings.components.login.Lo
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun LoginSection(
+fun LogInSection(
     navigateToLogin: () -> Unit,
     onCheckConnection: () -> Unit,
     connectionStatus: ConnectionStatus

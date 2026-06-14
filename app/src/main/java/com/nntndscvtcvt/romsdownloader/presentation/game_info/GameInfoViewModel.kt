@@ -9,13 +9,16 @@ import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameFavoriteRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameInfoRepository
+import com.nntndscvtcvt.romsdownloader.domain.repository.SettingsRepository
 import com.nntndscvtcvt.romsdownloader.presentation.utils.cut
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class GameInfoViewModel(
@@ -23,6 +26,7 @@ class GameInfoViewModel(
     private val favoriteRepository: GameFavoriteRepository,
     private val cookieRepository: CookieRepository,
     private val downloadFileRepository: DownloadFileRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<GameInfoState>(GameInfoState.Loading)
@@ -30,6 +34,9 @@ class GameInfoViewModel(
 
     private val _snackbarEvent = MutableSharedFlow<String>()
     val snackbarEvent = _snackbarEvent.asSharedFlow()
+
+    val useExternalDownloader = settingsRepository.getUseExternalDownloader()
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     fun getInfo(id: Int) {
         _uiState.value = GameInfoState.Loading
