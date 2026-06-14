@@ -20,8 +20,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 fun LoginScreenTopBar(
     onBack: () -> Unit,
     onRefreshClick: () -> Unit,
-    onClear: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior
+    onClear: () -> Unit
 ) {
     val backButton = painterResource(R.drawable.outline_keyboard_arrow_left_24)
     val refreshButton = painterResource(R.drawable.outline_refresh_24)
@@ -29,7 +28,6 @@ fun LoginScreenTopBar(
 
     TopAppBar(
         windowInsets = WindowInsets.statusBars,
-        scrollBehavior = scrollBehavior,
         title = {
             Text(text = stringResource(R.string.login_topbar))
         },
