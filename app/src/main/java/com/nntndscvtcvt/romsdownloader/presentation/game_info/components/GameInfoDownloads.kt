@@ -26,7 +26,6 @@ fun GameInfoDownloads(
     index: Int,
     startDownload: (String, String) -> Unit
 ) {
-    val context = LocalContext.current
     val leadingIcon = R.drawable.outline_download_24
     val trailingIcon = R.drawable.outline_keyboard_arrow_right_24
 

@@ -110,7 +110,7 @@ fun GameInfoScreen(
 
                     itemsIndexed(
                         items = state.gameFileItem,
-                        key = { _, item -> item.title }
+                        key = { _, item -> item.url }
                     ) { index, item ->
                         GameInfoDownloads(
                             downloads = state.gameFileItem,

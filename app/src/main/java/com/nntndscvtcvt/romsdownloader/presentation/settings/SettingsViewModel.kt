@@ -39,7 +39,7 @@ class SettingsViewModel(
     val gamesCount = _gamesCount.asStateFlow()
 
     val useExternalDownloader = settingsRepository.getUseExternalDownloader()
-        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private val downloadJob = mutableMapOf<String, Job>()
 

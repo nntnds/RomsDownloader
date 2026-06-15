@@ -65,8 +65,7 @@ fun ConsoleItem(
         },
         shapes = ListItemDefaults.segmentedShapes(index, totalCount),
         colors = ListItemDefaults.segmentedColors(
-            containerColor = if (state.isDownloading) MaterialTheme.colorScheme.surface
-                else MaterialTheme.colorScheme.surfaceContainer,
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
             supportingContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             trailingContentColor = MaterialTheme.colorScheme.primary
         ),
