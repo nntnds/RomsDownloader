@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -32,20 +33,7 @@ class DownloadViewModel(
             if (items.isEmpty()) DownloadState.Empty
             else DownloadState.Success(items)
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, DownloadState.Loading)
-
-    fun cookieCheck() = viewModelScope.launch {
-        val sig = cookieRepository.loggedInSig.firstOrNull()
-        val user = cookieRepository.loggedInUser.firstOrNull()
-
-        if (sig == null || user == null) {
-            _snackbarEvent.emit("Log in to your account")
-            return@launch
-        }
-
-        val result = downloadFileRepository.checkAccess(sig, user)
-        _snackbarEvent.emit(if (result.isSuccess) "Cookie are working" else "Log in to your account")
-    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DownloadState.Loading)
 
     fun retryDownload(downloadId: Long) = viewModelScope.launch {
         val sig = cookieRepository.loggedInSig.firstOrNull()

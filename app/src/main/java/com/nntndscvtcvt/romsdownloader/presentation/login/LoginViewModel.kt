@@ -10,16 +10,12 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val repository: CookieRepository
 ) : ViewModel() {
-    private val _isLoginSuccessful = MutableStateFlow(false)
-    val isLoginSuccessful = _isLoginSuccessful.asStateFlow()
 
     fun saveCookie(sig: String, user: String) = viewModelScope.launch {
         repository.saveCookies(sig, user)
-        _isLoginSuccessful.value = true
     }
 
     fun clearCookie() = viewModelScope.launch {
         repository.clearCookies()
-        _isLoginSuccessful.value = false
     }
 }

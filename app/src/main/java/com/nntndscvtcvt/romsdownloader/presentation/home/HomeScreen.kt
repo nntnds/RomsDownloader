@@ -64,15 +64,6 @@ fun HomeScreen(
                     contentPadding = PaddingValues(bottom = Dimens.PaddingLarge),
                     verticalArrangement = Arrangement.spacedBy(Dimens.PaddingLarge),
                 ) {
-//                    if (query.isEmpty() || !isSearchActive) {
-//                        item {
-//                            GameCarousel(
-//                                games = state.games.values.flatten().take(10),
-//                                navigateToGameInfo = navigateToGameInfo,
-//                            )
-//                        }
-//                    }
-
                     items(
                         items = platformList,
                         key = { it.key }

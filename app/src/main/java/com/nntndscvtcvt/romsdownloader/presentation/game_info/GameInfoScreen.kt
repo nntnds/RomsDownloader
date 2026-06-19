@@ -73,7 +73,7 @@ fun GameInfoScreen(
                     GameInfoTopBar(
                         isFavorite = isFavorite,
                         onBack = onBack,
-                        onFavoriteClick = { viewModel.toggleFavorite() },
+                        onFavoriteClick = viewModel::toggleFavorite,
                         scrollBehavior = scrollBehavior
                     )
                 },

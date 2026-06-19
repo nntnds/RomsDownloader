@@ -50,7 +50,7 @@ val appModule = module {
             context = androidContext(),
             klass = AppDatabase::class.java,
             name = "roms_database.db"
-        ).fallbackToDestructiveMigration(true).build()
+        ).build()
     }
 
     single { get<AppDatabase>().gameDao() }
