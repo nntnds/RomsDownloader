@@ -2,11 +2,9 @@ package com.nntndscvtcvt.romsdownloader.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -14,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowError
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
@@ -23,7 +20,6 @@ import com.nntndscvtcvt.romsdownloader.presentation.home.components.SearchBar
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
@@ -38,7 +34,6 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SearchBar(

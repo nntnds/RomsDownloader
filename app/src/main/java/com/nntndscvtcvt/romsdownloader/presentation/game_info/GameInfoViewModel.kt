@@ -36,7 +36,7 @@ class GameInfoViewModel(
     val snackbarEvent = _snackbarEvent.asSharedFlow()
 
     val useExternalDownloader = settingsRepository.getUseExternalDownloader()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     fun getInfo(id: Int) {
         _uiState.value = GameInfoState.Loading

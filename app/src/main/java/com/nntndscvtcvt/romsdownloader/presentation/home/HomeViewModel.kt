@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.SearchGameRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -40,16 +43,22 @@ class HomeViewModel(
             .debounce(300.milliseconds)
             .distinctUntilChanged()
             .flatMapLatest { query ->
-                if (query.isBlank()) {
+                val result = if (query.isBlank()) {
                     gameRepository.getAllGames()
                 } else {
                     searchGameRepository.searchGame(query.trim())
                 }
+                result
+                    .map { games ->
+                        HomeState.Success(games.groupBy { it.platform })
+                    }
+                    .catch { exception ->
+                        _uiState.value = HomeState.Error(exception)
+                    }
             }
-            .catch { _uiState.value = HomeState.Error(it) }
-            .collect { result ->
-                val grouped = result.groupBy { it.platform }
-                _uiState.value = HomeState.Success(grouped)
+            .flowOn(Dispatchers.Default)
+            .collect { success ->
+                _uiState.value = success
             }
     }
 
