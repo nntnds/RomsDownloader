@@ -19,14 +19,14 @@ fun ConsoleSupportingContent(
     ) {
         Text(
             text = "$gamesCount Games",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurface
         )
         Text(text = "•", style = MaterialTheme.typography.labelMedium)
         Text(
             text = size,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

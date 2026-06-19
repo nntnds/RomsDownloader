@@ -36,7 +36,7 @@ fun ConnectionItem(
         shapes = ListItemDefaults.segmentedShapes(1, 2),
         colors = ListItemDefaults.segmentedColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            supportingContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            supportingContentColor = MaterialTheme.colorScheme.onSurface,
             trailingContentColor = MaterialTheme.colorScheme.primary
         ),
         leadingContent = {
@@ -60,7 +60,7 @@ fun ConnectionItem(
                 ConnectionStatus.NotLoggedIn -> Icon(
                     painter = accountOff,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
                 ConnectionStatus.Idle -> Icon(
                     painter = refreshIcon,
@@ -77,14 +77,13 @@ fun ConnectionItem(
                     ConnectionStatus.NotLoggedIn -> stringResource(R.string.log_into_your_account)
                     ConnectionStatus.Idle -> stringResource(R.string.tap_to_check)
                 },
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         },
         content = {
             Text(
                 text = stringResource(R.string.archive_org_connection),
-                style = MaterialTheme.typography.labelLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

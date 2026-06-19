@@ -26,7 +26,7 @@ fun LoginItem(
         shapes = ListItemDefaults.segmentedShapes(0, 2),
         colors = ListItemDefaults.segmentedColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            supportingContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            supportingContentColor = MaterialTheme.colorScheme.onSurface,
             trailingContentColor = MaterialTheme.colorScheme.primary
         ),
         leadingContent = {
@@ -41,14 +41,13 @@ fun LoginItem(
         supportingContent = {
             Text(
                 text = stringResource(R.string.supporting_content),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         },
         content = {
             Text(
                 text = stringResource(R.string.login_headline_text),
-                style = MaterialTheme.typography.labelLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

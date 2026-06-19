@@ -52,7 +52,9 @@ fun HomeScreen(
                 ShowLoading(Modifier.padding(innerPadding))
             }
             is HomeState.Success -> {
-                val platformList = remember(state.games) { state.games.entries.toList() }
+                val platformList = remember(state.games) {
+                    state.games.entries.toList()
+                }
 
                 LazyColumn(
                     modifier = Modifier.padding(innerPadding),

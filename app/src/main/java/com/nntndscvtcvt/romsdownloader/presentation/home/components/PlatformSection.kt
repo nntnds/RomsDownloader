@@ -35,8 +35,6 @@ fun PlatformSection(
     navigateToGameInfo: (Int) -> Unit,
     navigateToSearchResult: (String, String) -> Unit
 ) {
-    val arrowIcon = painterResource(R.drawable.outline_keyboard_arrow_right_24)
-
     Column(verticalArrangement = Arrangement.spacedBy(Dimens.PaddingSmall)) {
         Row(
             modifier = Modifier
