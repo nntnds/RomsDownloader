@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -43,11 +44,13 @@ fun DownloadScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedIds by viewModel.selectedIds.collectAsStateWithLifecycle()
 
-    val isSelected = selectedIds.isNotEmpty()
+    val isSelectionMode by remember {
+        derivedStateOf { selectedIds.isNotEmpty() }
+    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel) {
         viewModel.snackbarEvent.collectLatest { message ->
             snackbarHostState.currentSnackbarData?.dismiss()
             snackbarHostState.showSnackbar(message)
@@ -57,12 +60,12 @@ fun DownloadScreen(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            if (isSelected) {
+            if (isSelectionMode) {
                 SelectionTopBar(
+                    onClearSelection = viewModel::clearSelection,
+                    onSelectAll = viewModel::selectAll,
+                    onDelete = viewModel::deleteSelected,
                     selectedCount = selectedIds.size,
-                    onClearSelection = { viewModel.clearSelection() },
-                    onSelectAll = { viewModel.selectAll() },
-                    onDelete = { viewModel.deleteSelected() },
                     scrollBehavior = scrollBehavior
                 )
             } else {
@@ -109,12 +112,12 @@ fun DownloadScreen(
                             onRefresh = { viewModel.retryDownload(item.id) },
                             onStop = { viewModel.stopDownload(item.id) },
                             onTap = {
-                                if (isSelected) viewModel.toggleSelection(item.id)
+                                if (isSelectionMode) viewModel.toggleSelection(item.id)
                                 else navigateToGameInfo(item.gameId)
                             },
                             onLongPress = { viewModel.toggleSelection(item.id) },
                             isSelected = item.id in selectedIds,
-                            isSelectedMode = isSelected
+                            isSelectedMode = isSelectionMode
                         )
                     }
                 }

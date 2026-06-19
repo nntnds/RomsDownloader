@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,7 +39,6 @@ import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadItem
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DownloadsList(
     modifier: Modifier = Modifier,
@@ -54,10 +54,15 @@ fun DownloadsList(
     val refreshButton = painterResource(R.drawable.outline_refresh_24)
     val checkCircle = painterResource(R.drawable.outline_check_circle_24)
 
+    val isSuccess = item.status == DownloadManager.STATUS_SUCCESSFUL
+    val isRetryAction = item.isStopped || item.status == DownloadManager.STATUS_FAILED
+    val isActionEnabled = !isSelectedMode && !isSuccess
+
+
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(Dimens.CardHeight)
+            .defaultMinSize(Dimens.CardHeight)
             .padding(horizontal = Dimens.PaddingLarge)
             .clip(CardDefaults.shape)
             .combinedClickable(
@@ -86,10 +91,7 @@ fun DownloadsList(
                     .height(Dimens.ImageHeight)
                     .aspectRatio(Dimens.ImageAspectRatio)
                     .clip(MaterialTheme.shapes.medium),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(COVER_URL + item.coverUrl)
-                    .crossfade(true)
-                    .build(),
+                model = COVER_URL + item.coverUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 placeholder = ColorPainter(MaterialTheme.colorScheme.surfaceVariant),
@@ -103,43 +105,24 @@ fun DownloadsList(
                 Text(
                     text = item.fileName,
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
-                when {
-                    item.isStopped -> Text(
-                        text = stringResource(R.string.stopped),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
-                    item.status == DownloadManager.STATUS_FAILED -> Text(
-                        text = stringResource(R.string.error),
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
-                    item.status == DownloadManager.STATUS_SUCCESSFUL -> Text(
-                        text = stringResource(R.string.download_finished),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
-                    item.status == DownloadManager.STATUS_RUNNING ||
-                            item.status == DownloadManager.STATUS_PENDING -> Text(
-                        text = stringResource(R.string.downloaded_mb, item.downloadedMbs),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+                Text(
+                    text = getStatusText(item),
+                    color = getStatusColor(item),
+                    style = MaterialTheme.typography.bodySmall,
+                )
             }
             Box(
                 modifier = Modifier.size(40.dp),
                 contentAlignment = Alignment.Center
             ) {
                 when {
-                    isSelectedMode -> { }
-                    item.status == DownloadManager.STATUS_SUCCESSFUL -> {
+                    isSelectedMode -> {
+                        // TODO
+                    }
+                    isSuccess -> {
                         Icon(
                             painter = checkCircle,
                             contentDescription = null,
@@ -148,24 +131,13 @@ fun DownloadsList(
                     }
                     else -> {
                         IconButton(
-                            onClick = {
-                                if (!isSelectedMode) {
-                                    when {
-                                        item.isStopped || item.status == DownloadManager.STATUS_FAILED -> onRefresh()
-                                        else -> onStop()
-                                    }
-                                }
-                            },
-                            enabled = !isSelectedMode
+                            onClick = { if (isRetryAction) onRefresh() else onStop() },
+                            enabled = isActionEnabled
                         ) {
                             Icon(
-                                painter = when {
-                                    item.isStopped || item.status == DownloadManager.STATUS_FAILED -> refreshButton
-                                    else -> stopButton
-                                },
+                                painter = if (isRetryAction) refreshButton else stopButton,
                                 contentDescription = null,
-                                tint = if (isSelectedMode) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                                else MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
