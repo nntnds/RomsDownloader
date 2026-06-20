@@ -23,7 +23,7 @@ fun BottomNavigationBar(
                 onClick = { onNavigate(route) },
                 icon = {
                     Icon(
-                        painter = painterResource(if (isSelected) destination.selectedIcon else destination.icon),
+                        painter = painterResource(if (isSelected) destination.selectedIcon else destination.outlineIcon),
                         contentDescription = null
                     )
                 },
