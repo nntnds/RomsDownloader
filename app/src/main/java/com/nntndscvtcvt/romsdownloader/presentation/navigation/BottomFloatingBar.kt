@@ -1,18 +1,12 @@
 package com.nntndscvtcvt.romsdownloader.presentation.navigation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
@@ -21,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -40,50 +34,42 @@ fun BottomFloatingToolbar(
 ) {
     HorizontalFloatingToolbar(
         expanded = true,
-        modifier = modifier.padding(bottom = 20.dp),
+        modifier = modifier.padding(bottom = 24.dp),
         colors = FloatingToolbarDefaults.standardFloatingToolbarColors(),
         shape = FloatingToolbarDefaults.ContainerShape,
+        expandedShadowElevation = 1.dp,
+        collapsedShadowElevation = 1.dp,
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            DESTINATIONS.forEach { (route, destination) ->
-                val isSelected = currentRoute == route
+        DESTINATIONS.forEach { (route, destination) ->
+            val isSelected = currentRoute == route
 
-                Row(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable { onNavigate(route) }
-                        .background(
-                    if (isSelected) MaterialTheme.colorScheme.secondaryContainer
-                            else Color.Transparent
-                        )
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    AnimatedVisibility(visible = isSelected) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(destination.selectedIcon),
-                                contentDescription = stringResource(destination.title),
-                                tint = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer
-                                    else MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                        }
-                    }
-
-                    Text(
-                        text = stringResource(destination.title),
-                        color = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer
-                            else MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.labelLarge
+            Row(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(
+                        if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+                        else Color.Transparent
+                    )
+                    .clickable { onNavigate(route) }
+                    .height(40.dp)
+                    .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium),
+            ) {
+                if (isSelected) {
+                    Icon(
+                        painter = painterResource(destination.selectedIcon),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
+                Text(
+                    text = stringResource(destination.title),
+                    color = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer
+                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
     }
