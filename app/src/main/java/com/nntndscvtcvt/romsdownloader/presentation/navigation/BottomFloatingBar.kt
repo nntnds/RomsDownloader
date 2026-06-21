@@ -1,10 +1,13 @@
 package com.nntndscvtcvt.romsdownloader.presentation.navigation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,9 +37,9 @@ fun BottomFloatingToolbar(
 ) {
     HorizontalFloatingToolbar(
         expanded = true,
-        modifier = modifier.padding(bottom = 20.dp),
+        modifier = modifier.padding(bottom = 24.dp),
         colors = FloatingToolbarDefaults.standardFloatingToolbarColors(),
-        shape = FloatingToolbarDefaults.ContainerShape,
+        shape = FloatingToolbarDefaults.ContainerShape
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 4.dp),
@@ -59,14 +62,15 @@ fun BottomFloatingToolbar(
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource(destination.selectedIcon),
-                            contentDescription = stringResource(destination.title),
-                            tint = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer
-                                else MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        if (isSelected) {
+                            Icon(
+                                painter = painterResource(destination.selectedIcon),
+                                contentDescription = stringResource(destination.title),
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                        }
                     }
 
                     Text(
