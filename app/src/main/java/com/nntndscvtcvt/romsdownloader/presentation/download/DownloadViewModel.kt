@@ -24,9 +24,6 @@ class DownloadViewModel(
     private val _selectedIds = MutableStateFlow<Set<Long>>(emptySet())
     val selectedIds = _selectedIds.asStateFlow()
 
-    private val _snackbarEvent = MutableSharedFlow<String>()
-    val snackbarEvent = _snackbarEvent.asSharedFlow()
-
     val uiState: StateFlow<DownloadState> = downloadFileRepository.getActiveDownloads()
         .map { items ->
             if (items.isEmpty()) DownloadState.Empty
@@ -38,15 +35,9 @@ class DownloadViewModel(
         val sig = cookieRepository.loggedInSig.firstOrNull()
         val user = cookieRepository.loggedInUser.firstOrNull()
 
-        if (sig == null || user == null) {
-            _snackbarEvent.emit("Log in to your account")
-            return@launch
-        }
+        if (sig == null || user == null) return@launch
 
-        downloadFileRepository.retryDownload(downloadId, sig, user).fold(
-            onSuccess = { _snackbarEvent.emit("Download restarted") },
-            onFailure = { _snackbarEvent.emit("Failed to retry download") }
-        )
+        downloadFileRepository.retryDownload(downloadId, sig, user)
     }
 
     fun stopDownload(downloadId: Long) = viewModelScope.launch {

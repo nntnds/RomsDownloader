@@ -3,6 +3,7 @@ package com.nntndscvtcvt.romsdownloader.presentation.download
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
@@ -48,16 +50,9 @@ fun DownloadScreen(
         derivedStateOf { selectedIds.isNotEmpty() }
     }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(viewModel) {
-        viewModel.snackbarEvent.collectLatest { message ->
-            snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar(message)
-        }
-    }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             if (isSelectionMode) {
@@ -71,11 +66,6 @@ fun DownloadScreen(
             } else {
                 DownloadScreenTopBar(navigateToSettings, scrollBehavior)
             }
-        },
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState
-            )
         }
     ) { innerPadding ->
         when(val state = uiState) {
@@ -96,11 +86,14 @@ fun DownloadScreen(
             }
             is DownloadState.Success -> {
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(Dimens.ColumnVerticalArrangement),
-                    contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
+                    contentPadding = PaddingValues(
+                        start = Dimens.PaddingLarge,
+                        end = Dimens.PaddingLarge,
+                        top = innerPadding.calculateTopPadding() + Dimens.PaddingLarge,
+                        bottom = innerPadding.calculateBottomPadding() + 100.dp
+                    )
                 ) {
                     items(
                         items = state.downloads,
