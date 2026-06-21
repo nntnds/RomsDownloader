@@ -3,6 +3,7 @@ package com.nntndscvtcvt.romsdownloader.presentation.favorite
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.components.GameCard
@@ -37,6 +39,7 @@ fun FavoriteScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             FavoriteScreenTopBar(
@@ -66,13 +69,16 @@ fun FavoriteScreen(
 
             is FavoriteState.Success -> {
                 LazyVerticalGrid(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                    modifier = Modifier.fillMaxSize(),
                     columns = GridCells.Fixed(Dimens.GridColumns),
                     horizontalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
                     verticalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
-                    contentPadding = PaddingValues(Dimens.PaddingLarge)
+                    contentPadding = PaddingValues(
+                        start = Dimens.PaddingLarge,
+                        end = Dimens.PaddingLarge,
+                        top = innerPadding.calculateTopPadding() + Dimens.PaddingLarge,
+                        bottom = innerPadding.calculateBottomPadding() + 100.dp
+                    )
                 ) {
                     items(
                         items = state.favorites,

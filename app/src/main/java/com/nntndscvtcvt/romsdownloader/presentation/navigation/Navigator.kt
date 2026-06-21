@@ -7,14 +7,22 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -26,6 +34,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.home.HomeScreen
 import com.nntndscvtcvt.romsdownloader.presentation.login.LoginScreen
 import com.nntndscvtcvt.romsdownloader.presentation.search_result.SearchResultScreen
 import com.nntndscvtcvt.romsdownloader.presentation.settings.SettingsScreen
+import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 fun Navigator() {
@@ -33,75 +42,70 @@ fun Navigator() {
     val currentRoute = backStack.lastOrNull()
     val navigator = remember { NavigatorState(backStack) }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0.dp)
-    ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            NavDisplay(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                backStack = backStack,
-                onBack = { backStack.removeLastOrNull() },
-                entryProvider = entryProvider {
-                    entry<AppRoutes.Home> {
-                        HomeScreen(
-                            navigateToGameInfo = navigator::navigateToGameInfo,
-                            navigateToSettings = navigator::navigateToSettings,
-                            navigateToSearchResult = navigator::navigateToSearchResult
-                        )
-                    }
-                    entry<AppRoutes.Downloads> {
-                        DownloadScreen(
-                            navigateToSettings = navigator::navigateToSettings,
-                            navigateToGameInfo = navigator::navigateToGameInfo
-                        )
-                    }
-                    entry<AppRoutes.Favorites> {
-                        FavoriteScreen(
-                            navigateToGameInfo = navigator::navigateToGameInfo,
-                            navigateToSettings = navigator::navigateToSettings
-                        )
-                    }
-                    entry<AppRoutes.GameInfo> { key ->
-                        GameInfoScreen(id = key.id, onBack = navigator::navigateBack)
-                    }
-                    entry<AppRoutes.Login> {
-                        LoginScreen(onBack = navigator::navigateBack)
-                    }
-                    entry<AppRoutes.Settings> {
-                        SettingsScreen(
-                            navigateToLogin = navigator::navigateToLogin,
-                            onBack = navigator::navigateBack
-                        )
-                    }
-                    entry<AppRoutes.SearchResult> { key ->
-                        SearchResultScreen(
-                            platform = key.platform,
-                            query = key.query,
-                            onBack = navigator::navigateBack,
-                            navigateToGameInfo = navigator::navigateToGameInfo
-                        )
-                    }
-                },
-                transitionSpec = {
-                    fadeIn(tween(250)) togetherWith fadeOut(tween(250))
-                },
-                popTransitionSpec = {
-                    fadeIn(tween(250)) togetherWith fadeOut(tween(250))
-                },
-                predictivePopTransitionSpec = {
-                    slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+    Box(modifier = Modifier.fillMaxSize()) {
+        NavDisplay(
+            modifier = Modifier.fillMaxSize(),
+            backStack = backStack,
+            onBack = { backStack.removeLastOrNull() },
+            entryProvider = entryProvider {
+                entry<AppRoutes.Home> {
+                    HomeScreen(
+                        navigateToGameInfo = navigator::navigateToGameInfo,
+                        navigateToSettings = navigator::navigateToSettings,
+                        navigateToSearchResult = navigator::navigateToSearchResult
+                    )
                 }
-            )
-
-            if (currentRoute.showBottomBar()) {
-                BottomFloatingToolbar(
-                    currentRoute = currentRoute,
-                    onNavigate = navigator::navigate,
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                )
+                entry<AppRoutes.Downloads> {
+                    DownloadScreen(
+                        navigateToSettings = navigator::navigateToSettings,
+                        navigateToGameInfo = navigator::navigateToGameInfo
+                    )
+                }
+                entry<AppRoutes.Favorites> {
+                    FavoriteScreen(
+                        navigateToGameInfo = navigator::navigateToGameInfo,
+                        navigateToSettings = navigator::navigateToSettings
+                    )
+                }
+                entry<AppRoutes.GameInfo> { key ->
+                    GameInfoScreen(id = key.id, onBack = navigator::navigateBack)
+                }
+                entry<AppRoutes.Login> {
+                    LoginScreen(onBack = navigator::navigateBack)
+                }
+                entry<AppRoutes.Settings> {
+                    SettingsScreen(
+                        navigateToLogin = navigator::navigateToLogin,
+                        onBack = navigator::navigateBack
+                    )
+                }
+                entry<AppRoutes.SearchResult> { key ->
+                    SearchResultScreen(
+                        platform = key.platform,
+                        query = key.query,
+                        onBack = navigator::navigateBack,
+                        navigateToGameInfo = navigator::navigateToGameInfo
+                    )
+                }
+            },
+            transitionSpec = {
+                fadeIn(tween(250)) togetherWith fadeOut(tween(250))
+            },
+            popTransitionSpec = {
+                fadeIn(tween(250)) togetherWith fadeOut(tween(250))
+            },
+            predictivePopTransitionSpec = {
+                slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
             }
+        )
+
+        if (currentRoute.showBottomBar()) {
+            BottomFloatingToolbar(
+                currentRoute = currentRoute,
+                onNavigate = navigator::navigate,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            )
         }
     }
 }
