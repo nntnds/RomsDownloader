@@ -60,10 +60,8 @@ class DownloadFileRepositoryImpl(
     }.flowOn(Dispatchers.IO)
 
     override suspend fun stopDownload(downloadId: Long) {
-        runCatching {
-            downloadManager.remove(downloadId)
-            downloadDao.setStopped(downloadId)
-        }
+        downloadManager.remove(downloadId)
+        downloadDao.setStopped(downloadId)
     }
 
     override suspend fun retryDownload(downloadId: Long, sig: String, user: String): Result<Long> =
@@ -97,6 +95,8 @@ class DownloadFileRepositoryImpl(
         downloadDao.insert(downloadTask.toEntity())
     }
 
+    // Private functions
+
     private fun buildRequest(url: String, filename: String, sig: String, user: String): Long {
         return try {
             val request = DownloadManager.Request(url.toUri()).apply {
@@ -108,67 +108,39 @@ class DownloadFileRepositoryImpl(
                 setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
             }
             downloadManager.enqueue(request)
-        } catch (e: Exception) {
-            -1L
-        }
+        } catch (e: Exception) { -1L }
     }
 
-    private fun getDownloadItem(entity: DownloadTaskEntity): DownloadItem? {
+    private fun getDownloadItem(entity: DownloadTaskEntity): DownloadItem {
         val query = DownloadManager.Query().setFilterById(entity.downloadId)
-        val cursor = downloadManager.query(query) ?: return null
+        val cursor = downloadManager.query(query)
 
-        return cursor.use {
-            if (it.isClosed || it.count == 0 || !it.moveToFirst()) { // If status is failed
-                return@use createFailedDownloadItem(entity)
-            }
+        return cursor?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+                val downloaded = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
 
-            return@use try {
-                val status = it.getInt(
-                    it.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)
-                )
-                val downloaded = it.getLong(
-                    it.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
-                )
-                createDownloadItem(entity, status, downloaded)
-            } catch (e: Exception) {
-                createFailedDownloadItem(entity)
-            }
-        }
+                entity.toDownloadItem(status, downloaded)
+            } else entity.toDownloadItem()
+        } ?: entity.toDownloadItem()
     }
 
     private fun createCookieHeader(sig: String, user: String): String {
         return "logged-in-sig=$sig; logged-in-user=$user"
     }
 
-    private fun createFailedDownloadItem(entity: DownloadTaskEntity): DownloadItem {
-        return DownloadItem(
-            id = entity.downloadId,
-            gameId = entity.gameId,
-            gameName = entity.gameName,
-            coverUrl = entity.coverUrl,
-            fileName = entity.fileName,
-            status = DownloadManager.STATUS_FAILED,
-            downloadedMbs = 0,
-            isStopped = entity.isStopped,
-            url = entity.url
-        )
-    }
-
-    private fun createDownloadItem(
-        entity: DownloadTaskEntity,
-        status: Int,
-        downloaded: Long
-    ): DownloadItem {
-        return DownloadItem(
-            id = entity.downloadId,
-            gameId = entity.gameId,
-            gameName = entity.gameName,
-            coverUrl = entity.coverUrl,
-            fileName = entity.fileName,
-            status = status,
-            downloadedMbs = downloaded / (1024 * 1024),
-            isStopped = entity.isStopped,
-            url = entity.url
-        )
-    }
+    private fun DownloadTaskEntity.toDownloadItem(
+        status: Int = DownloadManager.STATUS_FAILED,
+        downloadedBytes: Long = 0L
+    ): DownloadItem = DownloadItem(
+        id = this.downloadId,
+        gameId = this.gameId,
+        gameName = this.gameName,
+        coverUrl = this.coverUrl,
+        fileName = this.fileName,
+        status = status,
+        downloadedMbs = downloadedBytes / (1024 * 1024),
+        isStopped = this.isStopped,
+        url = this.url
+    )
 }
