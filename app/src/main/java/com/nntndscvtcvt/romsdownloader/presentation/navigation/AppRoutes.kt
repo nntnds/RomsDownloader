@@ -26,7 +26,3 @@ sealed class AppRoutes : NavKey {
     @Serializable
     data class SearchResult(val platform: String, val query: String) : AppRoutes()
 }
-
-fun NavKey?.showBottomBar(): Boolean = this is AppRoutes.Home ||
-        this is AppRoutes.Downloads ||
-        this is AppRoutes.Favorites
