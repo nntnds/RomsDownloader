@@ -1,29 +1,14 @@
 package com.nntndscvtcvt.romsdownloader.presentation.navigation
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
@@ -34,7 +19,8 @@ import com.nntndscvtcvt.romsdownloader.presentation.home.HomeScreen
 import com.nntndscvtcvt.romsdownloader.presentation.login.LoginScreen
 import com.nntndscvtcvt.romsdownloader.presentation.search_result.SearchResultScreen
 import com.nntndscvtcvt.romsdownloader.presentation.settings.SettingsScreen
-import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
+import com.nntndscvtcvt.romsdownloader.presentation.utils.showBottomBar
+import com.nntndscvtcvt.romsdownloader.presentation.utils.toIntRoute
 
 @Composable
 fun Navigator() {
@@ -89,13 +75,56 @@ fun Navigator() {
                 }
             },
             transitionSpec = {
-                fadeIn(tween(250)) togetherWith fadeOut(tween(250))
+                // 1. Проверяем оба состояния
+                val from = initialState.entries.lastOrNull()?.contentKey.toString().toIntRoute()
+                val to = targetState.entries.lastOrNull()?.contentKey.toString().toIntRoute()
+
+                if (from != null && to != null) {
+                    if (to > from) {
+                        slideInHorizontally(initialOffsetX = { it }) togetherWith
+                                slideOutHorizontally(targetOffsetX = { -it })
+                    } else {
+                        slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                                slideOutHorizontally(targetOffsetX = { it })
+                    }
+                } else {
+                    slideInHorizontally(initialOffsetX = { it }) togetherWith
+                            slideOutHorizontally(targetOffsetX = { -it })
+                }
             },
             popTransitionSpec = {
-                fadeIn(tween(250)) togetherWith fadeOut(tween(250))
+                val from = initialState.entries.lastOrNull()?.contentKey.toString().toIntRoute()
+                val to = targetState.entries.lastOrNull()?.contentKey.toString().toIntRoute()
+
+                if (from != null && to != null) {
+                    if (from > to) {
+                        slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                                slideOutHorizontally(targetOffsetX = { it })
+                    } else {
+                        slideInHorizontally(initialOffsetX = { it }) togetherWith
+                                slideOutHorizontally(targetOffsetX = { -it })
+                    }
+                } else {
+                    slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                            slideOutHorizontally(targetOffsetX = { it })
+                }
             },
             predictivePopTransitionSpec = {
-                slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+                val from = initialState.entries.lastOrNull()?.contentKey.toString().toIntRoute()
+                val to = targetState.entries.lastOrNull()?.contentKey.toString().toIntRoute()
+
+                if (from != null && to != null) {
+                    if (from > to) {
+                        slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                                slideOutHorizontally(targetOffsetX = { it })
+                    } else {
+                        slideInHorizontally(initialOffsetX = { it }) togetherWith
+                                slideOutHorizontally(targetOffsetX = { -it })
+                    }
+                } else {
+                    slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                            slideOutHorizontally(targetOffsetX = { it })
+                }
             }
         )
 
@@ -103,8 +132,7 @@ fun Navigator() {
             BottomFloatingToolbar(
                 currentRoute = currentRoute,
                 onNavigate = navigator::navigate,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
     }

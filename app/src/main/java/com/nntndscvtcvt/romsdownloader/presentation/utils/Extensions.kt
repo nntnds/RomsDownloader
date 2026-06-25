@@ -1,6 +1,8 @@
 package com.nntndscvtcvt.romsdownloader.presentation.utils
 
 import android.util.Log
+import androidx.navigation3.runtime.NavKey
+import com.nntndscvtcvt.romsdownloader.presentation.navigation.AppRoutes
 import java.net.URLDecoder
 
 fun Throwable.toUserMessage(): String = when (this) {
@@ -26,3 +28,14 @@ fun String.extractCookie(cookieName: String): String? {
         ?.takeIf { it.isNotBlank() }
         ?.let { URLDecoder.decode(it, "UTF-8") }
 }
+
+fun String.toIntRoute(): Int? = when(this) {
+    "Home" -> 1
+    "Downloads" -> 2
+    "Favorites" -> 3
+    else -> null
+}
+
+fun NavKey?.showBottomBar(): Boolean = this is AppRoutes.Home ||
+        this is AppRoutes.Downloads ||
+        this is AppRoutes.Favorites
