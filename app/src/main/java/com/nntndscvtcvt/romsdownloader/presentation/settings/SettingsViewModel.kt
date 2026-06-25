@@ -26,8 +26,8 @@ class SettingsViewModel(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    private val _connectionStatus = MutableStateFlow<ConnectionStatus>(ConnectionStatus.Idle)
-    val connectionStatus = _connectionStatus.asStateFlow()
+    private val _Settings_connectionStatus = MutableStateFlow<SettingsConnectionStatus>(SettingsConnectionStatus.Idle)
+    val connectionStatus = _Settings_connectionStatus.asStateFlow()
 
     private val _snackbarEvent = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val snackbarEvent = _snackbarEvent.asSharedFlow()
@@ -86,23 +86,23 @@ class SettingsViewModel(
     }
 
     fun checkConnection() {
-        if (_connectionStatus.value == ConnectionStatus.Checking) return
+        if (_Settings_connectionStatus.value == SettingsConnectionStatus.Checking) return
 
         viewModelScope.launch {
             val sig = cookieRepository.loggedInSig.firstOrNull()
             val user = cookieRepository.loggedInUser.firstOrNull()
 
             if (sig == null || user == null) {
-                _connectionStatus.value = ConnectionStatus.NotLoggedIn
+                _Settings_connectionStatus.value = SettingsConnectionStatus.NotLoggedIn
                 _snackbarEvent.emit("Please log in to Archive.org first.")
                 return@launch
             }
 
-            _connectionStatus.value = ConnectionStatus.Checking
+            _Settings_connectionStatus.value = SettingsConnectionStatus.Checking
             val result = downloadFileRepository.checkAccess(sig, user)
 
-            _connectionStatus.value = if (result.isSuccess) ConnectionStatus.Success
-            else ConnectionStatus.Error
+            _Settings_connectionStatus.value = if (result.isSuccess) SettingsConnectionStatus.Success
+            else SettingsConnectionStatus.Error
         }
     }
 

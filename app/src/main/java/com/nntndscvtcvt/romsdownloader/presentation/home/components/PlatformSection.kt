@@ -18,9 +18,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.components.GameCard
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens

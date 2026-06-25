@@ -23,8 +23,6 @@ class GameFavoriteRepositoryImpl(
         return favoriteDao.isFavoriteExist(id)
     }
 
-    override fun getAllFavorites(): Flow<List<Game>> {
-        return favoriteDao.getAllFavorites()
-            .map { games -> games.map { it.toDomain() } }
-    }
+    override fun getAllFavorites(): Flow<List<Game>> = favoriteDao.getAllFavorites()
+        .map { games -> games.map { it.toDomain() } }
 }

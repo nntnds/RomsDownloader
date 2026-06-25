@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.map
 class SearchGameRepositoryImpl(
     val gameDao: GameDao
 ) : SearchGameRepository {
-    override fun searchGame(query: String): Flow<List<Game>> {
-        return gameDao.searchGame(query)
-            .map { games -> games.map { it.toDomain() } }
-    }
+    override fun searchGame(query: String): Flow<List<Game>> = gameDao.searchGame(query)
+        .map { games -> games.map { it.toDomain() } }
 }

@@ -53,7 +53,7 @@ class DownloadFileRepositoryImpl(
     override fun getActiveDownloads(): Flow<List<DownloadItem>> = flow {
         while (true) {
             val entities = downloadDao.getAllDownloads()
-            val items = entities.mapNotNull { getDownloadItem(it) }
+            val items = entities.map { getDownloadItem(it) }
             emit(items)
             delay(1000L.milliseconds)
         }
