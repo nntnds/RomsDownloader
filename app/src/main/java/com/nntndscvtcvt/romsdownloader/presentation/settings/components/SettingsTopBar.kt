@@ -40,7 +40,6 @@ fun SettingsTopBar(
                     modifier = Modifier.size(Dimens.iconMediumSize)
                 )
             }
-        },
-        subtitle = { Text(stringResource(R.string.subtitle_topbar)) }
+        }
     )
 }

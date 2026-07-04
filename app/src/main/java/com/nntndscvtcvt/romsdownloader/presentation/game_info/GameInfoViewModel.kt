@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.nntndscvtcvt.romsdownloader.domain.model.DownloadTask
 import com.nntndscvtcvt.romsdownloader.domain.model.Downloads
 import com.nntndscvtcvt.romsdownloader.domain.model.Game
+import com.nntndscvtcvt.romsdownloader.domain.model.GameFileItem
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameFavoriteRepository
@@ -116,5 +117,7 @@ class GameInfoViewModel(
         }
     }
 
-
+    fun notifyNoExternalDownloader() = viewModelScope.launch {
+        _snackbarEvent.emit("External downloader not found")
+    }
 }

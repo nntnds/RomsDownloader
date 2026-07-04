@@ -14,30 +14,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameFileItem
+import com.nntndscvtcvt.romsdownloader.domain.model.GameFileItem
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun GameInfoDownloads(
-    downloads: List<GameFileItem>,
+    totalCount: Int,
     item: GameFileItem,
     index: Int,
     startDownload: (String, String) -> Unit
 ) {
-    val leadingIcon = R.drawable.outline_download_24
-    val trailingIcon = R.drawable.outline_keyboard_arrow_right_24
+    val leadingIcon = painterResource(R.drawable.outline_download_24)
+    val trailingIcon = painterResource(R.drawable.outline_keyboard_arrow_right_24)
 
     SegmentedListItem(
         onClick = {
             startDownload(item.url, "${item.title}.${item.type}")
         },
-        shapes = if (downloads.size == 1) ListItemDefaults.shapes(MaterialTheme.shapes.medium)
-            else ListItemDefaults.segmentedShapes(index = index, count = downloads.size),
+        shapes = if (totalCount == 1) ListItemDefaults.shapes(MaterialTheme.shapes.medium)
+            else ListItemDefaults.segmentedShapes(index, totalCount),
         modifier = Modifier.padding(horizontal = Dimens.PaddingLarge),
         leadingContent = {
             Icon(
-                painter = painterResource(leadingIcon),
+                painter = leadingIcon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurface
             )
@@ -45,7 +45,7 @@ fun GameInfoDownloads(
         trailingContent = {
             Icon(
                 modifier = Modifier.size(24.dp),
-                painter = painterResource(trailingIcon),
+                painter = trailingIcon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )

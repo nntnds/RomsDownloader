@@ -37,6 +37,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInf
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoScreenshots
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.components.GameInfoTopBar
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
+import com.nntndscvtcvt.romsdownloader.presentation.utils.launchExternalDownload
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
@@ -116,18 +117,14 @@ fun GameInfoScreen(
                         key = { _, item -> item.url }
                     ) { index, item ->
                         GameInfoDownloads(
-                            downloads = state.gameFileItem,
+                            totalCount = state.gameFileItem.size,
                             item = item,
                             index = index,
                             startDownload = { url, fileName ->
                                 if (useExternalDownloader) {
-                                    val intent = Intent(Intent.ACTION_VIEW).apply {
-                                        setDataAndType(url.toUri(), "application/octet-stream")
-                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    if (!launchExternalDownload(url, context)) {
+                                        viewModel.notifyNoExternalDownloader()
                                     }
-                                    try {
-                                        context.startActivity(Intent.createChooser(intent, "Download with..."))
-                                    } catch (e: Exception) { }
                                 } else {
                                     viewModel.startDownload(url, fileName, state.games)
                                 }

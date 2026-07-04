@@ -29,7 +29,7 @@ fun ConnectionItem(
     val errorIcon = painterResource(R.drawable.outline_error_24)
     val checkCircleIcon = painterResource(R.drawable.outline_check_circle_24)
     val accountOff = painterResource(R.drawable.outline_account_circle_off_24)
-    val wifiIcon = R.drawable.outline_android_wifi_3_bar_24
+    val wifiIcon = painterResource(R.drawable.outline_android_wifi_3_bar_24)
 
     SegmentedListItem(
         onClick = onCheckConnection,

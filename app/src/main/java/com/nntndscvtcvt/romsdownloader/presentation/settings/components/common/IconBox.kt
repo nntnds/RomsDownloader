@@ -8,9 +8,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
+
+@Composable
+fun IconBox(icon: Painter) {
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .background(
+                color = MaterialTheme.colorScheme.primaryContainer.copy(0.7f),
+                shape = MaterialTheme.shapes.medium
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = null,
+            modifier = Modifier.size(Dimens.iconDefaultSize),
+            tint = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    }
+}
 
 @Composable
 fun IconBox(icon: Int) {

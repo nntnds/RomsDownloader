@@ -88,7 +88,6 @@ fun ConsoleItem(
         content = {
             Text(
                 text = item.consoleName,
-                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onSurface
