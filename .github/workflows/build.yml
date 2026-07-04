@@ -38,6 +38,12 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease
 
+      # 4.5. Устанавливаем нужную версию Android Build Tools
+      - name: Install Android Build Tools
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "build-tools;36.0.0"
+
       # 5. Подписываем APK ключом, используя твои секреты из настроек репозитория
       - name: Sign Release APK
         uses: r0adkll/sign-android-release@v1
@@ -48,6 +54,7 @@ jobs:
           alias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+          buildToolsVersion: "36.0.0"
 
       # 6. Загружаем готовый файл, чтобы ты мог его скачать
       - name: Upload Signed APK
