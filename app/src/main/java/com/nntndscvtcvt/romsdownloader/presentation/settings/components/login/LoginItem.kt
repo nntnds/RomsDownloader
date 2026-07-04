@@ -18,7 +18,7 @@ import com.nntndscvtcvt.romsdownloader.presentation.settings.components.common.I
 fun LoginItem(
     navigateToLogin: () -> Unit
 ) {
-    val archiveIcon = R.drawable.outline_account_balance_24
+    val archiveIcon = painterResource(R.drawable.outline_account_balance_24)
     val loginIcon = painterResource(R.drawable.outline_login_24)
 
     SegmentedListItem(

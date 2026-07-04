@@ -130,7 +130,7 @@ fun SettingsScreen(
             item {
                 SegmentedListItem(
                     onClick = { viewModel.toggleExternalDownloader(!useExternalDownloader) },
-                    shapes = ListItemDefaults.shapes(MaterialTheme.shapes.large),
+                    shapes = ListItemDefaults.shapes(MaterialTheme.shapes.medium),
                     colors = ListItemDefaults.segmentedColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer
                     ),
