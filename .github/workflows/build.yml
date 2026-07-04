@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Скачиваем код из твоего репозитория
       - name: Checkout project sources
         uses: actions/checkout@v4
 
@@ -34,4 +35,11 @@ jobs:
           releaseDirectory: app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
           alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword:
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload Signed APK
+        uses: actions/upload-artifact@v5
+        with:
+          name: Signed-Release-APK
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
