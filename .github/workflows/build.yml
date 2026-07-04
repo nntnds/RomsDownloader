@@ -22,14 +22,14 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      # ВОТ ЭТОТ ШАГ СОЗДАСТ ФАЙЛ ПЕРЕД СБОРКОЙ
+      - name: Create google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build debug APK
         run: ./gradlew assembleDebug
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: RomsDownloader-debug-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
