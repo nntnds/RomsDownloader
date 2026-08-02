@@ -9,7 +9,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
@@ -20,9 +21,9 @@ fun GameInfoTopBar(
     onFavoriteClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
-    val backButton = painterResource(R.drawable.outline_keyboard_arrow_left_24)
-    val outlineFavoriteButton = painterResource(R.drawable.outline_favorite_24)
-    val filledFavoriteButton = painterResource(R.drawable.baseline_favorite_24)
+    val backButton = ImageVector.vectorResource(R.drawable.outline_keyboard_arrow_left_24)
+    val outlineFavoriteButton = ImageVector.vectorResource(R.drawable.outline_favorite_24)
+    val filledFavoriteButton = ImageVector.vectorResource(R.drawable.baseline_favorite_24)
 
     TopAppBar(
         windowInsets = WindowInsets.statusBars,
@@ -31,7 +32,7 @@ fun GameInfoTopBar(
         navigationIcon = {
             IconButton(onClick = onBack) {
                 Icon(
-                    painter = backButton,
+                    imageVector = backButton,
                     contentDescription = null,
                     modifier = Modifier.size(Dimens.iconMediumSize)
                 )
@@ -40,8 +41,9 @@ fun GameInfoTopBar(
         actions = {
             IconButton(onClick = onFavoriteClick) {
                 Icon(
-                    painter = if (isFavorite) filledFavoriteButton
-                    else outlineFavoriteButton, contentDescription = null
+                    imageVector = if (isFavorite) filledFavoriteButton
+                        else outlineFavoriteButton,
+                    contentDescription = null
                 )
             }
         }

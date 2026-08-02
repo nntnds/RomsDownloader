@@ -9,13 +9,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowError
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
 import com.nntndscvtcvt.romsdownloader.presentation.home.components.PlatformSection
@@ -36,33 +39,60 @@ fun HomeScreen(
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
+    HomeScreen(
+        query = query,
+        uiState = uiState,
+        isSearchActive = isSearchActive,
+        scrollBehavior = scrollBehavior,
+        onSearch = viewModel::searchGame,
+        onClear = viewModel::clearSearch,
+        onSearchActiveChange = viewModel::toggleIsActive,
+        navigateToSettings = navigateToSettings,
+        navigateToGameInfo = navigateToGameInfo,
+        navigateToSearchResult = navigateToSearchResult,
+    )
+}
+
+@Composable
+private fun HomeScreen(
+    query: String,
+    uiState: HomeState,
+    isSearchActive: Boolean,
+    scrollBehavior: TopAppBarScrollBehavior,
+    onSearch: (String) -> Unit,
+    onClear: () -> Unit,
+    onSearchActiveChange: (Boolean) -> Unit,
+    navigateToSettings: () -> Unit,
+    navigateToGameInfo: (Int) -> Unit,
+    navigateToSearchResult: (String, String) -> Unit
+) {
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SearchBar(
-                onSearch = viewModel::searchGame,
+                onSearch = onSearch,
                 query = query,
-                onClear = viewModel::clearSearch,
+                onClear = onClear,
                 isSearchActive = isSearchActive,
-                onSearchActiveChange = viewModel::toggleIsActive,
+                onSearchActiveChange = onSearchActiveChange,
                 navigateToSettings = navigateToSettings,
                 scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->
-        when (val state = uiState) {
+        when (uiState) {
             is HomeState.Loading -> {
                 ShowLoading(Modifier.padding(innerPadding))
             }
+
             is HomeState.Success -> {
-                val platformList = remember(state.games) {
-                    state.games.entries.toList()
+                val platformList = remember(uiState.games) {
+                    uiState.games.entries.toList()
                 }
 
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(
                         top = innerPadding.calculateTopPadding() + Dimens.PaddingLarge,
                         bottom = innerPadding.calculateBottomPadding() + 100.dp
@@ -84,9 +114,72 @@ fun HomeScreen(
                     }
                 }
             }
+
             is HomeState.Error -> {
-                ShowError(Modifier.padding(innerPadding), state.error)
+                ShowError(Modifier.padding(innerPadding), uiState.error)
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun HomeScreenContentPrev() {
+    HomeScreen(
+        query = "",
+        uiState = HomeState.Success(
+            games = mapOf(
+                "PSP" to listOf(
+                    Game(
+                        databaseID = 1,
+                        name = "Name",
+                        overview = "",
+                        platform = "",
+                        genres = emptyList(),
+                        developer = "",
+                        alternateNames = emptyList(),
+                        coverUrl = "",
+                        screenshots = emptyList(),
+                        downloads = emptyList()
+                    )
+                ),
+                "PS2" to listOf(
+                    Game(
+                        databaseID = 2,
+                        name = "Name",
+                        overview = "",
+                        platform = "",
+                        genres = emptyList(),
+                        developer = "",
+                        alternateNames = emptyList(),
+                        coverUrl = "",
+                        screenshots = emptyList(),
+                        downloads = emptyList()
+                    )
+                ),
+                "PS3" to listOf(
+                    Game(
+                        databaseID = 3,
+                        name = "Name",
+                        overview = "",
+                        platform = "",
+                        genres = emptyList(),
+                        developer = "",
+                        alternateNames = emptyList(),
+                        coverUrl = "",
+                        screenshots = emptyList(),
+                        downloads = emptyList()
+                    )
+                ),
+            ),
+        ),
+        isSearchActive = false,
+        scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+        onSearch = {},
+        onClear = {},
+        onSearchActiveChange = {},
+        navigateToSettings = {},
+        navigateToGameInfo = {},
+        navigateToSearchResult = { _, _ -> }
+    )
 }

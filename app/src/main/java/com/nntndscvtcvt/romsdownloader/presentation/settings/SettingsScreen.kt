@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
-import com.nntndscvtcvt.romsdownloader.domain.model.DownloadGamesState
+import com.nntndscvtcvt.romsdownloader.domain.model.DownloadGamesCatalogState
 import com.nntndscvtcvt.romsdownloader.presentation.components.SectionHeader
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.ConsoleItem
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.LogInSection
@@ -87,11 +87,10 @@ fun SettingsScreen(
                 SectionHeader(stringResource(R.string.log_in_header))
                 Spacer(Modifier.size(Dimens.PaddingLarge))
             }
-
             item {
                 LogInSection(
                     navigateToLogin = navigateToLogin,
-                    onCheckConnection = viewModel::checkConnection,
+                    onCheckConnection = { /* TODO Проверка соединения */ },
                     settingsConnectionStatus = connectionStatus
                 )
             }
@@ -102,12 +101,11 @@ fun SettingsScreen(
                 SectionHeader(stringResource(R.string.consoles_header))
                 Spacer(Modifier.size(Dimens.PaddingMedium))
             }
-
             itemsIndexed(
                 items = consoles,
                 key = { _, item -> item.consoleName }
             ) { index, item ->
-                val consoleState = progress[item.consoleName] ?: DownloadGamesState.Idle
+                val consoleState = progress[item.consoleName] ?: DownloadGamesCatalogState.Idle
 
                 ConsoleItem(
                     item = item,

@@ -11,9 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextOverflow
-import com.nntndscvtcvt.romsdownloader.domain.model.DownloadGamesState
+import com.nntndscvtcvt.romsdownloader.domain.model.DownloadGamesCatalogState
 import com.nntndscvtcvt.romsdownloader.presentation.settings.Console
-import com.nntndscvtcvt.romsdownloader.presentation.settings.components.common.IconBox
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.console.ConsoleDeleteDialog
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.console.ConsoleRedownloadDialog
 import com.nntndscvtcvt.romsdownloader.presentation.settings.components.console.ConsoleSupportingContent
@@ -27,7 +26,7 @@ fun ConsoleItem(
     totalCount: Int,
     downloadConsoleGame: (String) -> Unit,
     deletePlatformGames: (String) -> Unit,
-    state: DownloadGamesState,
+    state: DownloadGamesCatalogState,
     isDownloaded: Boolean,
     gamesCount: Int
 ) {
@@ -70,7 +69,7 @@ fun ConsoleItem(
             trailingContentColor = MaterialTheme.colorScheme.primary
         ),
         leadingContent = {
-            IconBox(item.icon)
+            // TODO
         },
         trailingContent = {
             ConsoleTrailingAction(

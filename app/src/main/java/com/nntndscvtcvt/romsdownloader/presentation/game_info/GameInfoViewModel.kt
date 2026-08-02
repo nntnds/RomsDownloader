@@ -2,14 +2,11 @@ package com.nntndscvtcvt.romsdownloader.presentation.game_info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nntndscvtcvt.romsdownloader.domain.model.DownloadTask
 import com.nntndscvtcvt.romsdownloader.domain.model.Downloads
-import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.domain.model.GameFileItem
 import com.nntndscvtcvt.romsdownloader.domain.repository.CookieRepository
-import com.nntndscvtcvt.romsdownloader.domain.repository.DownloadFileRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameFavoriteRepository
-import com.nntndscvtcvt.romsdownloader.domain.repository.GameInfoRepository
+import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
 import com.nntndscvtcvt.romsdownloader.domain.repository.SettingsRepository
 import com.nntndscvtcvt.romsdownloader.presentation.utils.cut
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,16 +15,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class GameInfoViewModel(
-    private val gameInfoRepository: GameInfoRepository,
     private val favoriteRepository: GameFavoriteRepository,
     private val cookieRepository: CookieRepository,
-    private val downloadFileRepository: DownloadFileRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val gameRepository: GameRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<GameInfoState>(GameInfoState.Loading)
@@ -44,63 +39,43 @@ class GameInfoViewModel(
         loadGameAndFavorite(id)
     }
 
-    fun startDownload(url: String, fileName: String, game: Game) = viewModelScope.launch {
-        val sig = cookieRepository.loggedInSig.firstOrNull()
-        val user = cookieRepository.loggedInUser.firstOrNull()
-
-        if (sig == null || user == null) {
-            _snackbarEvent.emit("Log in to your account")
-            return@launch
-        }
-
-        val downloadId = downloadFileRepository.downloadFile(url, sig, user, fileName)
-
-        if (downloadId != -1L) {
-            downloadFileRepository.saveDownload(
-                DownloadTask(
-                    downloadId = downloadId,
-                    gameId = game.databaseID,
-                    gameName = game.name,
-                    coverUrl = game.coverUrl,
-                    fileName = fileName,
-                    url = url
-                )
-            )
-            _snackbarEvent.emit("Download started")
-        } else {
-            _snackbarEvent.emit("Failed to start download")
-        }
-    }
-
-    private fun loadGameAndFavorite(id: Int) = viewModelScope.launch {
+    private fun loadGameAndFavorite(id: Int) {
         _uiState.value = GameInfoState.Loading
 
-        gameInfoRepository.getGameById(id).fold(
-            onFailure = { _uiState.value = GameInfoState.Error(it) },
-            onSuccess = { game ->
-                favoriteRepository.isFavoriteExist(game.databaseID)
-                    .catch { _uiState.value = GameInfoState.Error(it) }
-                    .collect { isFavorite ->
-                        _uiState.value = GameInfoState.Success(
-                            games = game,
-                            gameFileItem = mapDownloadItem(game.downloads),
-                            isFavorite = isFavorite
-                        )
-                    }
-            }
-        )
+        viewModelScope.launch {
+            gameRepository.getGameById(id).fold(
+                onFailure = {
+                    _uiState.value = GameInfoState.Error(it)
+                },
+                onSuccess = { game ->
+                    favoriteRepository.isFavoriteExist(game.databaseID)
+                        .catch {
+                            _uiState.value = GameInfoState.Error(it)
+                        }
+                        .collect { isFavorite ->
+                            _uiState.value = GameInfoState.Success(
+                                games = game,
+                                gameFileItem = mapDownloadItem(game.downloads),
+                                isFavorite = isFavorite
+                            )
+                        }
+                }
+            )
+        }
     }
 
-    fun toggleFavorite() = viewModelScope.launch {
-        val currentState = _uiState.value as? GameInfoState.Success ?: return@launch
+    fun toggleFavorite() {
+        val currentState = _uiState.value as? GameInfoState.Success ?: return
         val gameId = currentState.games.databaseID
 
-        if (currentState.isFavorite) {
-            favoriteRepository.removeFromFavorite(gameId)
-            _snackbarEvent.emit("Removed from favorites")
-        } else {
-            favoriteRepository.addToFavorite(gameId)
-            _snackbarEvent.emit("Added to favorites")
+        viewModelScope.launch {
+            if (currentState.isFavorite) {
+                favoriteRepository.removeFromFavorite(gameId)
+                _snackbarEvent.emit("Removed from favorites")
+            } else {
+                favoriteRepository.addToFavorite(gameId)
+                _snackbarEvent.emit("Added to favorites")
+            }
         }
     }
 

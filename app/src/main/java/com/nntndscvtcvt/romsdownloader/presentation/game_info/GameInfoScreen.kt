@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +27,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
+import com.nntndscvtcvt.romsdownloader.domain.model.GameFileItem
 import com.nntndscvtcvt.romsdownloader.presentation.components.SectionHeader
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowError
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
@@ -39,19 +42,16 @@ import com.nntndscvtcvt.romsdownloader.presentation.utils.launchExternalDownload
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun GameInfoScreen(
     id: Int,
     onBack: () -> Unit,
     viewModel: GameInfoViewModel = koinViewModel(key = id.toString())
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val useExternalDownloader by viewModel.useExternalDownloader.collectAsStateWithLifecycle()
-    val isFavorite = (state as? GameInfoState.Success)?.isFavorite ?: false
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val context = LocalContext.current
 
     LaunchedEffect(id) {
         viewModel.getInfo(id)
@@ -64,72 +64,133 @@ fun GameInfoScreen(
         }
     }
 
-    when (val state = state) {
-        is GameInfoState.Loading -> ShowLoading(Modifier)
-        is GameInfoState.Error -> ShowError(Modifier, e = state.error)
+    GameInfoScreen(
+        uiState = uiState,
+        onBack = onBack,
+        toggleFavorite = viewModel::toggleFavorite,
+        notifyNoExternalDownloader = viewModel::notifyNoExternalDownloader,
+        scrollBehavior = scrollBehavior,
+        snackbarHostState = snackbarHostState,
+        useExternalDownloader = useExternalDownloader
+
+    )
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun GameInfoScreen(
+    uiState: GameInfoState,
+    onBack: () -> Unit,
+    toggleFavorite: () -> Unit,
+    notifyNoExternalDownloader: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    snackbarHostState: SnackbarHostState,
+    useExternalDownloader: Boolean
+) {
+    when (uiState) {
+        is GameInfoState.Loading -> ShowLoading()
+        is GameInfoState.Error -> ShowError(e = uiState.error)
         is GameInfoState.Success -> {
-            Scaffold(
-                contentWindowInsets = WindowInsets(bottom = 0.dp),
-                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = {
-                    GameInfoTopBar(
-                        isFavorite = isFavorite,
-                        onBack = onBack,
-                        onFavoriteClick = viewModel::toggleFavorite,
-                        scrollBehavior = scrollBehavior
-                    )
-                },
-                snackbarHost = {
-                    SnackbarHost(hostState = snackbarHostState)
-                }
-            ) { innerPadding ->
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
-                    contentPadding = PaddingValues(bottom = Dimens.PaddingLarge),
-                ) {
-                    item { GameInfoHeader(state.games) }
+            GameInfoContent(
+                scrollBehavior = scrollBehavior,
+                isFavorite = uiState.isFavorite,
+                onBack = onBack,
+                toggleFavorite = toggleFavorite,
+                snackbarHostState = snackbarHostState,
+                game = uiState.games,
+                gameFileItem = uiState.gameFileItem,
+                useExternalDownloader = useExternalDownloader,
+                notifyNoExternalDownloader = notifyNoExternalDownloader
+            )
+        }
+    }
+}
 
-                    item { GameInfoOverview(state.games.overview) }
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun GameInfoContent(
+    scrollBehavior: TopAppBarScrollBehavior,
+    isFavorite: Boolean,
+    onBack: () -> Unit,
+    toggleFavorite: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    game: Game,
+    gameFileItem: List<GameFileItem>,
+    useExternalDownloader: Boolean,
+    notifyNoExternalDownloader: () -> Unit
+) {
+    val context = LocalContext.current
 
-                    item {
-                        Spacer(Modifier.size(Dimens.PaddingLarge))
-                        SectionHeader(stringResource(R.string.screenshots))
-                        Spacer(Modifier.size(Dimens.PaddingLarge))
-                    }
+    Scaffold(
+        contentWindowInsets = WindowInsets(bottom = 0.dp),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            GameInfoTopBar(
+                isFavorite = isFavorite,
+                onBack = onBack,
+                onFavoriteClick = toggleFavorite,
+                scrollBehavior = scrollBehavior
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+            contentPadding = PaddingValues(bottom = Dimens.PaddingLarge),
+        ) {
+            item {
+                GameInfoHeader(
+                    coverUrl = game.coverUrl,
+                    name = game.name,
+                    developer = game.developer,
+                    platform = game.platform,
+                    genres = game.genres
+                )
+            }
 
-                    item {
-                        GameInfoScreenshots(state.games)
-                        Spacer(Modifier.size(Dimens.PaddingLarge))
-                    }
+            item { GameInfoOverview(game.overview) }
 
-                    item {
-                        SectionHeader(stringResource(R.string.downloads))
-                        Spacer(Modifier.size(Dimens.PaddingLarge))
-                    }
+            item {
+                Spacer(Modifier.size(Dimens.PaddingLarge))
+                SectionHeader(stringResource(R.string.screenshots))
+                Spacer(Modifier.size(Dimens.PaddingLarge))
+            }
 
-                    itemsIndexed(
-                        items = state.gameFileItem,
-                        key = { _, item -> item.url }
-                    ) { index, item ->
-                        GameInfoDownloads(
-                            totalCount = state.gameFileItem.size,
-                            item = item,
-                            index = index,
-                            startDownload = { url, fileName ->
-                                if (useExternalDownloader) {
-                                    if (!launchExternalDownload(url, context)) {
-                                        viewModel.notifyNoExternalDownloader()
-                                    }
-                                } else {
-                                    viewModel.startDownload(url, fileName, state.games)
-                                }
+            item {
+                GameInfoScreenshots(
+                    screenshots = game.screenshots
+                )
+                Spacer(Modifier.size(Dimens.PaddingLarge))
+            }
+
+            item {
+                SectionHeader(stringResource(R.string.downloads))
+                Spacer(Modifier.size(Dimens.PaddingLarge))
+            }
+
+            itemsIndexed(
+                items = gameFileItem,
+                key = { _, item -> item.url }
+            ) { index, item ->
+                GameInfoDownloads(
+                    totalCount = gameFileItem.size,
+                    item = item,
+                    index = index,
+                    startDownload = { url, _ ->
+                        if (useExternalDownloader) {
+                            if (!launchExternalDownload(url, context)) {
+                                notifyNoExternalDownloader()
                             }
-                        )
+                        } else {
+                            /* TODO Добавить загрузчик */
+                        }
                     }
-                }
+                )
             }
         }
     }

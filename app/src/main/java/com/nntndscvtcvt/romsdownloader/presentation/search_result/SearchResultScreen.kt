@@ -20,11 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nntndscvtcvt.romsdownloader.R
+import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.components.GameCard
 import com.nntndscvtcvt.romsdownloader.presentation.components.ShowLoading
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
@@ -39,8 +41,9 @@ fun SearchResultScreen(
     navigateToGameInfo: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val backButton = painterResource(R.drawable.outline_keyboard_arrow_left_24)
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val backButton = ImageVector.vectorResource(R.drawable.outline_keyboard_arrow_left_24)
 
     LaunchedEffect(platform, query) {
         viewModel.loadGames(platform, query)
@@ -57,7 +60,7 @@ fun SearchResultScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            painter = backButton,
+                            imageVector = backButton,
                             contentDescription = null,
                             modifier = Modifier.size(Dimens.iconMediumSize)
                         )
@@ -66,36 +69,50 @@ fun SearchResultScreen(
             )
         }
     ) { innerPadding ->
-        when (val state = uiState) {
-            SearchResultState.Loading -> {
+        when (uiState) {
+            is SearchResultState.Idle -> {
+                Text(" =) ")
+            }
+
+            is SearchResultState.Loading -> {
                 ShowLoading(Modifier.padding(innerPadding))
             }
 
             is SearchResultState.Success -> {
-                LazyVerticalGrid(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
-                        .padding(horizontal = Dimens.PaddingLarge),
-                    columns = GridCells.Fixed(Dimens.GridColumns),
-                    horizontalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
-                    contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
-                ) {
-                    items(
-                        items = state.games,
-                        key = { it.databaseID }
-                    ) { game ->
-                        GameCard(
-                            game = game,
-                            navigateToGameInfo = navigateToGameInfo,
-                            modifier = Modifier
-                        )
-                    }
-                }
+                SearchResultContent(
+                    games = (uiState as SearchResultState.Success).games,
+                    navigateToGameInfo = navigateToGameInfo,
+                    innerPadding = innerPadding
+                )
             }
+        }
+    }
+}
 
-            else -> {}
+@Composable
+private fun SearchResultContent(
+    games: List<Game>,
+    navigateToGameInfo: (Int) -> Unit,
+    innerPadding: PaddingValues
+) {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxSize()
+            .padding(horizontal = Dimens.PaddingLarge),
+        columns = GridCells.Fixed(Dimens.GridColumns),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
+        verticalArrangement = Arrangement.spacedBy(Dimens.GridSpacing),
+        contentPadding = PaddingValues(bottom = Dimens.PaddingLarge)
+    ) {
+        items(
+            items = games,
+            key = { it.databaseID }
+        ) { game ->
+            GameCard(
+                game = game,
+                navigateToGameInfo = navigateToGameInfo,
+            )
         }
     }
 }

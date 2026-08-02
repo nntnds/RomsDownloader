@@ -15,13 +15,9 @@ class GameFavoriteRepositoryImpl(
         favoriteDao.addToFavorite(FavoriteEntity(id))
     }
 
-    override suspend fun removeFromFavorite(id: Int) {
-        favoriteDao.removeFromFavorite(FavoriteEntity(id))
-    }
+    override suspend fun removeFromFavorite(id: Int) = favoriteDao.removeFromFavorite(FavoriteEntity(id))
 
-    override fun isFavoriteExist(id: Int): Flow<Boolean> {
-        return favoriteDao.isFavoriteExist(id)
-    }
+    override fun isFavoriteExist(id: Int): Flow<Boolean> = favoriteDao.isFavoriteExist(id)
 
     override fun getAllFavorites(): Flow<List<Game>> = favoriteDao.getAllFavorites()
         .map { games -> games.map { it.toDomain() } }

@@ -11,8 +11,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
@@ -22,7 +23,7 @@ fun SettingsTopBar(
     onBack: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
-    val backButton = painterResource(R.drawable.outline_keyboard_arrow_left_24)
+    val backButton = ImageVector.vectorResource(R.drawable.outline_keyboard_arrow_left_24)
 
     TopAppBar(
         windowInsets = WindowInsets.statusBars,
@@ -35,7 +36,7 @@ fun SettingsTopBar(
                 onClick = onBack
             ) {
                 Icon(
-                    painter = backButton,
+                    imageVector = backButton,
                     contentDescription = null,
                     modifier = Modifier.size(Dimens.iconMediumSize)
                 )

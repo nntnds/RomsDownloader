@@ -9,8 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
@@ -20,9 +21,9 @@ fun LoginScreenTopBar(
     onRefreshClick: () -> Unit,
     onClear: () -> Unit
 ) {
-    val backButton = painterResource(R.drawable.outline_keyboard_arrow_left_24)
-    val refreshButton = painterResource(R.drawable.outline_refresh_24)
-    val cookieButton = painterResource(R.drawable.outline_cookie_off_24)
+    val backButton = ImageVector.vectorResource(R.drawable.outline_keyboard_arrow_left_24)
+    val refreshButton = ImageVector.vectorResource(R.drawable.outline_refresh_24)
+    val cookieButton = ImageVector.vectorResource(R.drawable.outline_cookie_off_24)
 
     TopAppBar(
         windowInsets = WindowInsets.statusBars,
@@ -32,7 +33,7 @@ fun LoginScreenTopBar(
         navigationIcon = {
             IconButton(onClick = onBack) {
                 Icon(
-                    painter = backButton,
+                    imageVector = backButton,
                     contentDescription = null,
                     modifier = Modifier.size(Dimens.iconMediumSize)
                 )

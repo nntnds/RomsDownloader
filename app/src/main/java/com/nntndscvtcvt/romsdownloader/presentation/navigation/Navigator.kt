@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.nntndscvtcvt.romsdownloader.presentation.download.DownloadScreen
 import com.nntndscvtcvt.romsdownloader.presentation.favorite.FavoriteScreen
 import com.nntndscvtcvt.romsdownloader.presentation.game_info.GameInfoScreen
 import com.nntndscvtcvt.romsdownloader.presentation.home.HomeScreen
@@ -39,12 +38,6 @@ fun Navigator() {
                         navigateToGameInfo = navigator::navigateToGameInfo,
                         navigateToSettings = navigator::navigateToSettings,
                         navigateToSearchResult = navigator::navigateToSearchResult
-                    )
-                }
-                entry<AppRoutes.Downloads> {
-                    DownloadScreen(
-                        navigateToSettings = navigator::navigateToSettings,
-                        navigateToGameInfo = navigator::navigateToGameInfo
                     )
                 }
                 entry<AppRoutes.Favorites> {

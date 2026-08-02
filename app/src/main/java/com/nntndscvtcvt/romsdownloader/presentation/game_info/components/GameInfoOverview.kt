@@ -10,6 +10,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -19,18 +20,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
+private val WHITESPACE_REGEX = Regex("\\s+")
+private const val OVERVIEW_COLLAPSED_MAX_LINES = 6
+
 @Composable
 fun GameInfoOverview(overview: String) {
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var isOverflowing by rememberSaveable { mutableStateOf(false) }
+    val cleanOverview = remember(overview) { overview.replace(WHITESPACE_REGEX, " ") }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(Dimens.PaddingLarge),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var isExpanded by rememberSaveable { mutableStateOf(false) }
-        val cleanOverview = overview.replace(Regex("\\s+"), " ")
-        var isOverflowing by rememberSaveable { mutableStateOf(false) }
-
         Text(
             text = cleanOverview,
             color = MaterialTheme.colorScheme.onSurface,
@@ -41,7 +45,9 @@ fun GameInfoOverview(overview: String) {
                 .fillMaxWidth()
                 .animateContentSize(),
             onTextLayout = { textLayoutResult ->
-                isOverflowing = textLayoutResult.hasVisualOverflow
+                if (!isExpanded) {
+                    isOverflowing = textLayoutResult.hasVisualOverflow
+                }
             }
         )
         if (isOverflowing || isExpanded) {

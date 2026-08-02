@@ -33,16 +33,18 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
-import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
-fun GameInfoScreenshots(state: Game) {
-    var isFullScreen by rememberSaveable { mutableStateOf(false) }
-    var imageUrl by rememberSaveable { mutableStateOf("") }
-    val carouselState = rememberCarouselState { state.screenshots.size }
+fun GameInfoScreenshots(
+    screenshots: List<String>,
+    modifier: Modifier = Modifier
+) {
+    var fullScreenImageUrl by rememberSaveable { mutableStateOf<String?>(null) }
+    val carouselState = rememberCarouselState { screenshots.size }
+    val context = LocalContext.current
 
-    if (state.screenshots.isEmpty()) {
+    if (screenshots.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,23 +66,18 @@ fun GameInfoScreenshots(state: Game) {
             state = carouselState,
             preferredItemWidth = 360.dp,
             itemSpacing = Dimens.PaddingMedium,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(horizontal = Dimens.PaddingLarge)
         ) { index ->
-            val url = state.screenshots[index]
-
+            val url = screenshots[index]
             AsyncImage(
                 modifier = Modifier
                     .height(Dimens.ScreenshotImageHeight)
                     .maskClip(MaterialTheme.shapes.medium)
-                    .clickable {
-                        isFullScreen = !isFullScreen
-                        imageUrl = url
-                    },
-                model = ImageRequest
-                    .Builder(LocalContext.current)
+                    .clickable { fullScreenImageUrl = url },
+                model = ImageRequest.Builder(context)
                     .crossfade(true)
                     .data(COVER_URL + url)
                     .memoryCachePolicy(CachePolicy.ENABLED)
@@ -91,27 +88,27 @@ fun GameInfoScreenshots(state: Game) {
                 error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
             )
         }
-        if (isFullScreen) {
+
+        fullScreenImageUrl?.let { url ->
             Dialog(
-                onDismissRequest = { isFullScreen = false }, properties = DialogProperties(
-                    usePlatformDefaultWidth = false
-                )
+                onDismissRequest = { fullScreenImageUrl = null },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clickable {
-                            isFullScreen = !isFullScreen
-                        }
+                        .clickable { fullScreenImageUrl = null }
                         .padding(Dimens.PaddingLarge),
-                    contentAlignment = Alignment.Center) {
+                    contentAlignment = Alignment.Center
+                ) {
                     AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(MaterialTheme.shapes.small)
-                            .clickable { isFullScreen = !isFullScreen },
-                        model = ImageRequest.Builder(LocalContext.current).crossfade(true)
-                            .data(COVER_URL + imageUrl).memoryCachePolicy(CachePolicy.ENABLED)
+                            .clip(MaterialTheme.shapes.small),
+                        model = ImageRequest.Builder(context)
+                            .crossfade(true)
+                            .data(url)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
                             .build(),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,

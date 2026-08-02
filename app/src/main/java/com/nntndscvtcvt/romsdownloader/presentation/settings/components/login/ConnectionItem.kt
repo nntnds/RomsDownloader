@@ -10,13 +10,13 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.settings.SettingsConnectionStatus
-import com.nntndscvtcvt.romsdownloader.presentation.settings.components.common.IconBox
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -25,11 +25,11 @@ fun ConnectionItem(
     onCheckConnection: () -> Unit,
     settingsConnectionStatus: SettingsConnectionStatus
 ) {
-    val refreshIcon = painterResource(R.drawable.outline_refresh_24)
-    val errorIcon = painterResource(R.drawable.outline_error_24)
-    val checkCircleIcon = painterResource(R.drawable.outline_check_circle_24)
-    val accountOff = painterResource(R.drawable.outline_account_circle_off_24)
-    val wifiIcon = painterResource(R.drawable.outline_android_wifi_3_bar_24)
+    val refreshIcon = ImageVector.vectorResource(R.drawable.outline_refresh_24)
+    val errorIcon = ImageVector.vectorResource(R.drawable.outline_error_24)
+    val checkCircleIcon = ImageVector.vectorResource(R.drawable.outline_check_circle_24)
+    val accountOff = ImageVector.vectorResource(R.drawable.outline_account_circle_off_24)
+    val wifiIcon = ImageVector.vectorResource(R.drawable.outline_android_wifi_3_bar_24)
 
     SegmentedListItem(
         onClick = onCheckConnection,
@@ -40,7 +40,7 @@ fun ConnectionItem(
             trailingContentColor = MaterialTheme.colorScheme.primary
         ),
         leadingContent = {
-            IconBox(wifiIcon)
+            // TODO
         },
         trailingContent = {
             when (settingsConnectionStatus) {
@@ -49,21 +49,21 @@ fun ConnectionItem(
                     strokeWidth = 2.dp
                 )
                 SettingsConnectionStatus.Success -> Icon(
-                    painter = checkCircleIcon,
+                    imageVector = checkCircleIcon,
                     contentDescription = null
                 )
                 SettingsConnectionStatus.Error -> Icon(
-                    painter = errorIcon,
+                    imageVector = errorIcon,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.error
                 )
                 SettingsConnectionStatus.NotLoggedIn -> Icon(
-                    painter = accountOff,
+                    imageVector = accountOff,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface
                 )
                 SettingsConnectionStatus.Idle -> Icon(
-                    painter = refreshIcon,
+                    imageVector = refreshIcon,
                     contentDescription = null
                 )
             }

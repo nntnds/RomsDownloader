@@ -24,11 +24,16 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nntndscvtcvt.romsdownloader.data.utils.Constants.COVER_URL
-import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 
 @Composable
-fun GameInfoHeader(state: Game) {
+fun GameInfoHeader(
+    coverUrl: String,
+    name: String,
+    developer: String,
+    platform: String,
+    genres: List<String>
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,7 +43,7 @@ fun GameInfoHeader(state: Game) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .crossfade(true)
-                .data(COVER_URL + state.coverUrl)
+                .data(COVER_URL + coverUrl)
                 .memoryCachePolicy(CachePolicy.ENABLED)
                 .build(),
             modifier = Modifier
@@ -55,21 +60,19 @@ fun GameInfoHeader(state: Game) {
             verticalArrangement = Arrangement.spacedBy(Dimens.ColumnVerticalArrangement)
         ) {
             Text(
-                text = state.name,
+                text = name,
                 style = MaterialTheme.typography.titleLarge,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = state.developer,
-                color = MaterialTheme.colorScheme.onSurface,
+                text = developer,
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = state.platform,
-                color = MaterialTheme.colorScheme.onSurface,
+                text = platform,
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -78,7 +81,7 @@ fun GameInfoHeader(state: Game) {
                 horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingSmall),
                 verticalArrangement = Arrangement.spacedBy(Dimens.PaddingSmall)
             ) {
-                state.genres.forEach {
+                genres.forEach {
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.onSurface,

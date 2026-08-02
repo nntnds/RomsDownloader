@@ -31,11 +31,8 @@ fun String.extractCookie(cookieName: String): String? {
 
 fun String.toIntRoute(): Int? = when(this) {
     "Home" -> 1
-    "Downloads" -> 2
-    "Favorites" -> 3
+    "Favorites" -> 2
     else -> null
 }
 
-fun NavKey?.showBottomBar(): Boolean = this is AppRoutes.Home ||
-        this is AppRoutes.Downloads ||
-        this is AppRoutes.Favorites
+fun NavKey?.showBottomBar(): Boolean = this is AppRoutes.Home || this is AppRoutes.Favorites

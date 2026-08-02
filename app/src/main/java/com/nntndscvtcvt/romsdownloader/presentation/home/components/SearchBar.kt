@@ -24,9 +24,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
@@ -34,18 +35,18 @@ import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SearchBar(
-    onSearch: (String) -> Unit,
     query: String,
+    onSearch: (String) -> Unit,
     onClear: () -> Unit,
-    isSearchActive: Boolean,
     onSearchActiveChange: (Boolean) -> Unit,
     navigateToSettings: () -> Unit,
+    isSearchActive: Boolean,
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
-    val backButton = painterResource(R.drawable.outline_keyboard_arrow_left_24)
-    val searchButton = painterResource(R.drawable.outline_search_24)
-    val clearButton = painterResource(R.drawable.outline_close_24)
-    val settingsButton = painterResource(R.drawable.outline_settings_24)
+    val backIcon = ImageVector.vectorResource(R.drawable.outline_keyboard_arrow_left_24)
+    val searchIcon = ImageVector.vectorResource(R.drawable.outline_search_24)
+    val clearIcon = ImageVector.vectorResource(R.drawable.outline_close_24)
+    val settingsIcon = ImageVector.vectorResource(R.drawable.outline_settings_24)
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -106,7 +107,7 @@ fun SearchBar(
                     }
                 ) {
                     Icon(
-                        painter = backButton,
+                        imageVector = backIcon,
                         contentDescription = null,
                         modifier = Modifier.size(Dimens.iconMediumSize)
                     )
@@ -120,16 +121,20 @@ fun SearchBar(
                         onClick = onClear
                     ) {
                         Icon(
-                            painter = clearButton,
+                            imageVector = clearIcon,
                             contentDescription = null,
                             modifier = Modifier.size(Dimens.iconDefaultSize)
                         )
                     }
                 }
             } else {
-                IconButton(onClick = { onSearchActiveChange(true) }) {
+                IconButton(
+                    onClick = {
+                        onSearchActiveChange(true)
+                    }
+                ) {
                     Icon(
-                        painter = searchButton,
+                        imageVector = searchIcon,
                         contentDescription = null
                     )
                 }
@@ -137,7 +142,7 @@ fun SearchBar(
                     onClick = navigateToSettings
                 ) {
                     Icon(
-                        painter = settingsButton,
+                        imageVector = settingsIcon,
                         contentDescription = null
                     )
                 }

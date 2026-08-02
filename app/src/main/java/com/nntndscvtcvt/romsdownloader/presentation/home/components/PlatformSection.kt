@@ -1,6 +1,5 @@
 package com.nntndscvtcvt.romsdownloader.presentation.home.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +17,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nntndscvtcvt.romsdownloader.R
 import com.nntndscvtcvt.romsdownloader.domain.model.Game
 import com.nntndscvtcvt.romsdownloader.presentation.components.GameCard
 import com.nntndscvtcvt.romsdownloader.presentation.utils.Dimens
@@ -35,12 +37,7 @@ fun PlatformSection(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(Dimens.PaddingSmall)) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(
-                    if (isSearch) Modifier.clickable {  }
-                    else Modifier
-                ),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -55,15 +52,16 @@ fun PlatformSection(
                 trailingContent = {
                     if (isSearch) {
                         TextButton(
-                            onClick = { navigateToSearchResult(platform, query) },
-                            content = {
-                                Text(
-                                    text = "See all",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                            },
-                        )
+                            onClick = {
+                                navigateToSearchResult(platform, query)
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.see_all),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
                     }
                 },
             )
@@ -83,5 +81,33 @@ fun PlatformSection(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PlatformSectionPrev() {
+    MaterialTheme {
+        PlatformSection(
+            platform = "PSP",
+            games = listOf(
+                Game(
+                    databaseID = 1,
+                    name = "Name",
+                    overview = "",
+                    platform = "",
+                    genres = emptyList(),
+                    developer = "",
+                    alternateNames = emptyList(),
+                    coverUrl = "",
+                    screenshots = emptyList(),
+                    downloads = emptyList()
+                )
+            ),
+            isSearch = true,
+            query = "Game",
+            navigateToGameInfo = {},
+            navigateToSearchResult = { _, _ -> },
+        )
     }
 }

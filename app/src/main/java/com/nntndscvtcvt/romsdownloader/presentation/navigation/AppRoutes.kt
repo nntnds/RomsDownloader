@@ -9,9 +9,6 @@ sealed class AppRoutes : NavKey {
     data object Home : AppRoutes()
 
     @Serializable
-    data object Downloads : AppRoutes()
-
-    @Serializable
     data object Favorites : AppRoutes()
 
     @Serializable

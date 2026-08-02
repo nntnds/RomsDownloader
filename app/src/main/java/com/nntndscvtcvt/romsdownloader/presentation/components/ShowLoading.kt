@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ShowLoading(modifier: Modifier = Modifier) {
-    Box(modifier.fillMaxSize()) {
+    Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LoadingIndicator(Modifier.align(Alignment.Center))
     }
 }

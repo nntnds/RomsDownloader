@@ -8,8 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import com.nntndscvtcvt.romsdownloader.R
 
 @Composable
@@ -17,7 +18,7 @@ fun FavoriteScreenTopBar(
     navigateToSettings: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
-    val settingsButton = painterResource(R.drawable.outline_settings_24)
+    val settingsIcon = ImageVector.vectorResource(R.drawable.outline_settings_24)
 
     TopAppBar(
         scrollBehavior = scrollBehavior,
@@ -28,10 +29,8 @@ fun FavoriteScreenTopBar(
             )
         },
         actions = {
-            IconButton(
-                onClick = navigateToSettings
-            ) {
-                Icon(settingsButton, null)
+            IconButton(onClick = navigateToSettings) {
+                Icon(settingsIcon, null)
             }
         }
     )

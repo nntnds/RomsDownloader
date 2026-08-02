@@ -95,7 +95,4 @@ dependencies {
 
     // Datastore
     implementation(libs.datastore)
-
-    // Ketch
-//    implementation(libs.ketch)
 }

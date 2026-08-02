@@ -15,11 +15,6 @@ val DESTINATIONS = mapOf(
         selectedIcon = R.drawable.baseline_home_filled_24,
         title = R.string.nav_home
     ),
-    AppRoutes.Downloads to BottomBarItem(
-        outlineIcon = R.drawable.outline_download_24,
-        selectedIcon = R.drawable.outline_download_24,
-        title = R.string.nav_downloads
-    ),
     AppRoutes.Favorites to BottomBarItem(
         outlineIcon = R.drawable.outline_favorite_24,
         selectedIcon = R.drawable.baseline_favorite_24,

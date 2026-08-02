@@ -18,7 +18,7 @@ class FavoriteViewModel(
             if (games.isEmpty()) FavoriteState.Empty
             else FavoriteState.Success(games)
         }
-        .catch { FavoriteState.Error(it) }
+        .catch { emit(FavoriteState.Error(it)) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

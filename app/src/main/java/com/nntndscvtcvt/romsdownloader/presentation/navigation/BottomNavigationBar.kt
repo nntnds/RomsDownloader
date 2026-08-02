@@ -5,8 +5,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation3.runtime.NavKey
 
 @Composable
@@ -23,7 +24,10 @@ fun BottomNavigationBar(
                 onClick = { onNavigate(route) },
                 icon = {
                     Icon(
-                        painter = painterResource(if (isSelected) destination.selectedIcon else destination.outlineIcon),
+                        imageVector = ImageVector.vectorResource(
+                            if (isSelected) destination.selectedIcon
+                            else destination.outlineIcon
+                        ),
                         contentDescription = null
                     )
                 },

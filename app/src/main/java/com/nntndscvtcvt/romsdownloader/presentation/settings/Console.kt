@@ -1,12 +1,11 @@
 package com.nntndscvtcvt.romsdownloader.presentation.settings
 
-import androidx.annotation.DrawableRes
 import com.nntndscvtcvt.romsdownloader.R
 
 data class Console(
     val consoleName: String,
     val platform: String,
-    @DrawableRes val icon: Int,
+    val icon: Int,
     val size: String,
 )
 

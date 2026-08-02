@@ -3,7 +3,6 @@ package com.nntndscvtcvt.romsdownloader.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nntndscvtcvt.romsdownloader.domain.repository.GameRepository
-import com.nntndscvtcvt.romsdownloader.domain.repository.SearchGameRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -15,26 +14,26 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class HomeViewModel(
     private val gameRepository: GameRepository,
-    private val searchGameRepository: SearchGameRepository
 ) : ViewModel() {
-
-    private val _query = MutableStateFlow("")
-    val query = _query.asStateFlow()
 
     private val _uiState = MutableStateFlow<HomeState>(HomeState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    private val _query = MutableStateFlow("")
+    val query = _query.asStateFlow()
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive = _isSearchActive.asStateFlow()
 
     init {
-        viewModelScope.launch { observeGames() }
+        viewModelScope.launch {
+            observeGames()
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -46,35 +45,32 @@ class HomeViewModel(
                 val result = if (query.isBlank()) {
                     gameRepository.getAllGames()
                 } else {
-                    searchGameRepository.searchGame(query.trim())
+                    gameRepository.searchGame(query.trim())
                 }
-                result
-                    .map { games ->
-                        HomeState.Success(games.groupBy { it.platform })
-                    }
-                    .catch { exception ->
-                        _uiState.value = HomeState.Error(exception)
-                    }
-            }
-            .flowOn(Dispatchers.Default)
+                result.map { games ->
+                    HomeState.Success(games.groupBy { it.platform })
+                }.catch { exception ->
+                    _uiState.value = HomeState.Error(exception)
+                }
+            }.flowOn(Dispatchers.Default)
             .collect { success ->
                 _uiState.value = success
             }
     }
 
     fun searchGame(query: String) {
-        _query.update { query }
+        _query.value = query
         if (query.isNotBlank() && !_isSearchActive.value) {
-            _isSearchActive.update { true }
+            _isSearchActive.value = true
         }
     }
 
     fun clearSearch() {
-        _query.update { "" }
+        _query.value = ""
     }
 
     fun toggleIsActive(value: Boolean) {
-        _isSearchActive.update { value }
+        _isSearchActive.value = value
         if (!value) {
             clearSearch()
         }

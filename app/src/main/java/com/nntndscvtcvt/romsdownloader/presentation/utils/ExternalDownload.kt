@@ -13,5 +13,7 @@ fun launchExternalDownload(url: String, context: Context): Boolean {
     return try {
         context.startActivity(Intent.createChooser(intent, "Download with..."))
         true
-    } catch(e: ActivityNotFoundException) { false }
+    } catch(e: ActivityNotFoundException) {
+        false
+    }
 }

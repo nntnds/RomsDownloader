@@ -10,11 +10,12 @@ import kotlinx.coroutines.flow.map
 
 class SettingsRepositoryImpl(
     private val dataStore: DataStore<Preferences>
-): SettingsRepository {
+) : SettingsRepository {
     private val USE_EXTERNAL_DOWNLOADER = booleanPreferencesKey("use_external_downloader")
 
-    override fun getUseExternalDownloader(): Flow<Boolean> = dataStore.data
-        .map { it[USE_EXTERNAL_DOWNLOADER] ?: false }
+    override fun getUseExternalDownloader(): Flow<Boolean> {
+        return dataStore.data.map { it[USE_EXTERNAL_DOWNLOADER] ?: false }
+    }
 
     override suspend fun setUseExternalDownloader(value: Boolean) {
         dataStore.edit { it[USE_EXTERNAL_DOWNLOADER] = value }
